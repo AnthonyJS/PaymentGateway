@@ -7,6 +7,6 @@ namespace PaymentGateway.Application.Common.Interfaces
   public interface IPurchaseHistoryRepository
   {
     void InsertPurchase(Purchase purchase);
-    List<Purchase> GetPurchaseById(Guid id);
+    Purchase GetPurchaseById(Guid id);
   }
 }

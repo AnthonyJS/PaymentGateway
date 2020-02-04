@@ -22,14 +22,7 @@ namespace PaymentGateway.API.Controllers
       _logger = logger;
     }
 
-    [HttpGet]
-    public async Task<IActionResult> GetAllOrders()
-    {
-      var query = new GetAllOrdersQuery();
-      var result = await _mediator.Send(query);
-      return Ok(result);
-    }
-
+    // TODO: Need to make sure it only returns last 4 card digits
     [HttpGet("{orderId}")]
     public async Task<IActionResult> GetOrder(Guid orderId)
     {

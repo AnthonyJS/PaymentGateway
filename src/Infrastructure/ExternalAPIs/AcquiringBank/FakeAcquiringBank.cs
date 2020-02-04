@@ -16,6 +16,7 @@ namespace PaymentGateway.Infrastructure.ExternalAPIs.AcquiringBank
       return new AcquiringBankResponse()
       {
         Id = Guid.NewGuid(),
+        Amount = request.Amount,
         // A simple case to be able to toggle success / failure
         StatusCode = request.Amount > 1 && request.Amount <= 10000
           ? AcquiringBankStatusCode.Success

@@ -1,9 +1,11 @@
+using System;
 using PaymentGateway.Application.Common.Enums;
 
 namespace PaymentGateway.Application.Common.Models
 {
   public class Purchase
   {
+    public Guid Id { get; set; }
     public string CardNumber { get; set; }
     public int ExpiryMonth { get; set; }
     public int ExpiryYear { get; set; }

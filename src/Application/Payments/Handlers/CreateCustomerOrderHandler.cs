@@ -5,7 +5,9 @@ using MediatR;
 using PaymentGateway.Application.AcquiringBank.Enums;
 using PaymentGateway.Application.AcquiringBank.Models;
 using PaymentGateway.Application.Commands;
+using PaymentGateway.Application.Common.Enums;
 using PaymentGateway.Application.Common.Interfaces;
+using PaymentGateway.Application.Common.Models;
 using PaymentGateway.Application.Responses;
 
 namespace PaymentGateway.Application.Handlers
@@ -13,10 +15,11 @@ namespace PaymentGateway.Application.Handlers
   public class CreateCustomerOrderHandler : IRequestHandler<CreateCustomerOrderCommand, OrderResponse>
   {
     private readonly IAcquiringBank _acquiringBank;
-    public CreateCustomerOrderHandler(IAcquiringBank acquiringBank)
+    private readonly IPurchaseHistoryRepository _purchaseHistoryRepository;
+    public CreateCustomerOrderHandler(IAcquiringBank acquiringBank, IPurchaseHistoryRepository purchaseHistoryRepository)
     {
       _acquiringBank = acquiringBank;
-
+      _purchaseHistoryRepository = purchaseHistoryRepository;
     }
 
     public async Task<OrderResponse> Handle(CreateCustomerOrderCommand request, CancellationToken cancellationToken)
@@ -26,11 +29,22 @@ namespace PaymentGateway.Application.Handlers
         Amount = request.Amount
       };
 
-      var result = await _acquiringBank.ProcessPayment(acquiringBankRequest);
+      AcquiringBankResponse result = await _acquiringBank.ProcessPayment(acquiringBankRequest);
+
+      var purchase = new Purchase()
+      {
+        Id = result.Id,
+        // CardNumber = "123456",
+        Amount = request.Amount,
+        Currency = Currency.GBP
+      };
+
+      _purchaseHistoryRepository.InsertPurchase(purchase);
 
       return new OrderResponse()
       {
-        Id = Guid.NewGuid(),
+        Id = result.Id,
+        Amount = result.Amount,
         HelloMessage = result.StatusCode == AcquiringBankStatusCode.Success
           ? "Succccceessss"
           : "Booo"

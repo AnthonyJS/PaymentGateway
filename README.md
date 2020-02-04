@@ -2,6 +2,14 @@
 
 - Automapper
 - LiteDB
+- .sln file
+- Unit testing
+- Result<T>
+- Currency enum
+- Validation
+- Custom exceptions
+- Docker
+- Need to make sure it only returns last 4 card digits
 
 ## Assumptions
 
@@ -17,5 +25,3 @@
   - Infrastructure
 
 ## Areas of improvement
-
-Unit testing
