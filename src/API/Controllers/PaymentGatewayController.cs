@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -15,11 +16,14 @@ namespace PaymentGateway.API.Controllers
   {
     private readonly ILogger<PaymentGatewayController> _logger;
     private readonly IMediator _mediator;
+    private readonly IMapper _mapper;
 
-    public PaymentGatewayController(ILogger<PaymentGatewayController> logger, IMediator mediator)
+    public PaymentGatewayController(ILogger<PaymentGatewayController> logger,
+    IMediator mediator, IMapper mapper)
     {
       _mediator = mediator;
       _logger = logger;
+      _mapper = mapper;
     }
 
     // TODO: Need to make sure it only returns last 4 card digits
@@ -37,11 +41,7 @@ namespace PaymentGateway.API.Controllers
     [HttpPost]
     public async Task<IActionResult> CreateOrder([FromBody] CreateCustomerOrderRequest request)
     {
-      // TODO: Use automapper here
-      var command = new CreateCustomerOrderCommand()
-      {
-        Amount = request.Amount
-      };
+      var command = _mapper.Map<CreateCustomerOrderCommand>(request);
 
       var result = await _mediator.Send(command);
 

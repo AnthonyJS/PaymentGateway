@@ -2,7 +2,7 @@ namespace PaymentGateway.Application.Common.Enums
 {
   public enum Currency
   {
-    GBP = 0,
+    GBP = 1,
     USD,
     EUR,
     AUD,

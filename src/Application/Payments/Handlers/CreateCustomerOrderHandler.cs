@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using AutoMapper;
 using MediatR;
 using PaymentGateway.Application.AcquiringBank.Enums;
 using PaymentGateway.Application.AcquiringBank.Models;
@@ -16,18 +17,18 @@ namespace PaymentGateway.Application.Handlers
   {
     private readonly IAcquiringBank _acquiringBank;
     private readonly IPurchaseHistoryRepository _purchaseHistoryRepository;
-    public CreateCustomerOrderHandler(IAcquiringBank acquiringBank, IPurchaseHistoryRepository purchaseHistoryRepository)
+    private readonly IMapper _mapper;
+
+    public CreateCustomerOrderHandler(IAcquiringBank acquiringBank, IPurchaseHistoryRepository purchaseHistoryRepository, IMapper mapper)
     {
       _acquiringBank = acquiringBank;
       _purchaseHistoryRepository = purchaseHistoryRepository;
+      _mapper = mapper;
     }
 
     public async Task<OrderResponse> Handle(CreateCustomerOrderCommand request, CancellationToken cancellationToken)
     {
-      var acquiringBankRequest = new AcquiringBankRequest()
-      {
-        Amount = request.Amount
-      };
+      var acquiringBankRequest = _mapper.Map<AcquiringBankRequest>(request);
 
       AcquiringBankResponse result = await _acquiringBank.ProcessPayment(acquiringBankRequest);
 
