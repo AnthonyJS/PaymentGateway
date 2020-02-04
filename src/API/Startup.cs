@@ -12,6 +12,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using PaymentGateway.Application.Common.Interfaces;
+using PaymentGateway.Infrastructure.ExternalAPIs.AcquiringBank;
 
 namespace PaymentGateway
 {
@@ -28,6 +30,7 @@ namespace PaymentGateway
     public void ConfigureServices(IServiceCollection services)
     {
       services.AddControllers();
+      services.AddScoped<IAcquiringBank, FakeAcquiringBank>();
 
       var assembly = AppDomain.CurrentDomain.Load("PaymentGateway.Application");
       services.AddMediatR(assembly);

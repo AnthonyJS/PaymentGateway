@@ -47,8 +47,7 @@ namespace PaymentGateway.API.Controllers
       // TODO: Use automapper here
       var command = new CreateCustomerOrderCommand()
       {
-        CustomerId = request.CustomerId,
-        ProductId = request.ProductId
+        Amount = request.Amount
       };
 
       var result = await _mediator.Send(command);

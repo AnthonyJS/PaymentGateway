@@ -1,11 +1,8 @@
-using System;
-using MediatR;
 using PaymentGateway.Application.Common.Enums;
-using PaymentGateway.Application.Responses;
 
-namespace PaymentGateway.Application.Commands
+namespace PaymentGateway.Application.AcquiringBank.Models
 {
-  public class CreateCustomerOrderCommand : IRequest<OrderResponse>
+  public class AcquiringBankRequest
   {
     public string CardNumber { get; set; }
     public int ExpiryMonth { get; set; }
@@ -14,5 +11,6 @@ namespace PaymentGateway.Application.Commands
     public Currency Currency { get; set; }
     public decimal Amount { get; set; }
     public string CVV { get; set; }
+
   }
 }
