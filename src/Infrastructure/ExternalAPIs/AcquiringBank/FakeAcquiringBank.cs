@@ -12,6 +12,7 @@ namespace PaymentGateway.Infrastructure.ExternalAPIs.AcquiringBank
   {
     public async Task<AcquiringBankResponse> ProcessPayment(AcquiringBankRequest request)
     {
+      // TODO: Make this Result<Acquiring.....>
       return new AcquiringBankResponse()
       {
         Id = Guid.NewGuid(),

@@ -1,3 +1,8 @@
+## TODO
+
+- Automapper
+- LiteDB
+
 ## Assumptions
 
 ## Technology, architecture and design decisions
