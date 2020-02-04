@@ -1,27 +1,30 @@
 ## TODO
 
-- Automapper
-- LiteDB
-- .sln file
+- Use automapper for everything
+- Pass all card details through
+- Need to make sure it only returns last 4 card digits
 - Unit testing
 - Result<T>
 - Currency enum
 - Validation
 - Custom exceptions
 - Docker
-- Need to make sure it only returns last 4 card digits
 
 ## Assumptions
 
-## Technology, architecture and design decisions
+## Technologies and libraries
 
 - MediatR
+- Automapper
+- LiteDB
+
+## Architecture and design decisions
+
 - CQRS
 - Onion architecture
-
   - API
   - Application
   - Domain (omitted)
   - Infrastructure
 
-## Areas of improvement
+## Further areas for development
