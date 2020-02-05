@@ -8,7 +8,7 @@ public class AutoMapping : Profile
   public AutoMapping()
   {
     // From, To
-    CreateMap<CreateCustomerOrderRequest, CreateCustomerOrderCommand>();
-    CreateMap<CreateCustomerOrderCommand, AcquiringBankRequest>();
+    CreateMap<CreatePaymentRequest, CreatePaymentCommand>();
+    CreateMap<CreatePaymentCommand, AcquiringBankRequest>();
   }
 }

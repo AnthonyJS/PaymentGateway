@@ -5,12 +5,13 @@ using PaymentGateway.Application.Responses;
 
 namespace PaymentGateway.Application.Commands
 {
-  public class CreateCustomerOrderCommand : IRequest<OrderResponse>
+  public class CreatePaymentCommand : IRequest<PaymentResponse>
   {
+    public string FirstName { get; set; }
+    public string Surname { get; set; }
     public string CardNumber { get; set; }
-    public int ExpiryMonth { get; set; }
-    public int ExpiryYear { get; set; }
-    // TODO: Should send this as a string rather than an arbitrary Id
+    public byte ExpiryMonth { get; set; }
+    public byte ExpiryYear { get; set; }
     public Currency Currency { get; set; }
     public decimal Amount { get; set; }
     public string CVV { get; set; }

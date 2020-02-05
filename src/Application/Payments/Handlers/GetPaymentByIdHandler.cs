@@ -9,20 +9,20 @@ using PaymentGateway.Application.Responses;
 
 namespace PaymentGateway.Application.Handlers
 {
-  public class GetOrderByIdHandler : IRequestHandler<GetOrderByIdQuery, OrderResponse>
+  public class GetPaymentByIdHandler : IRequestHandler<GetPaymentByIdQuery, PaymentResponse>
   {
     private readonly IPurchaseHistoryRepository _purchaseHistoryRepository;
 
-    public GetOrderByIdHandler(IPurchaseHistoryRepository purchaseHistoryRepository)
+    public GetPaymentByIdHandler(IPurchaseHistoryRepository purchaseHistoryRepository)
     {
       _purchaseHistoryRepository = purchaseHistoryRepository;
     }
 
-    public async Task<OrderResponse> Handle(GetOrderByIdQuery request, CancellationToken cancellationToken)
+    public async Task<PaymentResponse> Handle(GetPaymentByIdQuery request, CancellationToken cancellationToken)
     {
       Purchase purchase = _purchaseHistoryRepository.GetPurchaseById(request.Id);
 
-      return new OrderResponse()
+      return new PaymentResponse()
       {
         Id = purchase.Id,
         Amount = purchase.Amount

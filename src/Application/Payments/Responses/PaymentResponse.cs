@@ -2,7 +2,7 @@ using System;
 
 namespace PaymentGateway.Application.Responses
 {
-  public class OrderResponse
+  public class PaymentResponse
   {
     public Guid Id { get; set; }
     public decimal Amount { get; set; }

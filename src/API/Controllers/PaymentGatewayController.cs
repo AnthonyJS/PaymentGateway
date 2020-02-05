@@ -27,10 +27,10 @@ namespace PaymentGateway.API.Controllers
     }
 
     // TODO: Need to make sure it only returns last 4 card digits
-    [HttpGet("{orderId}")]
-    public async Task<IActionResult> GetOrder(Guid orderId)
+    [HttpGet("{paymentId}")]
+    public async Task<IActionResult> GetPayment(Guid paymentId)
     {
-      var query = new GetOrderByIdQuery(orderId);
+      var query = new GetPaymentByIdQuery(paymentId);
       var result = await _mediator.Send(query);
 
       return result != null
@@ -39,13 +39,13 @@ namespace PaymentGateway.API.Controllers
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateOrder([FromBody] CreateCustomerOrderRequest request)
+    public async Task<IActionResult> CreatePayment([FromBody] CreatePaymentRequest request)
     {
-      var command = _mapper.Map<CreateCustomerOrderCommand>(request);
+      var command = _mapper.Map<CreatePaymentCommand>(request);
 
       var result = await _mediator.Send(command);
 
-      return CreatedAtAction("CreateOrder", new { orderId = result.Id }, result);
+      return CreatedAtAction("CreatePayment", new { paymentId = result.Id }, result);
     }
   }
 }

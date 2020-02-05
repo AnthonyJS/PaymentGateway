@@ -13,20 +13,20 @@ using PaymentGateway.Application.Responses;
 
 namespace PaymentGateway.Application.Handlers
 {
-  public class CreateCustomerOrderHandler : IRequestHandler<CreateCustomerOrderCommand, OrderResponse>
+  public class CreatePaymentHandler : IRequestHandler<CreatePaymentCommand, PaymentResponse>
   {
     private readonly IAcquiringBank _acquiringBank;
     private readonly IPurchaseHistoryRepository _purchaseHistoryRepository;
     private readonly IMapper _mapper;
 
-    public CreateCustomerOrderHandler(IAcquiringBank acquiringBank, IPurchaseHistoryRepository purchaseHistoryRepository, IMapper mapper)
+    public CreatePaymentHandler(IAcquiringBank acquiringBank, IPurchaseHistoryRepository purchaseHistoryRepository, IMapper mapper)
     {
       _acquiringBank = acquiringBank;
       _purchaseHistoryRepository = purchaseHistoryRepository;
       _mapper = mapper;
     }
 
-    public async Task<OrderResponse> Handle(CreateCustomerOrderCommand request, CancellationToken cancellationToken)
+    public async Task<PaymentResponse> Handle(CreatePaymentCommand request, CancellationToken cancellationToken)
     {
       var acquiringBankRequest = _mapper.Map<AcquiringBankRequest>(request);
 
@@ -42,7 +42,7 @@ namespace PaymentGateway.Application.Handlers
 
       _purchaseHistoryRepository.InsertPurchase(purchase);
 
-      return new OrderResponse()
+      return new PaymentResponse()
       {
         Id = result.Id,
         Amount = result.Amount,

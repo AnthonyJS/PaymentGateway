@@ -4,11 +4,11 @@ using PaymentGateway.Application.Responses;
 
 namespace PaymentGateway.Application.Queries
 {
-  public class GetOrderByIdQuery : IRequest<OrderResponse>
+  public class GetPaymentByIdQuery : IRequest<PaymentResponse>
   {
     public Guid Id { get; set; }
 
-    public GetOrderByIdQuery(Guid id)
+    public GetPaymentByIdQuery(Guid id)
     {
       Id = id;
     }
