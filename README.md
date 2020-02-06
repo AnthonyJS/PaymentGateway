@@ -4,6 +4,7 @@
 - Pass all card details through
 - Need to make sure it only returns last 4 card digits
 - Unit testing
+- AuditableEntity base class
 - Result<T>
 - Currency enum
 - Validation

@@ -4,7 +4,7 @@ using LiteDB;
 using PaymentGateway.Application.Common.Interfaces;
 using PaymentGateway.Application.Common.Models;
 
-namespace PaymentGateway.Infrastructure.Persistence.PurchaseHistory
+namespace PaymentGateway.Infrastructure.Persistence.PaymentHistory
 {
   public class Customer
   {
@@ -15,25 +15,25 @@ namespace PaymentGateway.Infrastructure.Persistence.PurchaseHistory
   }
 
 
-  public class PurchaseHistoryRepository : IPurchaseHistoryRepository
+  public class PaymentHistoryRepository : IPaymentHistoryRepository
   {
-    public Purchase GetPurchaseById(Guid id)
+    public Payment GetPaymentById(Guid id)
     {
       using (var db = new LiteDatabase(@"MyData.db"))
       {
-        var col = db.GetCollection<Purchase>("purchases");
+        var col = db.GetCollection<Payment>("payments");
 
         return col.FindOne(x => x.Id == id);
       }
     }
 
-    public void InsertPurchase(Purchase purchase)
+    public void InsertPayment(Payment payment)
     {
       using (var db = new LiteDatabase(@"MyData.db"))
       {
-        var col = db.GetCollection<Purchase>("purchases");
+        var col = db.GetCollection<Payment>("payments");
 
-        col.Insert(purchase);
+        col.Insert(payment);
       }
     }
   }

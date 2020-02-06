@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using AutoMapper;
 using MediatR;
 using PaymentGateway.Application.Common.Interfaces;
 using PaymentGateway.Application.Common.Models;
@@ -9,24 +10,24 @@ using PaymentGateway.Application.Responses;
 
 namespace PaymentGateway.Application.Handlers
 {
-  public class GetPaymentByIdHandler : IRequestHandler<GetPaymentByIdQuery, PaymentResponse>
+  public class GetPaymentByIdHandler : IRequestHandler<GetPaymentByIdQuery, PaymentByIdResponse>
   {
-    private readonly IPurchaseHistoryRepository _purchaseHistoryRepository;
+    private readonly IPaymentHistoryRepository _paymentHistoryRepository;
+    private readonly IMapper _mapper;
 
-    public GetPaymentByIdHandler(IPurchaseHistoryRepository purchaseHistoryRepository)
+    public GetPaymentByIdHandler(IPaymentHistoryRepository paymentHistoryRepository, IMapper mapper)
     {
-      _purchaseHistoryRepository = purchaseHistoryRepository;
+      _paymentHistoryRepository = paymentHistoryRepository;
+      _mapper = mapper;
     }
 
-    public async Task<PaymentResponse> Handle(GetPaymentByIdQuery request, CancellationToken cancellationToken)
+    public async Task<PaymentByIdResponse> Handle(GetPaymentByIdQuery request, CancellationToken cancellationToken)
     {
-      Purchase purchase = _purchaseHistoryRepository.GetPurchaseById(request.Id);
+      Payment payment = _paymentHistoryRepository.GetPaymentById(request.Id);
 
-      return new PaymentResponse()
-      {
-        Id = purchase.Id,
-        Amount = purchase.Amount
-      };
+      return _mapper.Map<PaymentByIdResponse>(payment);
+
+
     }
   }
 }

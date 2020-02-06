@@ -4,7 +4,7 @@ using PaymentGateway.Application.Responses;
 
 namespace PaymentGateway.Application.Queries
 {
-  public class GetPaymentByIdQuery : IRequest<PaymentResponse>
+  public class GetPaymentByIdQuery : IRequest<PaymentByIdResponse>
   {
     public Guid Id { get; set; }
 

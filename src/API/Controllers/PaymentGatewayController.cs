@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using PaymentGateway.Application.Commands;
 using PaymentGateway.Application.Queries;
 using PaymentGateway.Application.Requests;
+using PaymentGateway.Application.Responses;
 
 namespace PaymentGateway.API.Controllers
 {
@@ -43,7 +44,7 @@ namespace PaymentGateway.API.Controllers
     {
       var command = _mapper.Map<CreatePaymentCommand>(request);
 
-      var result = await _mediator.Send(command);
+      PaymentResponse result = await _mediator.Send(command);
 
       return CreatedAtAction("CreatePayment", new { paymentId = result.Id }, result);
     }

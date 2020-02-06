@@ -4,9 +4,9 @@ using PaymentGateway.Application.Common.Models;
 
 namespace PaymentGateway.Application.Common.Interfaces
 {
-  public interface IPurchaseHistoryRepository
+  public interface IPaymentHistoryRepository
   {
-    void InsertPurchase(Purchase purchase);
-    Purchase GetPurchaseById(Guid id);
+    void InsertPayment(Payment payment);
+    Payment GetPaymentById(Guid id);
   }
 }

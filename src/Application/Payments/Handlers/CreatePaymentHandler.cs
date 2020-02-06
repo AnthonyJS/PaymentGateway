@@ -16,13 +16,13 @@ namespace PaymentGateway.Application.Handlers
   public class CreatePaymentHandler : IRequestHandler<CreatePaymentCommand, PaymentResponse>
   {
     private readonly IAcquiringBank _acquiringBank;
-    private readonly IPurchaseHistoryRepository _purchaseHistoryRepository;
+    private readonly IPaymentHistoryRepository _paymentHistoryRepository;
     private readonly IMapper _mapper;
 
-    public CreatePaymentHandler(IAcquiringBank acquiringBank, IPurchaseHistoryRepository purchaseHistoryRepository, IMapper mapper)
+    public CreatePaymentHandler(IAcquiringBank acquiringBank, IPaymentHistoryRepository paymentHistoryRepository, IMapper mapper)
     {
       _acquiringBank = acquiringBank;
-      _purchaseHistoryRepository = purchaseHistoryRepository;
+      _paymentHistoryRepository = paymentHistoryRepository;
       _mapper = mapper;
     }
 
@@ -32,21 +32,17 @@ namespace PaymentGateway.Application.Handlers
 
       AcquiringBankResponse result = await _acquiringBank.ProcessPayment(acquiringBankRequest);
 
-      var purchase = new Purchase()
-      {
-        Id = result.Id,
-        // CardNumber = "123456",
-        Amount = request.Amount,
-        Currency = Currency.GBP
-      };
+      // TODO: If (result.IsSuccess)
 
-      _purchaseHistoryRepository.InsertPurchase(purchase);
+      var payment = _mapper.Map<Payment>(request);
+      payment.AcquiringBankId = result.Id;
+
+      _paymentHistoryRepository.InsertPayment(payment);
 
       return new PaymentResponse()
       {
-        Id = result.Id,
-        Amount = result.Amount,
-        HelloMessage = result.StatusCode == AcquiringBankStatusCode.Success
+        Id = payment.Id,
+        StatusMessage = result.StatusCode == AcquiringBankStatusCode.Success
           ? "Succccceessss"
           : "Booo"
       };

@@ -15,7 +15,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using PaymentGateway.Application.Common.Interfaces;
 using PaymentGateway.Infrastructure.ExternalAPIs.AcquiringBank;
-using PaymentGateway.Infrastructure.Persistence.PurchaseHistory;
+using PaymentGateway.Infrastructure.Persistence.PaymentHistory;
 
 namespace PaymentGateway
 {
@@ -33,7 +33,7 @@ namespace PaymentGateway
     {
       services.AddControllers();
       services.AddScoped<IAcquiringBank, FakeAcquiringBank>();
-      services.AddScoped<IPurchaseHistoryRepository, PurchaseHistoryRepository>();
+      services.AddScoped<IPaymentHistoryRepository, PaymentHistoryRepository>();
 
       var assembly = AppDomain.CurrentDomain.Load("PaymentGateway.Application");
       services.AddMediatR(assembly);
