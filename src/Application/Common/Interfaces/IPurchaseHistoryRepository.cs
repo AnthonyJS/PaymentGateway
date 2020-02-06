@@ -1,12 +1,14 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using CSharpFunctionalExtensions;
 using PaymentGateway.Application.Common.Models;
 
 namespace PaymentGateway.Application.Common.Interfaces
 {
   public interface IPaymentHistoryRepository
   {
-    void InsertPayment(Payment payment);
-    Payment GetPaymentById(Guid id);
+    Task<Result> InsertPayment(Payment payment);
+    Task<Result<Payment>> GetPaymentById(Guid id);
   }
 }

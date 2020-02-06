@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
+using CSharpFunctionalExtensions;
 using MediatR;
 using PaymentGateway.Application.Common.Interfaces;
 using PaymentGateway.Application.Common.Models;
@@ -23,11 +24,10 @@ namespace PaymentGateway.Application.Handlers
 
     public async Task<PaymentByIdResponse> Handle(GetPaymentByIdQuery request, CancellationToken cancellationToken)
     {
-      Payment payment = _paymentHistoryRepository.GetPaymentById(request.Id);
+      Result<Payment> result = await _paymentHistoryRepository.GetPaymentById(request.Id);
+      Payment payment = result.Value;
 
       return _mapper.Map<PaymentByIdResponse>(payment);
-
-
     }
   }
 }

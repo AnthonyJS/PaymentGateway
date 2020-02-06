@@ -17,6 +17,7 @@
 - MediatR
 - Automapper
 - LiteDB
+- [CSharpFunctionalExtensions](https://www.nuget.org/packages/CSharpFunctionalExtensions/)
 
 ## Architecture and design decisions
 
