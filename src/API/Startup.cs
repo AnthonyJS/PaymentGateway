@@ -32,7 +32,7 @@ namespace PaymentGateway
     public void ConfigureServices(IServiceCollection services)
     {
       services.AddControllers();
-      services.AddScoped<IAcquiringBankGateway, AcquiringBankGateway>();
+      services.AddScoped<IAcquiringBankService, AcquiringBankService>();
       services.AddScoped<IAcquiringBankHttpClient, FakeAcquiringBankHttpClient>();
       services.AddScoped<IPaymentHistoryRepository, PaymentHistoryRepository>();
 

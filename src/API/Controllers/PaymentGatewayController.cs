@@ -42,15 +42,16 @@ namespace PaymentGateway.API.Controllers
     [HttpPost]
     public async Task<IActionResult> CreatePayment([FromBody] CreatePaymentRequest request)
     {
-      var command = _mapper.Map<CreatePaymentCommand>(request);
+      CreatePaymentCommand command = _mapper.Map<CreatePaymentCommand>(request);
 
       Result<Guid> result = await _mediator.Send(command);
 
       if (result.IsFailure)
         return UnprocessableEntity(result.Error);
 
-      return CreatedAtAction("CreatePayment", new { id = result.Value }, result.Value);
-
+      return CreatedAtAction("CreatePayment",
+                              new { id = result.Value },
+                              new { id = result.Value });
     }
   }
 }
