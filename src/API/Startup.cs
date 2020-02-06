@@ -32,7 +32,8 @@ namespace PaymentGateway
     public void ConfigureServices(IServiceCollection services)
     {
       services.AddControllers();
-      services.AddScoped<IAcquiringBank, FakeAcquiringBank>();
+      services.AddScoped<IAcquiringBankGateway, AcquiringBankGateway>();
+      services.AddScoped<IAcquiringBankHttpClient, FakeAcquiringBankHttpClient>();
       services.AddScoped<IPaymentHistoryRepository, PaymentHistoryRepository>();
 
       var assembly = AppDomain.CurrentDomain.Load("PaymentGateway.Application");

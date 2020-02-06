@@ -8,8 +8,14 @@ namespace PaymentGateway.Infrastructure.ExternalAPIs.AcquiringBank
 {
   // TODO: The real implementation of this would have an HttpClient that makes call to the real bank.
   // This fake version just returns a success or failure based on the amount paid.
-  public class FakeAcquiringBank : IAcquiringBank
+  public class AcquiringBankGateway : IAcquiringBankGateway
   {
+    private readonly IAcquiringBankHttpClient _acquiringBankHttpClient;
+
+    public AcquiringBankGateway(IAcquiringBankHttpClient acquiringBankHttpClient)
+    {
+      _acquiringBankHttpClient = acquiringBankHttpClient;
+    }
     public async Task<AcquiringBankResponse> ProcessPayment(AcquiringBankRequest request)
     {
       // TODO: Make this Result<Acquiring.....>

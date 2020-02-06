@@ -15,11 +15,11 @@ namespace PaymentGateway.Application.Handlers
 {
   public class CreatePaymentHandler : IRequestHandler<CreatePaymentCommand, PaymentResponse>
   {
-    private readonly IAcquiringBank _acquiringBank;
+    private readonly IAcquiringBankGateway _acquiringBank;
     private readonly IPaymentHistoryRepository _paymentHistoryRepository;
     private readonly IMapper _mapper;
 
-    public CreatePaymentHandler(IAcquiringBank acquiringBank, IPaymentHistoryRepository paymentHistoryRepository, IMapper mapper)
+    public CreatePaymentHandler(IAcquiringBankGateway acquiringBank, IPaymentHistoryRepository paymentHistoryRepository, IMapper mapper)
     {
       _acquiringBank = acquiringBank;
       _paymentHistoryRepository = paymentHistoryRepository;
