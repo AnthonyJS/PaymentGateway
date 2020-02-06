@@ -31,11 +31,11 @@ namespace PaymentGateway.API.Controllers
     [HttpGet("{paymentId}")]
     public async Task<IActionResult> GetPayment(Guid paymentId)
     {
-      var query = new GetPaymentByIdQuery(paymentId);
-      var result = await _mediator.Send(query);
+      GetPaymentByIdQuery query = new GetPaymentByIdQuery(paymentId);
+      Result<PaymentByIdResponse> result = await _mediator.Send(query);
 
-      return result != null
-        ? (IActionResult)Ok(result)
+      return result.IsSuccess
+        ? (IActionResult)Ok(result.Value)
         : NotFound();
     }
 
