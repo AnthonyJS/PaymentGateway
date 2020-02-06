@@ -1,9 +1,9 @@
 ## TODO
 
-- Result<T>
-- HTTP status codes? Some method of returning success / failure to use as code
+- Merge Common and Payments folders
 - AuditableEntity base class
 - Readme
+- Change CVV into int16
 - Merge into master
 - Unit testing
 - Validation
@@ -29,3 +29,5 @@
   - Infrastructure
 
 ## Further areas for development
+
+Put call to Acquiring Bank and saving to DB in a transaction to ensure it is atomic, and can rollback if failure occurs part way through.

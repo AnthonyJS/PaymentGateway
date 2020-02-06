@@ -11,23 +11,26 @@ using PaymentGateway.Application.Responses;
 
 namespace PaymentGateway.Application.Handlers
 {
-  public class GetPaymentByIdHandler : IRequestHandler<GetPaymentByIdQuery, PaymentByIdResponse>
+  public class GetPaymentByIdQueryHandler : IRequestHandler<GetPaymentByIdQuery, Result<PaymentByIdResponse>>
   {
     private readonly IPaymentHistoryRepository _paymentHistoryRepository;
     private readonly IMapper _mapper;
 
-    public GetPaymentByIdHandler(IPaymentHistoryRepository paymentHistoryRepository, IMapper mapper)
+    public GetPaymentByIdQueryHandler(IPaymentHistoryRepository paymentHistoryRepository, IMapper mapper)
     {
       _paymentHistoryRepository = paymentHistoryRepository;
       _mapper = mapper;
     }
 
-    public async Task<PaymentByIdResponse> Handle(GetPaymentByIdQuery request, CancellationToken cancellationToken)
+    public async Task<Result<PaymentByIdResponse>> Handle(GetPaymentByIdQuery request, CancellationToken cancellationToken)
     {
       Result<Payment> result = await _paymentHistoryRepository.GetPaymentById(request.Id);
       Payment payment = result.Value;
 
-      return _mapper.Map<PaymentByIdResponse>(payment);
+      if (payment == null)
+        return Result.Failure<PaymentByIdResponse>("Unable to find payment");
+
+      return Result.Ok(_mapper.Map<PaymentByIdResponse>(payment));
     }
   }
 }
