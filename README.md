@@ -29,3 +29,5 @@
   - Infrastructure
 
 ## Further areas for development
+
+Put call to Acquiring Bank and saving to DB in a transaction to ensure it is atomic, and can rollback if failure occurs part way through.

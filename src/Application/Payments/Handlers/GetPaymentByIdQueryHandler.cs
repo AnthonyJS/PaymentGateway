@@ -11,12 +11,12 @@ using PaymentGateway.Application.Responses;
 
 namespace PaymentGateway.Application.Handlers
 {
-  public class GetPaymentByIdHandler : IRequestHandler<GetPaymentByIdQuery, PaymentByIdResponse>
+  public class GetPaymentByIdQueryHandler : IRequestHandler<GetPaymentByIdQuery, PaymentByIdResponse>
   {
     private readonly IPaymentHistoryRepository _paymentHistoryRepository;
     private readonly IMapper _mapper;
 
-    public GetPaymentByIdHandler(IPaymentHistoryRepository paymentHistoryRepository, IMapper mapper)
+    public GetPaymentByIdQueryHandler(IPaymentHistoryRepository paymentHistoryRepository, IMapper mapper)
     {
       _paymentHistoryRepository = paymentHistoryRepository;
       _mapper = mapper;

@@ -2,6 +2,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
+using CSharpFunctionalExtensions;
 using MediatR;
 using PaymentGateway.Application.AcquiringBank.Enums;
 using PaymentGateway.Application.AcquiringBank.Models;
@@ -13,47 +14,40 @@ using PaymentGateway.Application.Responses;
 
 namespace PaymentGateway.Application.Handlers
 {
-  public class CreatePaymentHandler : IRequestHandler<CreatePaymentCommand, PaymentResponse>
+  public class CreatePaymentCommandHandler : IRequestHandler<CreatePaymentCommand, Result<Guid>>
   {
     private readonly IAcquiringBankGateway _acquiringBank;
     private readonly IPaymentHistoryRepository _paymentHistoryRepository;
     private readonly IMapper _mapper;
 
-    public CreatePaymentHandler(IAcquiringBankGateway acquiringBank, IPaymentHistoryRepository paymentHistoryRepository, IMapper mapper)
+    public CreatePaymentCommandHandler(IAcquiringBankGateway acquiringBank, IPaymentHistoryRepository paymentHistoryRepository, IMapper mapper)
     {
       _acquiringBank = acquiringBank;
       _paymentHistoryRepository = paymentHistoryRepository;
       _mapper = mapper;
     }
 
-    public async Task<PaymentResponse> Handle(CreatePaymentCommand request, CancellationToken cancellationToken)
+    public async Task<Result<Guid>> Handle(CreatePaymentCommand request, CancellationToken cancellationToken)
     {
 
-      var payment = _mapper.Map<Payment>(request);
+      Payment payment = _mapper.Map<Payment>(request);
 
-      // var acquiringBankRequest = _mapper.Map<AcquiringBankRequest>(request);
+      // TODO: Could put this in an atomic transaction
 
-      var result = await _acquiringBank.ProcessPayment(payment);
+      Result<Guid> result = await _acquiringBank.ProcessPayment(payment);
 
       if (result.IsFailure)
-        return new PaymentResponse()
-        {
-          // Id = payment.Id,
-          StatusMessage = "Booo"
-        };
+        return Result.Failure<Guid>($"The acquirer bank would not process the payment: {result.Error}");
 
       payment.Id = Guid.NewGuid();
       payment.AcquiringBankId = result.Value;
 
-      _paymentHistoryRepository.InsertPayment(payment);
+      var dbResult = await _paymentHistoryRepository.InsertPayment(payment);
 
-      return new PaymentResponse()
-      {
-        Id = payment.Id,
-        StatusMessage = result.IsSuccess
-          ? "Succccceessss"
-          : "Booo"
-      };
+      if (result.IsFailure)
+        return Result.Failure<Guid>("Failed to save to the DB");
+
+      return Result.Ok(payment.Id);
     }
   }
 }

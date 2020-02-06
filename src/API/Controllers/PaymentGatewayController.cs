@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using AutoMapper;
+using CSharpFunctionalExtensions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -27,7 +28,6 @@ namespace PaymentGateway.API.Controllers
       _mapper = mapper;
     }
 
-    // TODO: Need to make sure it only returns last 4 card digits
     [HttpGet("{paymentId}")]
     public async Task<IActionResult> GetPayment(Guid paymentId)
     {
@@ -44,9 +44,13 @@ namespace PaymentGateway.API.Controllers
     {
       var command = _mapper.Map<CreatePaymentCommand>(request);
 
-      PaymentResponse result = await _mediator.Send(command);
+      Result<Guid> result = await _mediator.Send(command);
 
-      return CreatedAtAction("CreatePayment", new { paymentId = result.Id }, result);
+      if (result.IsFailure)
+        return UnprocessableEntity(result.Error);
+
+      return CreatedAtAction("CreatePayment", new { id = result.Value }, result.Value);
+
     }
   }
 }
