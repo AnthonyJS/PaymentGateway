@@ -28,22 +28,29 @@ namespace PaymentGateway.Application.Handlers
 
     public async Task<PaymentResponse> Handle(CreatePaymentCommand request, CancellationToken cancellationToken)
     {
-      var acquiringBankRequest = _mapper.Map<AcquiringBankRequest>(request);
-
-      AcquiringBankResponse result = await _acquiringBank.ProcessPayment(acquiringBankRequest);
-
-      // TODO: If (result.IsSuccess)
 
       var payment = _mapper.Map<Payment>(request);
+
+      // var acquiringBankRequest = _mapper.Map<AcquiringBankRequest>(request);
+
+      var result = await _acquiringBank.ProcessPayment(payment);
+
+      if (result.IsFailure)
+        return new PaymentResponse()
+        {
+          // Id = payment.Id,
+          StatusMessage = "Booo"
+        };
+
       payment.Id = Guid.NewGuid();
-      payment.AcquiringBankId = result.Id;
+      payment.AcquiringBankId = result.Value;
 
       _paymentHistoryRepository.InsertPayment(payment);
 
       return new PaymentResponse()
       {
         Id = payment.Id,
-        StatusMessage = result.StatusCode == AcquiringBankStatusCode.Success
+        StatusMessage = result.IsSuccess
           ? "Succccceessss"
           : "Booo"
       };
