@@ -5,12 +5,7 @@ namespace PaymentGateway.Application.Common.Models
 {
   public class Payment
   {
-    public Payment()
-    {
-      Id = Guid.NewGuid();
-    }
-
-    public Guid Id { get; }
+    public Guid Id { get; set; }
     public Guid AcquiringBankId { get; set; }
     public string FirstName { get; set; }
     public string Surname { get; set; }

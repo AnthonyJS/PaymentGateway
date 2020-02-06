@@ -35,6 +35,7 @@ namespace PaymentGateway.Application.Handlers
       // TODO: If (result.IsSuccess)
 
       var payment = _mapper.Map<Payment>(request);
+      payment.Id = Guid.NewGuid();
       payment.AcquiringBankId = result.Id;
 
       _paymentHistoryRepository.InsertPayment(payment);

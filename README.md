@@ -1,12 +1,11 @@
 ## TODO
 
-- Use automapper for everything
-- Pass all card details through
-- Need to make sure it only returns last 4 card digits
-- Unit testing
-- AuditableEntity base class
 - Result<T>
-- Currency enum
+- HTTP status codes? Some method of returning success / failure to use as code
+- AuditableEntity base class
+- Readme
+- Merge into master
+- Unit testing
 - Validation
 - Custom exceptions
 - Docker
