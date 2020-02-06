@@ -13,6 +13,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using PaymentGateway.Application.Common.Interface;
 using PaymentGateway.Application.Common.Interfaces;
 using PaymentGateway.Infrastructure.ExternalAPIs.AcquiringBank;
 using PaymentGateway.Infrastructure.Persistence.PaymentHistory;

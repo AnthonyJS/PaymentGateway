@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using CSharpFunctionalExtensions;
 using PaymentGateway.Application.Common.Models;
 
-namespace PaymentGateway.Infrastructure.ExternalAPIs.AcquiringBank
+namespace PaymentGateway.Application.Common.Interface
 {
   public interface IAcquiringBankHttpClient
   {

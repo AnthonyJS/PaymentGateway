@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using CSharpFunctionalExtensions;
 using PaymentGateway.Application.Common.Enums;
+using PaymentGateway.Application.Common.Interface;
 using PaymentGateway.Application.Common.Models;
 
 namespace PaymentGateway.Infrastructure.ExternalAPIs.AcquiringBank
