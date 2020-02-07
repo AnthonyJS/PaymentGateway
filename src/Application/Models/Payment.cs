@@ -14,6 +14,6 @@ namespace PaymentGateway.Application.Models
     public int ExpiryYear { get; set; }
     public Currency Currency { get; set; }
     public decimal Amount { get; set; }
-    public string CVV { get; set; }
+    public short CVV { get; set; }
   }
 }

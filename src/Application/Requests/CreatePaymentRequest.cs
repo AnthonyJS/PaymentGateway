@@ -11,6 +11,6 @@ namespace PaymentGateway.Application.Requests
     public byte ExpiryYear { get; set; }
     public string Currency { get; set; }
     public decimal Amount { get; set; }
-    public string CVV { get; set; }
+    public short CVV { get; set; }
   }
 }
