@@ -12,6 +12,7 @@ using PaymentGateway.API.Controllers;
 using AutoMapper;
 using System;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace PaymentGateway.API.Unit.Tests
 {
@@ -20,6 +21,13 @@ namespace PaymentGateway.API.Unit.Tests
     private readonly Mock<ILogger<PaymentGatewayController>> _mockLogger;
     private readonly Mock<IMediator> _mockMediator;
     private readonly Mock<IMapper> _mockMapper;
+
+    public PaymentGatewayControllerTests()
+    {
+      _mockMediator = new Mock<IMediator>();
+      _mockMapper = new Mock<IMapper>();
+      _mockLogger = new Mock<ILogger<PaymentGatewayController>>();
+    }
 
     [Fact]
     public async void ShouldGet()
@@ -30,9 +38,14 @@ namespace PaymentGateway.API.Unit.Tests
         Amount = 54543.54M
       };
 
-      var expectedResult = new Result.Ok(blah);
 
-      _mockMediator.Setup(m => m.Send(It.IsAny<GetPaymentByIdQuery>)).Returns(expectedResult);
+
+      Result<PaymentByIdResponse> expectedResult = Result.Ok(blah);
+
+      var woo = new GetPaymentByIdQuery(Guid.NewGuid());
+
+
+      _mockMediator.Setup(m => m.Send(woo, default(CancellationToken))).ReturnsAsync(expectedResult);
 
       var sut = new PaymentGatewayController(_mockLogger.Object, _mockMediator.Object, _mockMapper.Object);
 
@@ -40,7 +53,7 @@ namespace PaymentGateway.API.Unit.Tests
 
       var result = await sut.GetPayment(id);
 
-      Assert.True(result == HttpStatusCode.Ok);
+      Assert.IsType<OkObjectResult>(result);
     }
   }
 }
