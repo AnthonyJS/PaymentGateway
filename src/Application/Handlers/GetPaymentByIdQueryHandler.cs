@@ -4,8 +4,8 @@ using System.Threading.Tasks;
 using AutoMapper;
 using CSharpFunctionalExtensions;
 using MediatR;
-using PaymentGateway.Application.Common.Interfaces;
-using PaymentGateway.Application.Common.Models;
+using PaymentGateway.Application.Interfaces;
+using PaymentGateway.Application.Models;
 using PaymentGateway.Application.Queries;
 using PaymentGateway.Application.Responses;
 

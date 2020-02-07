@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using CSharpFunctionalExtensions;
 using LiteDB;
-using PaymentGateway.Application.Common.Interfaces;
-using PaymentGateway.Application.Common.Models;
+using PaymentGateway.Application.Interfaces;
+using PaymentGateway.Application.Models;
 
 namespace PaymentGateway.Infrastructure.Persistence.PaymentHistory
 {

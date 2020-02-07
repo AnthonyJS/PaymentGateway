@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using CSharpFunctionalExtensions;
-using PaymentGateway.Application.Common.Models;
+using PaymentGateway.Application.Models;
 
-namespace PaymentGateway.Application.Common.Interfaces
+namespace PaymentGateway.Application.Interfaces
 {
   public interface IPaymentHistoryRepository
   {

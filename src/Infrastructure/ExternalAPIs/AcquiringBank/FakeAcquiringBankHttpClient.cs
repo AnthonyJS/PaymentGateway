@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using CSharpFunctionalExtensions;
-using PaymentGateway.Application.Common.Enums;
-using PaymentGateway.Application.Common.Interface;
-using PaymentGateway.Application.Common.Models;
+using PaymentGateway.Application.Enums;
+using PaymentGateway.Application.Interfaces;
+using PaymentGateway.Application.Models;
 
 namespace PaymentGateway.Infrastructure.ExternalAPIs.AcquiringBank
 {

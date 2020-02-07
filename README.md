@@ -1,6 +1,7 @@
 ## TODO
 
 - Merge Common and Payments folders
+- Handle ABC as currency
 - AuditableEntity base class
 - Readme
 - Change CVV into int16

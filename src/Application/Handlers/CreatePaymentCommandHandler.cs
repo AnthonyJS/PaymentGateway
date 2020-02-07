@@ -5,8 +5,8 @@ using AutoMapper;
 using CSharpFunctionalExtensions;
 using MediatR;
 using PaymentGateway.Application.Commands;
-using PaymentGateway.Application.Common.Interfaces;
-using PaymentGateway.Application.Common.Models;
+using PaymentGateway.Application.Interfaces;
+using PaymentGateway.Application.Models;
 
 namespace PaymentGateway.Application.Handlers
 {

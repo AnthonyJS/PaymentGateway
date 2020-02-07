@@ -1,7 +1,7 @@
 using System;
-using PaymentGateway.Application.Common.Enums;
+using PaymentGateway.Application.Enums;
 
-namespace PaymentGateway.Application.Common.Models
+namespace PaymentGateway.Application.Models
 {
   public class Payment
   {

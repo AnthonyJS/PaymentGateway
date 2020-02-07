@@ -1,8 +1,8 @@
 using System;
 using AutoMapper;
 using PaymentGateway.Application.Commands;
-using PaymentGateway.Application.Common.Enums;
-using PaymentGateway.Application.Common.Models;
+using PaymentGateway.Application.Enums;
+using PaymentGateway.Application.Models;
 using PaymentGateway.Application.Requests;
 using PaymentGateway.Application.Responses;
 

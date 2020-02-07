@@ -1,6 +1,6 @@
 using System.ComponentModel;
 
-namespace PaymentGateway.Application.Common.Enums
+namespace PaymentGateway.Application.Enums
 {
   public enum Currency
   {
