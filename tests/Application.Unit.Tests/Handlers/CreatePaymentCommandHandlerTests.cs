@@ -39,12 +39,11 @@ namespace PaymentGateway.Application.Unit.Tests.Handlers
     [Fact]
     public async Task ShouldGetData()
     {
-      var id = Guid.NewGuid();
-      var acquiringBankResult = Result.Ok<Guid>(id);
+      var acquiringBankResult = Result.Ok<Guid>(Guid.NewGuid());
 
       _mockAcquiringBankService.Setup(a => a.ProcessPayment(It.IsAny<Payment>())).ReturnsAsync(acquiringBankResult);
 
-      _mockPaymentHistoryRepository.Setup(p => p.InsertPayment(It.IsAny<Payment>())).ReturnsAsync(Result.Ok<Guid>(id));
+      _mockPaymentHistoryRepository.Setup(p => p.InsertPayment(It.IsAny<Payment>())).ReturnsAsync(Result.Ok<Guid>(Guid.NewGuid()));
 
       var sut = new CreatePaymentCommandHandler(_mockAcquiringBankService.Object,
                       _mockPaymentHistoryRepository.Object, _mapper);
@@ -59,7 +58,6 @@ namespace PaymentGateway.Application.Unit.Tests.Handlers
     [Fact]
     public async Task ShouldReturnFailureIfBankAcquirerFails()
     {
-      var id = Guid.NewGuid();
       var acquiringBankResult = Result.Failure<Guid>("Failed to make payment on acquiring bank");
 
       _mockAcquiringBankService.Setup(a => a.ProcessPayment(It.IsAny<Payment>())).ReturnsAsync(acquiringBankResult);
@@ -77,8 +75,7 @@ namespace PaymentGateway.Application.Unit.Tests.Handlers
     [Fact]
     public async Task ShouldReturnFailureIfPaymentNotSavedToDB()
     {
-      var id = Guid.NewGuid();
-      var acquiringBankResult = Result.Ok<Guid>(id);
+      var acquiringBankResult = Result.Ok<Guid>(Guid.NewGuid());
 
       _mockAcquiringBankService.Setup(a => a.ProcessPayment(It.IsAny<Payment>())).ReturnsAsync(acquiringBankResult);
 
