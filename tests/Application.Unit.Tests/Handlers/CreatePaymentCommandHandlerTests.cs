@@ -56,13 +56,9 @@ namespace PaymentGateway.Application.Unit.Tests.Handlers
       var id = Guid.NewGuid();
       var acquiringBankResult = Result.Ok<Guid>(id);
 
-      var payment = new Payment();
+      _mockAcquiringBankService.Setup(a => a.ProcessPayment(It.IsAny<Payment>())).ReturnsAsync(acquiringBankResult);
 
-      var request = new CreatePaymentCommand();
-
-      _mockAcquiringBankService.Setup(a => a.ProcessPayment(payment)).ReturnsAsync(acquiringBankResult);
-
-      _mockPaymentHistoryRepository.Setup(p => p.InsertPayment(payment)).ReturnsAsync(Result.Ok<Guid>(id));
+      _mockPaymentHistoryRepository.Setup(p => p.InsertPayment(It.IsAny<Payment>())).ReturnsAsync(Result.Ok<Guid>(id));
 
       var sut = new CreatePaymentCommandHandler(_mockAcquiringBankService.Object,
                       _mockPaymentHistoryRepository.Object, _mapper);
@@ -80,13 +76,7 @@ namespace PaymentGateway.Application.Unit.Tests.Handlers
       var id = Guid.NewGuid();
       var acquiringBankResult = Result.Failure<Guid>("Failed to make payment on acquiring bank");
 
-      var payment = new Payment();
-
-      var request = new CreatePaymentCommand();
-
       _mockAcquiringBankService.Setup(a => a.ProcessPayment(It.IsAny<Payment>())).ReturnsAsync(acquiringBankResult);
-
-      // _mockPaymentHistoryRepository.Setup(p => p.InsertPayment(payment)).ReturnsAsync(Result.Ok<Guid>(id));
 
       var sut = new CreatePaymentCommandHandler(_mockAcquiringBankService.Object,
                       _mockPaymentHistoryRepository.Object, _mapper);
@@ -98,21 +88,25 @@ namespace PaymentGateway.Application.Unit.Tests.Handlers
       Assert.False(result.IsSuccess);
     }
 
+    [Fact]
+    public async Task ShouldReturnFailureIfPaymentNotSavedToDB()
+    {
+      var id = Guid.NewGuid();
+      var acquiringBankResult = Result.Ok<Guid>(id);
 
-    // [Fact]
-    // public async Task ShouldNotGetData()
-    // {
-    //   var id = Guid.NewGuid();
-    //   var paymentResult = Result.Failure<Payment>("gfgfgd");
-    //   _mockPaymentHistoryRepository.Setup(p => p.GetPaymentById(id)).ReturnsAsync(paymentResult);
+      _mockAcquiringBankService.Setup(a => a.ProcessPayment(It.IsAny<Payment>())).ReturnsAsync(acquiringBankResult);
 
-    //   var sut = new GetPaymentByIdQueryHandler(_mockPaymentHistoryRepository.Object, _mockMapper.Object);
+      _mockPaymentHistoryRepository.Setup(p => p.InsertPayment(It.IsAny<Payment>()))
+            .ReturnsAsync(Result.Failure<Guid>("Failed to save to DB"));
 
-    //   var query = new GetPaymentByIdQuery(id);
+      var sut = new CreatePaymentCommandHandler(_mockAcquiringBankService.Object,
+                      _mockPaymentHistoryRepository.Object, _mapper);
 
-    //   var result = await sut.Handle(query, default(CancellationToken));
+      var command = new CreatePaymentCommand();
 
-    //   Assert.True(result.IsFailure);
-    // }
+      var result = await sut.Handle(command, default(CancellationToken));
+
+      Assert.False(result.IsSuccess);
+    }
   }
 }

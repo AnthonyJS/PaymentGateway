@@ -39,8 +39,11 @@ namespace PaymentGateway.Application.Handlers
 
       Result dbResult = await _paymentHistoryRepository.InsertPayment(payment);
 
-      if (result.IsFailure)
+      if (dbResult.IsFailure)
+      {
+        // TODO: Rollback payment with bank here
         return Result.Failure<Guid>("Failed to save to the DB");
+      }
 
       return Result.Ok(payment.Id);
     }
