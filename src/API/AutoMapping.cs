@@ -6,17 +6,20 @@ using PaymentGateway.Application.Models;
 using PaymentGateway.Application.Requests;
 using PaymentGateway.Application.Responses;
 
-public class AutoMapping : Profile
+namespace PaymentGateway.API
 {
-  public AutoMapping()
+  public class AutoMapping : Profile
   {
-    // From, To
-    CreateMap<CreatePaymentRequest, CreatePaymentCommand>()
-      .ForMember(dest => dest.Currency,
-                 src => src.MapFrom(c => Enum.Parse(typeof(Currency), c.Currency)));
-    CreateMap<CreatePaymentCommand, Payment>();
-    CreateMap<Payment, PaymentByIdResponse>()
-      .ForMember(dest => dest.CardNumber4Digits,
-                 src => src.MapFrom(c => c.CardNumber.Substring(c.CardNumber.Length - 4)));
+    public AutoMapping()
+    {
+      // From, To
+      CreateMap<CreatePaymentRequest, CreatePaymentCommand>()
+        .ForMember(dest => dest.Currency,
+                   src => src.MapFrom(c => Enum.Parse(typeof(Currency), c.Currency)));
+      CreateMap<CreatePaymentCommand, Payment>();
+      CreateMap<Payment, PaymentByIdResponse>()
+        .ForMember(dest => dest.CardNumber4Digits,
+                   src => src.MapFrom(c => c.CardNumber.Substring(c.CardNumber.Length - 4)));
+    }
   }
 }

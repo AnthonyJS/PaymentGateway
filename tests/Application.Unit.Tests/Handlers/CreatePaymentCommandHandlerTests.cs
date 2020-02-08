@@ -5,6 +5,7 @@ using PaymentGateway.Application.Interfaces;
 using AutoMapper;
 using System;
 using CSharpFunctionalExtensions;
+using PaymentGateway.API;
 using PaymentGateway.Application.Models;
 using PaymentGateway.Application.Handlers;
 using System.Threading;
@@ -18,21 +19,6 @@ using PaymentGateway.Application.Responses;
 
 namespace PaymentGateway.Application.Unit.Tests.Handlers
 {
-  public class AutoMapping : Profile
-  {
-    public AutoMapping()
-    {
-      // From, To
-      CreateMap<CreatePaymentRequest, CreatePaymentCommand>()
-        .ForMember(dest => dest.Currency,
-                   src => src.MapFrom(c => Enum.Parse(typeof(Currency), c.Currency)));
-      CreateMap<CreatePaymentCommand, Payment>();
-      CreateMap<Payment, PaymentByIdResponse>()
-        .ForMember(dest => dest.CardNumber4Digits,
-                   src => src.MapFrom(c => c.CardNumber.Substring(c.CardNumber.Length - 4)));
-    }
-  }
-
   public class CreatePaymentCommandHandlerTests
   {
     private readonly Mock<IAcquiringBankService> _mockAcquiringBankService;
