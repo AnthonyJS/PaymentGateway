@@ -46,6 +46,8 @@ namespace PaymentGateway.API.Controllers
 
       Result<Guid> result = await _mediator.Send(command);
 
+      Console.WriteLine("result " + result.IsFailure);
+
       if (result.IsFailure)
         return UnprocessableEntity(result.Error);
 

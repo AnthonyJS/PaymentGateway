@@ -13,6 +13,7 @@ using AutoMapper;
 using System;
 using System.Threading.Tasks;
 using System.Threading;
+using PaymentGateway.Application.Handlers;
 
 namespace PaymentGateway.API.Unit.Tests
 {
@@ -29,8 +30,36 @@ namespace PaymentGateway.API.Unit.Tests
       _mockLogger = new Mock<ILogger<PaymentGatewayController>>();
     }
 
+    // [Fact]
+    // public async void ShouldGet()
+    // {
+    //   var blah = new PaymentByIdResponse()
+    //   {
+    //     Id = Guid.NewGuid(),
+    //     Amount = 54543.54M
+    //   };
+
+
+
+    //   Result<PaymentByIdResponse> expectedResult = Result.Ok(blah);
+
+    //   var woo = new GetPaymentByIdQuery(Guid.NewGuid());
+
+
+    //   _mockMediator.Setup(m => m.Send(woo, default(CancellationToken))).ReturnsAsync(expectedResult);
+
+    //   var sut = new PaymentGatewayController(_mockLogger.Object, _mockMediator.Object, _mockMapper.Object);
+
+    //   var id = Guid.NewGuid();
+
+    //   var result = await sut.GetPayment(id);
+
+    //   Assert.IsType<OkObjectResult>(result);
+    // }
+
+
     [Fact]
-    public async void ShouldGet()
+    public async void ShouldNotGet()
     {
       var blah = new PaymentByIdResponse()
       {
@@ -40,9 +69,10 @@ namespace PaymentGateway.API.Unit.Tests
 
 
 
-      Result<PaymentByIdResponse> expectedResult = Result.Ok(blah);
+      Result<PaymentByIdResponse> expectedResult = Result.Failure<PaymentByIdResponse>(":(");
 
-      var woo = new GetPaymentByIdQuery(Guid.NewGuid());
+      GetPaymentByIdQuery query = new GetPaymentByIdQuery(Guid.NewGuid());
+      GetPaymentByIdQueryHandler handler = new GetPaymentByIdQueryHandler(null, null);
 
 
       _mockMediator.Setup(m => m.Send(woo, default(CancellationToken))).ReturnsAsync(expectedResult);
@@ -53,7 +83,7 @@ namespace PaymentGateway.API.Unit.Tests
 
       var result = await sut.GetPayment(id);
 
-      Assert.IsType<OkObjectResult>(result);
+      Assert.IsType<NotFoundResult>(result);
     }
   }
 }

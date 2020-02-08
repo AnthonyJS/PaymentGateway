@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <RootNamespace>PaymentGateway.API.Unit.Tests</RootNamespace>
+    <AssemblyName>PaymentGateway.API.Unit</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
