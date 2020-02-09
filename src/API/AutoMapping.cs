@@ -18,8 +18,8 @@ namespace PaymentGateway.API
                    src => src.MapFrom(c => Enum.Parse(typeof(Currency), c.Currency)));
       CreateMap<CreatePaymentCommand, Payment>();
       CreateMap<Payment, PaymentByIdResponse>()
-        .ForMember(dest => dest.CardNumber4Digits,
-                   src => src.MapFrom(c => c.CardNumber.Substring(c.CardNumber.Length - 4)));
+        .ForMember(dest => dest.CardNumberMasked,
+                   src => src.MapFrom(c => $"____-____-____-{c.CardNumber.Substring(c.CardNumber.Length - 4)}"));
     }
   }
 }
