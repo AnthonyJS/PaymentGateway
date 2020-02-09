@@ -23,7 +23,7 @@ namespace PaymentGateway.Infrastructure.Persistence.PaymentHistory
     {
       using (var db = new LiteDatabase(@"MyData.db"))
       {
-        var col = db.GetCollection<Payment>("payments");
+        var col = await Task.Run(() => db.GetCollection<Payment>("payments"));
 
         return Result.Ok(col.FindOne(x => x.Id == id));
       }
@@ -33,7 +33,7 @@ namespace PaymentGateway.Infrastructure.Persistence.PaymentHistory
     {
       using (var db = new LiteDatabase(@"MyData.db"))
       {
-        var col = db.GetCollection<Payment>("payments");
+        var col = await Task.Run(() => db.GetCollection<Payment>("payments"));
 
         col.Insert(payment);
       }

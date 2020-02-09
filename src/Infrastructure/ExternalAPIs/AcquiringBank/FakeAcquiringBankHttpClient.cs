@@ -18,6 +18,11 @@ namespace PaymentGateway.Infrastructure.ExternalAPIs.AcquiringBank
 
     public async Task<Result<Guid>> ProcessPayment(Payment payment)
     {
+      return await Task.Run(() => DoFakeValidation(payment));
+    }
+
+    private Result<Guid> DoFakeValidation(Payment payment)
+    {
       if (!_permittedCurrencies.Contains(payment.Currency))
         return Result.Failure<Guid>($"We do not currently accept {payment.Currency.ToString()}");
 
