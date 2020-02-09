@@ -9,6 +9,7 @@ using PaymentGateway.Application.Models;
 using PaymentGateway.Application.Handlers;
 using System.Threading;
 using System.Threading.Tasks;
+using PaymentGateway.API;
 
 namespace PaymentGateway.Application.Unit.Tests.Handlers
 {
@@ -17,41 +18,46 @@ namespace PaymentGateway.Application.Unit.Tests.Handlers
   public class GetPaymentByIdQueryHandlerTests
   {
     private readonly Mock<IPaymentHistoryRepository> _mockPaymentHistoryRepository;
-    private readonly Mock<IMapper> _mockMapper;
+    private readonly IMapper _mapper;
 
     public GetPaymentByIdQueryHandlerTests()
     {
       _mockPaymentHistoryRepository = new Mock<IPaymentHistoryRepository>();
-      _mockMapper = new Mock<IMapper>();
+      MapperConfiguration mapperConfig = new MapperConfiguration(cfg =>
+      {
+        cfg.AddProfile<AutoMapping>();
+      });
+      _mapper = mapperConfig.CreateMapper();
     }
 
     [Fact]
-    public async Task ShouldGetData()
+    public async Task ShouldFindAndReturnData()
     {
-      var id = Guid.NewGuid();
-      var paymentResult = Result.Ok<Payment>(new Payment());
-      _mockPaymentHistoryRepository.Setup(p => p.GetPaymentById(id)).ReturnsAsync(paymentResult);
+      var paymentResult = Result.Ok<Payment>(new Payment() { Amount = 123M });
+      _mockPaymentHistoryRepository.Setup(p => p.GetPaymentById(It.IsAny<Guid>())).ReturnsAsync(paymentResult);
 
-      var sut = new GetPaymentByIdQueryHandler(_mockPaymentHistoryRepository.Object, _mockMapper.Object);
+      var sut = new GetPaymentByIdQueryHandler(_mockPaymentHistoryRepository.Object, _mapper);
 
-      var query = new GetPaymentByIdQuery(id);
+      var query = new GetPaymentByIdQuery(Guid.NewGuid());
 
       var result = await sut.Handle(query, default(CancellationToken));
 
+
+      _mockPaymentHistoryRepository.Verify(p => p.GetPaymentById(It.IsAny<Guid>()), Times.Once());
       Assert.True(result.IsSuccess);
+      Assert.True(result.Value.Amount == 123M);
     }
 
 
     [Fact]
-    public async Task ShouldNotGetData()
+    public async Task ShouldReturnFailureIfCannotFindPaymentById()
     {
-      var id = Guid.NewGuid();
-      var paymentResult = Result.Failure<Payment>("gfgfgd");
-      _mockPaymentHistoryRepository.Setup(p => p.GetPaymentById(id)).ReturnsAsync(paymentResult);
+      var paymentResult = Result.Failure<Payment>("Failed to get data");
+      _mockPaymentHistoryRepository.Setup(p => p.GetPaymentById(It.IsAny<Guid>())).ReturnsAsync(paymentResult);
 
-      var sut = new GetPaymentByIdQueryHandler(_mockPaymentHistoryRepository.Object, _mockMapper.Object);
+      var sut = new GetPaymentByIdQueryHandler(_mockPaymentHistoryRepository.Object, _mapper);
 
-      var query = new GetPaymentByIdQuery(id);
+      var query = new GetPaymentByIdQuery(Guid.NewGuid());
 
       var result = await sut.Handle(query, default(CancellationToken));
 

@@ -6,11 +6,9 @@ using AutoMapper;
 using System;
 using CSharpFunctionalExtensions;
 using PaymentGateway.API;
-using PaymentGateway.Application.Models;
 using PaymentGateway.Application.Handlers;
 using System.Threading;
 using System.Threading.Tasks;
-using PaymentGateway.Application.Commands;
 using PaymentGateway.Application.Commands;
 using PaymentGateway.Application.Enums;
 using PaymentGateway.Application.Models;
@@ -37,7 +35,7 @@ namespace PaymentGateway.Application.Unit.Tests.Handlers
     }
 
     [Fact]
-    public async Task ShouldGetData()
+    public async Task ShouldSendPaymentToAcquiringBankAndSaveInDB()
     {
       var acquiringBankResult = Result.Ok<Guid>(Guid.NewGuid());
 
@@ -52,11 +50,13 @@ namespace PaymentGateway.Application.Unit.Tests.Handlers
 
       var result = await sut.Handle(command, default(CancellationToken));
 
+      _mockAcquiringBankService.Verify(a => a.ProcessPayment(It.IsAny<Payment>()), Times.Once());
+      _mockPaymentHistoryRepository.Verify(p => p.InsertPayment(It.IsAny<Payment>()), Times.Once());
       Assert.True(result.IsSuccess);
     }
 
     [Fact]
-    public async Task ShouldReturnFailureIfBankAcquirerFails()
+    public async Task ShouldFailIfBankAcquirerDoesNotSucceed()
     {
       var acquiringBankResult = Result.Failure<Guid>("Failed to make payment on acquiring bank");
 
@@ -69,11 +69,14 @@ namespace PaymentGateway.Application.Unit.Tests.Handlers
 
       var result = await sut.Handle(command, default(CancellationToken));
 
-      Assert.False(result.IsSuccess);
+
+      _mockAcquiringBankService.Verify(a => a.ProcessPayment(It.IsAny<Payment>()), Times.Once());
+      _mockPaymentHistoryRepository.Verify(p => p.InsertPayment(It.IsAny<Payment>()), Times.Never());
+      Assert.True(result.IsFailure);
     }
 
     [Fact]
-    public async Task ShouldReturnFailureIfPaymentNotSavedToDB()
+    public async Task ShouldFailIfPaymentNotSavedToDB()
     {
       var acquiringBankResult = Result.Ok<Guid>(Guid.NewGuid());
 
@@ -89,7 +92,9 @@ namespace PaymentGateway.Application.Unit.Tests.Handlers
 
       var result = await sut.Handle(command, default(CancellationToken));
 
-      Assert.False(result.IsSuccess);
+      _mockAcquiringBankService.Verify(a => a.ProcessPayment(It.IsAny<Payment>()), Times.Once());
+      _mockPaymentHistoryRepository.Verify(p => p.InsertPayment(It.IsAny<Payment>()), Times.Once());
+      Assert.True(result.IsFailure);
     }
   }
 }
