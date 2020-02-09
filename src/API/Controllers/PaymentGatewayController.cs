@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using CSharpFunctionalExtensions;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using PaymentGateway.Application.Commands;
@@ -47,8 +48,8 @@ namespace PaymentGateway.API.Controllers
 
       Result<PaymentResponse> result = await _mediator.Send(command);
 
-      if (result.IsFailure)
-        return UnprocessableEntity(result.Error);
+      if (!result.IsSuccess)
+        return StatusCode(StatusCodes.Status503ServiceUnavailable);
 
       if (!result.Value.IsSuccess)
         return UnprocessableEntity(new { id = result.Value.Id, ErrorMessage = result.Value.ErrorMessage });
