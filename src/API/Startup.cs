@@ -1,17 +1,14 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
+using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using PaymentGateway.Application.Interfaces;
+using PaymentGateway.Infrastructure.ExternalAPIs.AcquiringBank;
+using PaymentGateway.Infrastructure.Persistence.PaymentHistory;
 
 namespace PaymentGateway
 {
@@ -28,9 +25,13 @@ namespace PaymentGateway
     public void ConfigureServices(IServiceCollection services)
     {
       services.AddControllers();
+      services.AddScoped<IAcquiringBankService, AcquiringBankService>();
+      services.AddScoped<IAcquiringBankHttpClient, FakeAcquiringBankHttpClient>();
+      services.AddScoped<IPaymentHistoryRepository, PaymentHistoryRepository>();
 
       var assembly = AppDomain.CurrentDomain.Load("PaymentGateway.Application");
       services.AddMediatR(assembly);
+      services.AddAutoMapper(typeof(Startup));
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
