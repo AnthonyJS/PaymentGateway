@@ -56,7 +56,7 @@ namespace PaymentGateway.Application.Unit.Tests.Handlers
     }
 
     [Fact]
-    public async Task ShouldFailIfBankAcquirerDoesNotSucceed()
+    public async Task ShouldSavePaymentToDatabaseEvenIfBankAcquirerDoesNotSucceed()
     {
       var acquiringBankResult = Result.Failure<Guid>("Failed to make payment on acquiring bank");
 
@@ -71,8 +71,8 @@ namespace PaymentGateway.Application.Unit.Tests.Handlers
 
 
       _mockAcquiringBankService.Verify(a => a.ProcessPayment(It.IsAny<Payment>()), Times.Once());
-      _mockPaymentHistoryRepository.Verify(p => p.InsertPayment(It.IsAny<Payment>()), Times.Never());
-      Assert.True(result.IsFailure);
+      _mockPaymentHistoryRepository.Verify(p => p.InsertPayment(It.IsAny<Payment>()), Times.Once());
+      Assert.True(result.IsSuccess);
     }
 
     [Fact]
