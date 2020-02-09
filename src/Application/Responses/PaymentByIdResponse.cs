@@ -8,7 +8,7 @@ namespace PaymentGateway.Application.Responses
     public Guid AcquiringBankId { get; set; }
     public string FirstName { get; set; }
     public string Surname { get; set; }
-    public string CardNumber4Digits { get; set; }
+    public string CardNumberMasked { get; set; }
     public int ExpiryMonth { get; set; }
     public int ExpiryYear { get; set; }
     public string Currency { get; set; }
