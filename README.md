@@ -139,7 +139,7 @@ This enables all of the dependencies to point inwards and creates very loose cou
 There are many aspects of this project that I would like to develop further, but was unable to due to time constraints. These include:
 
 - Schema validation for data being posted to the API
-- Atomic transactions and rollback on errors - I wanted to put the call to the Acquiring Bank and saving to payment data to the DB in a transaction to ensure it is atomic, and can rollback if failure occurs part way through.
+- Atomic transactions and rollback on errors - I wanted to put the call to the Acquiring Bank and saving the payment data to the DB in a transaction to ensure it is atomic, and can rollback if failure occurs part way through.
 - Logging
 - Custom exceptions
 - Docker containerisation
