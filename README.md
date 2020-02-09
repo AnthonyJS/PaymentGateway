@@ -69,7 +69,7 @@ The payment will only succeed if:
 
 - the amount is greater than 0,
 - the amount is less than 10,000,
-- the currency is GBP, EUR or USD
+- the currency is GBP, EUR or USD (and it will fail for JPY and AUD).
 
 ### Retrieving information about the payment
 
