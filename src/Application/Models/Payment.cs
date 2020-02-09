@@ -15,5 +15,7 @@ namespace PaymentGateway.Application.Models
     public Currency Currency { get; set; }
     public decimal Amount { get; set; }
     public short CVV { get; set; }
+    public bool IsSuccess { get; set; }
+    public string ErrorMessage { get; set; }
   }
 }

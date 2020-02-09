@@ -2,10 +2,11 @@ using System;
 using CSharpFunctionalExtensions;
 using MediatR;
 using PaymentGateway.Application.Enums;
+using PaymentGateway.Application.Models;
 
 namespace PaymentGateway.Application.Commands
 {
-  public class CreatePaymentCommand : IRequest<Result<Guid>>
+  public class CreatePaymentCommand : IRequest<Result<PaymentResponse>>
   {
     public string FirstName { get; set; }
     public string Surname { get; set; }

@@ -6,6 +6,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using PaymentGateway.Application.Commands;
+using PaymentGateway.Application.Models;
 using PaymentGateway.Application.Queries;
 using PaymentGateway.Application.Requests;
 using PaymentGateway.Application.Responses;
@@ -44,14 +45,19 @@ namespace PaymentGateway.API.Controllers
     {
       CreatePaymentCommand command = _mapper.Map<CreatePaymentCommand>(request);
 
-      Result<Guid> result = await _mediator.Send(command);
+      Result<PaymentResponse> result = await _mediator.Send(command);
 
       if (result.IsFailure)
         return UnprocessableEntity(result.Error);
 
+      if (!result.Value.IsSuccess)
+      {
+        return UnprocessableEntity(new { id = result.Value.Id, ErrorMessage = result.Value.ErrorMessage });
+      }
+
       return CreatedAtAction("CreatePayment",
-                              new { id = result.Value },
-                              new { id = result.Value });
+                              new { id = result.Value.Id },
+                              new { id = result.Value.Id });
     }
   }
 }

@@ -10,7 +10,7 @@ using PaymentGateway.Application.Models;
 
 namespace PaymentGateway.Application.Handlers
 {
-  public class CreatePaymentCommandHandler : IRequestHandler<CreatePaymentCommand, Result<Guid>>
+  public class CreatePaymentCommandHandler : IRequestHandler<CreatePaymentCommand, Result<PaymentResponse>>
   {
     private readonly IAcquiringBankService _acquiringBankService;
     private readonly IPaymentHistoryRepository _paymentHistoryRepository;
@@ -23,29 +23,43 @@ namespace PaymentGateway.Application.Handlers
       _mapper = mapper;
     }
 
-    public async Task<Result<Guid>> Handle(CreatePaymentCommand request, CancellationToken cancellationToken)
+    public async Task<Result<PaymentResponse>> Handle(CreatePaymentCommand request, CancellationToken cancellationToken)
     {
       Payment payment = _mapper.Map<Payment>(request);
 
       // TODO: The payment request to the acquiring bank and save the result
       // to the DB could be done in an atomic transaction.
-      Result<Guid> result = await _acquiringBankService.ProcessPayment(payment);
+      Result<Guid> acquiringBankResult = await _acquiringBankService.ProcessPayment(payment);
 
-      if (result.IsFailure)
-        return Result.Failure<Guid>($"The acquirer bank would not process the payment: {result.Error}");
+      // if (result.IsFailure)
+      //   return Result.Failure<PaymentResponse>($"The acquirer bank would not process the payment: {result.Error}");
 
       payment.Id = Guid.NewGuid();
-      payment.AcquiringBankId = result.Value;
+      payment.IsSuccess = acquiringBankResult.IsSuccess;
+
+      if (payment.IsSuccess)
+      {
+        payment.AcquiringBankId = acquiringBankResult.Value;
+      }
+      else
+      {
+        payment.ErrorMessage = acquiringBankResult.Error;
+      }
 
       Result dbResult = await _paymentHistoryRepository.InsertPayment(payment);
 
       if (dbResult.IsFailure)
       {
         // TODO: Rollback payment with bank here
-        return Result.Failure<Guid>("Failed to save to the DB");
+        return Result.Failure<PaymentResponse>("Failed to save to the DB");
       }
 
-      return Result.Ok(payment.Id);
+      return Result.Ok(new PaymentResponse()
+      {
+        Id = payment.Id,
+        IsSuccess = acquiringBankResult.IsSuccess,
+        ErrorMessage = acquiringBankResult.IsSuccess ? string.Empty : acquiringBankResult.Error
+      });
     }
   }
 }
