@@ -2,7 +2,6 @@ using System;
 using CSharpFunctionalExtensions;
 using MediatR;
 using PaymentGateway.Application.Enums;
-using PaymentGateway.Application.Responses;
 
 namespace PaymentGateway.Application.Commands
 {

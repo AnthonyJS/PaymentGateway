@@ -25,10 +25,11 @@ namespace PaymentGateway.Application.Handlers
     public async Task<Result<PaymentByIdResponse>> Handle(GetPaymentByIdQuery request, CancellationToken cancellationToken)
     {
       Result<Payment> result = await _paymentHistoryRepository.GetPaymentById(request.Id);
-      Payment payment = result.Value;
 
-      if (payment == null)
+      if (result.IsFailure)
         return Result.Failure<PaymentByIdResponse>("Unable to find payment");
+
+      Payment payment = result.Value;
 
       return Result.Ok(_mapper.Map<PaymentByIdResponse>(payment));
     }
