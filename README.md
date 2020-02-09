@@ -20,7 +20,11 @@
 
 ### Making a payment
 
-`https://localhost:5001/paymentgateway/`
+Send an `HttpPost` to
+
+```text
+https://localhost:5001/paymentgateway/
+```
 
 #### Body
 
@@ -34,6 +38,14 @@
     "currency": "GBP",
     "amount": 4404.44,
     "cvv": 321
+}
+```
+
+This will return as `id`
+
+```JSON
+{
+    "id": "9e51d18a-e022-4aed-8d62-01a2cc0bea7d"
 }
 ```
 
