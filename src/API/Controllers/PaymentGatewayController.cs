@@ -51,9 +51,7 @@ namespace PaymentGateway.API.Controllers
         return UnprocessableEntity(result.Error);
 
       if (!result.Value.IsSuccess)
-      {
         return UnprocessableEntity(new { id = result.Value.Id, ErrorMessage = result.Value.ErrorMessage });
-      }
 
       return CreatedAtAction("CreatePayment",
                               new { id = result.Value.Id },

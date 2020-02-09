@@ -31,20 +31,13 @@ namespace PaymentGateway.Application.Handlers
       // to the DB could be done in an atomic transaction.
       Result<Guid> acquiringBankResult = await _acquiringBankService.ProcessPayment(payment);
 
-      // if (result.IsFailure)
-      //   return Result.Failure<PaymentResponse>($"The acquirer bank would not process the payment: {result.Error}");
-
       payment.Id = Guid.NewGuid();
       payment.IsSuccess = acquiringBankResult.IsSuccess;
 
       if (payment.IsSuccess)
-      {
         payment.AcquiringBankId = acquiringBankResult.Value;
-      }
       else
-      {
         payment.ErrorMessage = acquiringBankResult.Error;
-      }
 
       Result dbResult = await _paymentHistoryRepository.InsertPayment(payment);
 
@@ -58,7 +51,9 @@ namespace PaymentGateway.Application.Handlers
       {
         Id = payment.Id,
         IsSuccess = acquiringBankResult.IsSuccess,
-        ErrorMessage = acquiringBankResult.IsSuccess ? string.Empty : acquiringBankResult.Error
+        ErrorMessage = acquiringBankResult.IsSuccess
+                        ? string.Empty
+                        : acquiringBankResult.Error
       });
     }
   }
