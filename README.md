@@ -1,3 +1,42 @@
+# Payment Gateway demo
+
+## Steps to get Payment Gateway running locally
+
+- Clone this repository
+
+### To run the API
+
+- From the root directory, type the following on the CLI:
+
+  `dotnet run --project src/API/API.csproj`
+
+### To run the tests
+
+- From the root directory, type the following on the CLI:
+
+  `dotnet test`
+
+## Using the API
+
+### Making a payment
+
+`https://localhost:5001/paymentgateway/`
+
+#### Body
+
+```JSON
+{
+    "firstName": "Tim",
+    "surname": "Tomson",
+    "cardNumber": "1234-5678-8765-4321",
+    "expiryMonth": 10,
+    "expiryYear": 20,
+    "currency": "GBP",
+    "amount": 4404.44,
+    "cvv": 321
+}
+```
+
 ## TODO
 
 - Unit testing
@@ -38,3 +77,7 @@
 - Store LiteDB in Docker volume to make it persist
 
 - Swagger / Swagger UI
+
+```
+
+```
