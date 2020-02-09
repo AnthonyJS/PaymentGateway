@@ -2,7 +2,7 @@
 
 ## Steps to get Payment Gateway running locally
 
-- Clone this repository
+Firstly, clone this repository and then:
 
 ### To run the API locally
 
