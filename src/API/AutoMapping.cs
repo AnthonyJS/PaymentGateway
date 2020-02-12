@@ -13,10 +13,10 @@ namespace PaymentGateway.API
     public AutoMapping()
     {
       // From, To
-      CreateMap<CreatePaymentRequest, CreatePaymentCommand>()
-        .ForMember(dest => dest.Currency,
+      CreateMap<CreatePaymentRequest, CreatePaymentCommand>();
+      CreateMap<CreatePaymentCommand, Payment>()
+            .ForMember(dest => dest.Currency,
                    src => src.MapFrom(c => Enum.Parse(typeof(Currency), c.Currency)));
-      CreateMap<CreatePaymentCommand, Payment>();
       CreateMap<Payment, PaymentByIdResponse>()
         .ForMember(dest => dest.CardNumberMasked,
                    src => src.MapFrom(c => $"____-____-____-{c.CardNumber.Substring(c.CardNumber.Length - 4)}"));
