@@ -6,9 +6,9 @@ using System;
 
 namespace PaymentGateway.Application.Validation
 {
-  public class CreatePaymentRequestValidator : AbstractValidator<CreatePaymentRequest>
+  public class CreatePaymentCommandValidator : AbstractValidator<CreatePaymentCommand>
   {
-    public CreatePaymentRequestValidator()
+    public CreatePaymentCommandValidator()
     {
       RuleFor(x => x.FirstName).NotEmpty().Length(1, 100).WithMessage("Please enter your First name");
       RuleFor(x => x.Surname).NotEmpty().Length(1, 100).WithMessage("Please enter your Surname");
