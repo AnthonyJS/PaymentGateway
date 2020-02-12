@@ -1,13 +1,14 @@
 ﻿using FluentValidation;
 using PaymentGateway.Application.Commands;
 using PaymentGateway.Application.Enums;
+using PaymentGateway.Application.Requests;
 using System;
 
 namespace PaymentGateway.Application.Validation
 {
-  public class CreatePaymentCommandValidator : AbstractValidator<CreatePaymentCommand>
+  public class CreatePaymentRequestValidator : AbstractValidator<CreatePaymentRequest>
   {
-    public CreatePaymentCommandValidator()
+    public CreatePaymentRequestValidator()
     {
       RuleFor(x => x.FirstName).NotEmpty().Length(1, 100).WithMessage("Please enter your First name");
       RuleFor(x => x.Surname).NotEmpty().Length(1, 100).WithMessage("Please enter your Surname");

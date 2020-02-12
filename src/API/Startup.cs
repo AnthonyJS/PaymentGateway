@@ -1,6 +1,7 @@
 using System;
 using AutoMapper;
 using FluentValidation;
+using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -8,7 +9,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using PaymentGateway.Application.Interfaces;
-using PaymentGateway.Application.PipelineBehaviours;
 using PaymentGateway.Infrastructure.ExternalAPIs.AcquiringBank;
 using PaymentGateway.Infrastructure.Persistence.PaymentHistory;
 
@@ -34,8 +34,11 @@ namespace PaymentGateway
       var assembly = AppDomain.CurrentDomain.Load("PaymentGateway.Application");
       services.AddMediatR(assembly);
       services.AddAutoMapper(typeof(Startup));
-      services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
-      services.AddValidatorsFromAssembly(assembly);
+      services.AddControllers()
+        .AddFluentValidation(opt =>
+        {
+          opt.RegisterValidatorsFromAssembly(assembly);
+        });
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
