@@ -27,8 +27,9 @@ namespace PaymentGateway.Application.Handlers
     {
       Payment payment = _mapper.Map<Payment>(request);
 
-      // TODO: The payment request to the acquiring bank and save the result
-      // to the DB could be done in an atomic transaction.
+      // TODO: The payment request to the acquiring bank and saving the result
+      // to the DB should be done in an atomic transaction, so a rollback
+      // can be performed in case one part fails.
       Result<Guid> acquiringBankResult = await _acquiringBankService.ProcessPayment(payment);
 
       payment.Id = Guid.NewGuid();
@@ -43,7 +44,6 @@ namespace PaymentGateway.Application.Handlers
 
       if (dbResult.IsFailure)
       {
-        // TODO: Rollback payment with bank here
         return Result.Failure<PaymentResponse>("Failed to save to the DB");
       }
 
