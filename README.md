@@ -114,7 +114,7 @@ This enables all of the dependencies to point inwards and creates very loose cou
 
 ### Validation
 
-I decided to use Fluent Validation to enforce the validation of the data being posted to the API. I chose to plug it into the built in AspNetCore validation as this provides a simple way of returning validation messages to the consumer of the API.
+I decided to use `Fluent Validation` to enforce the validation of the data being posted to the API. I chose to plug it into the built in AspNetCore validation as this provides a simple way of returning messages to the consumer of the API.
 
 With some more work it could be plugged into the MediatR behaviour pipeline and provide domain model validation.
 
@@ -146,7 +146,7 @@ I have written some integration tests that call the API to check data can be ins
 
 - [Fluent Validation](https://fluentvalidation.net/)
 
-  I decided to use Fluent Validation because it has a simple and expressive API for writing schema validation rules. It can be easily plugged into the AspNetCore validation mechanism.
+  I decided to use Fluent Validation because it has a simple and expressive API for writing schema validation rules.
 
 ## TODO
 

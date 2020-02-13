@@ -13,7 +13,7 @@ namespace PaymentGateway.Application.Validation
       RuleFor(x => x.FirstName).NotEmpty().Length(1, 100).WithMessage("Please enter your First name");
       RuleFor(x => x.Surname).NotEmpty().Length(1, 100).WithMessage("Please enter your Surname");
       RuleFor(x => x.CardNumber).NotEmpty().Length(1, 20).WithMessage("Please enter a 16 digit card number");
-      RuleFor(x => x.ExpiryMonth).NotEmpty().Must(month => month > 0 && month <= 12).WithMessage("Please enter a valid month as a 2 digit number");
+      RuleFor(x => x.ExpiryMonth).NotEmpty().Must(month => month > 0 && month <= 12).WithMessage("Please enter the month as a number, e.g. 1 for January");
       RuleFor(x => x.ExpiryYear).NotEmpty().Must(year => year >= 0 && year <= 99).WithMessage("Please enter the year as 2 digits, e.g. 22 for 2022");
 
       RuleFor(x => x.Currency).NotEmpty();
