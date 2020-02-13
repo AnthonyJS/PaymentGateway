@@ -25,7 +25,12 @@ namespace PaymentGateway.Infrastructure.Persistence.PaymentHistory
       {
         var col = await Task.Run(() => db.GetCollection<Payment>("payments"));
 
-        return Result.Ok(col.FindOne(x => x.Id == id));
+        var result = col.FindOne(x => x.Id == id);
+
+        if (result == null)
+            return Result.Failure<Payment>("Payment not in DB");
+          
+        return Result.Ok(result);
       }
     }
 
