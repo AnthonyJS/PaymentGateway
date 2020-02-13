@@ -5,7 +5,6 @@ using CSharpFunctionalExtensions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using PaymentGateway.API.Attributes;
 using PaymentGateway.Application.Commands;
 using PaymentGateway.Application.Models;
 using PaymentGateway.Application.Queries;
@@ -15,7 +14,6 @@ using PaymentGateway.Application.Responses;
 namespace PaymentGateway.API.Controllers
 {
   [ApiController]
-  [ValidateModel]
   [Route("[controller]")]
   public class PaymentGatewayController : ControllerBase
   {
@@ -55,9 +53,9 @@ namespace PaymentGateway.API.Controllers
       if (!result.Value.IsSuccess)
         return UnprocessableEntity(new { id = result.Value.Id, result.Value.ErrorMessage });
 
-      return CreatedAtAction("CreatePayment",
-                              new { id = result.Value.Id },
-                              new { id = result.Value.Id });
+      var response = new CreatePaymentCommandResponse() { Id = result.Value.Id };
+
+      return CreatedAtAction("CreatePayment", response, response);
     }
   }
 }
