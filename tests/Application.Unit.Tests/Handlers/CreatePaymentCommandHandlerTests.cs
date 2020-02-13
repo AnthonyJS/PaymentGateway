@@ -44,7 +44,7 @@ namespace PaymentGateway.Application.Unit.Tests.Handlers
       _mockPaymentHistoryRepository.Setup(p => p.InsertPayment(It.IsAny<Payment>())).ReturnsAsync(Result.Ok<Guid>(Guid.NewGuid()));
 
       var sut = new CreatePaymentCommandHandler(_mockAcquiringBankService.Object,
-                      _mockPaymentHistoryRepository.Object, _mapper, null);
+                      _mockPaymentHistoryRepository.Object, _mapper);
 
       var command = new CreatePaymentCommand();
 
@@ -63,7 +63,7 @@ namespace PaymentGateway.Application.Unit.Tests.Handlers
       _mockAcquiringBankService.Setup(a => a.ProcessPayment(It.IsAny<Payment>())).ReturnsAsync(acquiringBankResult);
 
       var sut = new CreatePaymentCommandHandler(_mockAcquiringBankService.Object,
-                      _mockPaymentHistoryRepository.Object, _mapper, null);
+                      _mockPaymentHistoryRepository.Object, _mapper);
 
       var command = new CreatePaymentCommand();
 
@@ -86,7 +86,7 @@ namespace PaymentGateway.Application.Unit.Tests.Handlers
             .ReturnsAsync(Result.Failure<Guid>("Failed to save to DB"));
 
       var sut = new CreatePaymentCommandHandler(_mockAcquiringBankService.Object,
-                      _mockPaymentHistoryRepository.Object, _mapper, null);
+                      _mockPaymentHistoryRepository.Object, _mapper);
 
       var command = new CreatePaymentCommand();
 

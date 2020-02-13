@@ -18,26 +18,17 @@ namespace PaymentGateway.Application.Handlers
     private readonly IAcquiringBankService _acquiringBankService;
     private readonly IPaymentHistoryRepository _paymentHistoryRepository;
     private readonly IMapper _mapper;
-    private readonly IValidator<CreatePaymentCommand> _validator;
 
     public CreatePaymentCommandHandler(IAcquiringBankService acquiringBankService,
-      IPaymentHistoryRepository paymentHistoryRepository, IMapper mapper,
-      IValidator<CreatePaymentCommand> validator)
+      IPaymentHistoryRepository paymentHistoryRepository, IMapper mapper)
     {
       _acquiringBankService = acquiringBankService;
       _paymentHistoryRepository = paymentHistoryRepository;
       _mapper = mapper;
-      _validator = validator;
     }
 
     public async Task<Result<PaymentResponse>> Handle(CreatePaymentCommand command, CancellationToken cancellationToken)
     {
-      var validationResult = _validator.Validate(command);
-
-      if (!validationResult.IsValid)
-        return Result.Failure<PaymentResponse>(
-            string.Join(", ", validationResult.Errors.Select(e => e.ErrorMessage)));
-
       Payment payment = _mapper.Map<Payment>(command);
 
       // TODO: The payment request to the acquiring bank and saving the result
