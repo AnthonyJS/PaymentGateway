@@ -1,5 +1,6 @@
 using System;
 using AutoMapper;
+using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -32,6 +33,11 @@ namespace PaymentGateway
       var assembly = AppDomain.CurrentDomain.Load("PaymentGateway.Application");
       services.AddMediatR(assembly);
       services.AddAutoMapper(typeof(Startup));
+      services.AddControllers()
+        .AddFluentValidation(opt =>
+        {
+          opt.RegisterValidatorsFromAssembly(assembly);
+        });
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

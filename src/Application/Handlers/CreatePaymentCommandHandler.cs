@@ -1,8 +1,11 @@
 using System;
+using System.Linq;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using CSharpFunctionalExtensions;
+using FluentValidation;
 using MediatR;
 using PaymentGateway.Application.Commands;
 using PaymentGateway.Application.Interfaces;
@@ -16,19 +19,21 @@ namespace PaymentGateway.Application.Handlers
     private readonly IPaymentHistoryRepository _paymentHistoryRepository;
     private readonly IMapper _mapper;
 
-    public CreatePaymentCommandHandler(IAcquiringBankService acquiringBankService, IPaymentHistoryRepository paymentHistoryRepository, IMapper mapper)
+    public CreatePaymentCommandHandler(IAcquiringBankService acquiringBankService,
+      IPaymentHistoryRepository paymentHistoryRepository, IMapper mapper)
     {
       _acquiringBankService = acquiringBankService;
       _paymentHistoryRepository = paymentHistoryRepository;
       _mapper = mapper;
     }
 
-    public async Task<Result<PaymentResponse>> Handle(CreatePaymentCommand request, CancellationToken cancellationToken)
+    public async Task<Result<PaymentResponse>> Handle(CreatePaymentCommand command, CancellationToken cancellationToken)
     {
-      Payment payment = _mapper.Map<Payment>(request);
+      Payment payment = _mapper.Map<Payment>(command);
 
-      // TODO: The payment request to the acquiring bank and save the result
-      // to the DB could be done in an atomic transaction.
+      // TODO: The payment request to the acquiring bank and saving the result
+      // to the DB should be done in an atomic transaction, so a rollback
+      // can be performed in case one part fails.
       Result<Guid> acquiringBankResult = await _acquiringBankService.ProcessPayment(payment);
 
       payment.Id = Guid.NewGuid();
@@ -43,7 +48,6 @@ namespace PaymentGateway.Application.Handlers
 
       if (dbResult.IsFailure)
       {
-        // TODO: Rollback payment with bank here
         return Result.Failure<PaymentResponse>("Failed to save to the DB");
       }
 

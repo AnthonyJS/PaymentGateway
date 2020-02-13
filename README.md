@@ -61,7 +61,7 @@ Upon success, you will receive an `id` like the following.
 
 You can use this id to retrieve information about the request from the `get` endpoint.
 
-#### N.B. Dummy validation
+#### N.B. Dummy Acquiring Bank validation
 
 To simulate success and error cases from the acquiring bank, some dummy validation rules have been applied.
 
@@ -111,6 +111,10 @@ This enables all of the dependencies to point inwards and creates very loose cou
   Because of the small scale of my sample application, I thought it would be over engineering to include both of these in my project, hence I have only included an `Application` layer.
 
 - `Infrastructure` is where all external dependencies live, hence the wrapper for the Acquiring Bank Http Client lives here, as well as the persistence logic to save the payments to the database.
+
+- Validation
+
+Decided not to use AspNetCore validation with Fluent Validation because I wanted the validation on the domain Command, rather than the Request object
 
 ## Technologies and libraries
 
