@@ -5,6 +5,7 @@ using CSharpFunctionalExtensions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using PaymentGateway.API.Attributes;
 using PaymentGateway.Application.Commands;
 using PaymentGateway.Application.Models;
 using PaymentGateway.Application.Queries;
@@ -14,6 +15,7 @@ using PaymentGateway.Application.Responses;
 namespace PaymentGateway.API.Controllers
 {
   [ApiController]
+  [ValidateModel]
   [Route("[controller]")]
   public class PaymentGatewayController : ControllerBase
   {
