@@ -7,6 +7,7 @@ using PaymentGateway.Application.Models;
 using PaymentGateway.Application.Enums;
 using PaymentGateway.Infrastructure.Persistence.PaymentHistory;
 using Newtonsoft.Json;
+using System.Net;
 
 namespace PaymentGateway.API.Integration.Tests
 {
@@ -40,6 +41,16 @@ namespace PaymentGateway.API.Integration.Tests
 
       Assert.True(responseData.FirstName == "Jim");
       Assert.True(responseData.Amount == 4404.44M);
+    }
+
+    [Fact]
+    public async Task ShouldReturnErrorIfPaymentCannotBeFound()
+    {
+      var id = Guid.NewGuid();
+
+      var response = await _client.GetAsync($"/paymentgateway/{id}");
+
+      Assert.True(response.StatusCode == HttpStatusCode.NotFound);
     }
 
     // TODO: Put this in a transaction so the data can be removed after the test finishes

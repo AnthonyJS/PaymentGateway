@@ -89,11 +89,11 @@ https://localhost:5001/paymentgateway/9e51d18a-e022-4aed-8d62-01a2cc0bea7d
 
 ## Architecture and design decisions
 
-- CQRS
+### CQRS
 
 I used a CQRS pattern to separate out my queries and commands to enable a clean separation of concerns, testability and loose coupling.
 
-- Onion architecture
+### Onion architecture
 
 I used an onion architecture pattern to organise the project, inspired by [Clean Architecture with ASP.NET Core 3.0 - Jason Taylor](https://www.youtube.com/watch?v=5OtUm1BLmG0)
 
@@ -112,9 +112,15 @@ This enables all of the dependencies to point inwards and creates very loose cou
 
 - `Infrastructure` is where all external dependencies live, hence the wrapper for the Acquiring Bank Http Client lives here, as well as the persistence logic to save the payments to the database.
 
-- Validation
+### Validation
 
-Decided not to use AspNetCore validation with Fluent Validation because I wanted the validation on the domain Command, rather than the Request object
+I decided to use Fluent Validation to enforce the validation of the data being posted to the API. I chose to plug it into the built in AspNetCore validation as this provides a simple way of returning validation messages to the consumer of the API.
+
+With some more work it could be plugged into the MediatR behaviour pipeline and provide domain model validation.
+
+### Integration tests
+
+I have written some integration tests that call the API to check data can be inserted and retrieved, as well as that the validation logic is being applied.
 
 ## Technologies and libraries
 
@@ -138,11 +144,14 @@ Decided not to use AspNetCore validation with Fluent Validation because I wanted
 
   I needed a modern testing library so I chose XUnit because it works really well with .NET Core.
 
+- [Fluent Validation](https://fluentvalidation.net/)
+
+  I decided to use Fluent Validation because it has a simple and expressive API for writing schema validation rules. It can be easily plugged into the AspNetCore validation mechanism.
+
 ## TODO
 
 There are many aspects of this project that I would like to develop further, but was unable to due to time constraints. These include:
 
-- Schema validation for data being posted to the API
 - Atomic transactions and rollback on errors - I wanted to put the call to the Acquiring Bank and saving the payment data to the DB in a transaction to ensure it is atomic, and can rollback if failure occurs part way through.
 - Logging
 - Custom exceptions
