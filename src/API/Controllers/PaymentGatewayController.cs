@@ -29,6 +29,12 @@ namespace PaymentGateway.API.Controllers
       _mapper = mapper;
     }
 
+    /// <summary>
+    /// Retrieves a Payment by Id in the query string
+    /// </summary>
+    /// <param name="paymentId"></param>
+    /// <response code="200">Returns the payment details</response>
+    /// <response code="404">Payment could not be found</response>
     [HttpGet("{paymentId}")]
     public async Task<IActionResult> GetPayment(Guid paymentId)
     {
@@ -40,6 +46,12 @@ namespace PaymentGateway.API.Controllers
         : NotFound();
     }
 
+    /// <summary>
+    /// Inserts a Payment using information submitted in the request body
+    /// </summary>
+    /// <response code="201">Successfully inserted payment</response>
+    /// <response code="400">Validation error when submitting payment</response>
+    /// <response code="422">Unable to insert the payment</response>
     [HttpPost]
     public async Task<IActionResult> CreatePayment([FromBody] CreatePaymentRequest request)
     {

@@ -148,12 +148,20 @@ I have written some integration tests that call the API to check data can be ins
 
   I decided to use Fluent Validation because it has a simple and expressive API for writing schema validation rules.
 
+- [Swagger](https://swagger.io/)
+
+  I have added Swagger for documenting the API and to assist with discovery and exploration. It can be accessed on the following URL:
+  ```text
+  https://localhost:5001/swagger
+  ```
+
 ## TODO
 
 There are many aspects of this project that I would like to develop further, but was unable to due to time constraints. These include:
 
+- Versioning
 - Atomic transactions and rollback on errors - I wanted to put the call to the Acquiring Bank and saving the payment data to the DB in a transaction to ensure it is atomic, and can rollback if failure occurs part way through.
 - Logging
 - Custom exceptions
 - Docker containerisation
-- Swagger - to simplify API discovery
+
