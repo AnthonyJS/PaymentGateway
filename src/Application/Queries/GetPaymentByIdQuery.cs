@@ -1,11 +1,11 @@
-using System;
+﻿using System;
 using CSharpFunctionalExtensions;
 using MediatR;
-using PaymentGateway.Application.Responses;
+using PaymentGateway.Application.Models;
 
 namespace PaymentGateway.Application.Queries
 {
-  public class GetPaymentByIdQuery : IRequest<Result<PaymentByIdResponse>>
+  public class GetPaymentByIdQuery : IRequest<Result<Payment>>
   {
     public Guid Id { get; set; }
 

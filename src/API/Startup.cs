@@ -37,13 +37,13 @@ namespace PaymentGateway
       services.AddScoped<IAcquiringBankHttpClient, FakeAcquiringBankHttpClient>();
       services.AddScoped<IPaymentHistoryRepository, PaymentHistoryRepository>();
 
-      var assembly = AppDomain.CurrentDomain.Load("PaymentGateway.Application");
-      services.AddMediatR(assembly);
+      var applicationAssembly = AppDomain.CurrentDomain.Load("PaymentGateway.Application");
+      services.AddMediatR(applicationAssembly);
       services.AddAutoMapper(typeof(Startup));
       services.AddControllers()
         .AddFluentValidation(opt =>
         {
-          opt.RegisterValidatorsFromAssembly(assembly);
+          opt.RegisterValidatorsFromAssembly(Assembly.GetExecutingAssembly());
         });
     }
 

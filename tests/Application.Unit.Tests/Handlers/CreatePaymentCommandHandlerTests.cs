@@ -1,5 +1,4 @@
-using PaymentGateway.Application.Queries;
-using Moq;
+﻿using Moq;
 using Xunit;
 using PaymentGateway.Application.Interfaces;
 using AutoMapper;
@@ -10,10 +9,7 @@ using PaymentGateway.Application.Handlers;
 using System.Threading;
 using System.Threading.Tasks;
 using PaymentGateway.Application.Commands;
-using PaymentGateway.Application.Enums;
 using PaymentGateway.Application.Models;
-using PaymentGateway.Application.Requests;
-using PaymentGateway.Application.Responses;
 
 namespace PaymentGateway.Application.Unit.Tests.Handlers
 {

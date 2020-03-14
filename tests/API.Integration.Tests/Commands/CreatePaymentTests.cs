@@ -2,24 +2,19 @@
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
-using PaymentGateway.Application.Requests;
-using PaymentGateway.Application.Responses;
 using Xunit;
 using System.Net;
 using System.Threading.Tasks;
+using PaymentGateway.API.Contracts.V1;
+using API.Integration.Tests;
+using PaymentGateway.API.Contracts.V1.Requests;
+using PaymentGateway.API.Contracts.V1.Responses;
 
 namespace PaymentGateway.API.Integration.Tests
 {
   [Collection("sequential")]
-  public class CreatePaymentTests : IClassFixture<ApiClientFactory>
+  public class CreatePaymentTests : IntegrationTest
   {
-    private readonly HttpClient _client;
-
-    public CreatePaymentTests(ApiClientFactory factory)
-    {
-      _client = factory.CreateClient();
-    }
-
     [Fact]
     public async Task ShouldInsertPaymentWithValidData()
     {
@@ -37,13 +32,13 @@ namespace PaymentGateway.API.Integration.Tests
       var payload = JsonSerializer.Serialize(data);
 
       var content = new StringContent(payload, Encoding.UTF8, "application/json");
-      var response = await _client.PostAsync($"/paymentgateway", content);
+      var response = await TestClient.PostAsync(ApiRoutes.Payments.Create, content);
 
       response.EnsureSuccessStatusCode();
 
       var responseString = await response.Content.ReadAsStringAsync();
 
-      var responseData = JsonSerializer.Deserialize<CreatePaymentCommandResponse>(responseString);
+      var responseData = JsonSerializer.Deserialize<CreatePaymentSuccessResponse>(responseString);
 
       Assert.True(responseData.Id.GetType() == typeof(Guid));
     }
@@ -65,7 +60,7 @@ namespace PaymentGateway.API.Integration.Tests
       var payload = JsonSerializer.Serialize(data);
 
       var content = new StringContent(payload, Encoding.UTF8, "application/json");
-      var response = await _client.PostAsync($"/paymentgateway", content);
+      var response = await TestClient.PostAsync(ApiRoutes.Payments.Create, content);
 
       Assert.True(response.StatusCode == HttpStatusCode.BadRequest);
     }

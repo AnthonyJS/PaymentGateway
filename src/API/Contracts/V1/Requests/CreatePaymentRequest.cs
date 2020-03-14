@@ -1,6 +1,4 @@
-using System;
-
-namespace PaymentGateway.Application.Requests
+﻿namespace PaymentGateway.API.Contracts.V1.Requests
 {
   public class CreatePaymentRequest
   {

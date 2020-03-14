@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Net.Http;
-using PaymentGateway.Application.Responses;
 using Xunit;
 using System.Threading.Tasks;
 using PaymentGateway.Application.Models;
@@ -8,19 +6,20 @@ using PaymentGateway.Application.Enums;
 using PaymentGateway.Infrastructure.Persistence.PaymentHistory;
 using Newtonsoft.Json;
 using System.Net;
+using PaymentGateway.API.Contracts.V1;
+using API.Integration.Tests;
+using PaymentGateway.API.Contracts.V1.Responses;
 
 namespace PaymentGateway.API.Integration.Tests
 {
 
   [Collection("sequential")]
-  public class GetPaymentTests : IClassFixture<ApiClientFactory>, IClassFixture<PaymentHistoryRepository>
+  public class GetPaymentTests : IntegrationTest, IClassFixture<PaymentHistoryRepository>
   {
-    private readonly HttpClient _client;
     private readonly PaymentHistoryRepository _repository;
 
-    public GetPaymentTests(ApiClientFactory factory, PaymentHistoryRepository repository)
+    public GetPaymentTests(PaymentHistoryRepository repository)
     {
-      _client = factory.CreateClient();
       _repository = repository;
     }
 
@@ -29,7 +28,7 @@ namespace PaymentGateway.API.Integration.Tests
     {
       var id = await insertPaymentDirectlyIntoDatabaseForTesting();
 
-      var response = await _client.GetAsync($"/paymentgateway/{id}");
+      var response = await TestClient.GetAsync(ApiRoutes.Payments.Get.Replace("{paymentId}", id.ToString()));
 
       response.EnsureSuccessStatusCode();
 
@@ -48,7 +47,7 @@ namespace PaymentGateway.API.Integration.Tests
     {
       var id = Guid.NewGuid();
 
-      var response = await _client.GetAsync($"/paymentgateway/{id}");
+      var response = await TestClient.GetAsync(ApiRoutes.Payments.Get.Replace("{paymentId}", id.ToString()));
 
       Assert.True(response.StatusCode == HttpStatusCode.NotFound);
     }
