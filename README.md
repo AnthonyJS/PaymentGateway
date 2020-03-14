@@ -24,12 +24,12 @@ dotnet test
 
 ### Making a payment
 
-Use a tool such as [Postman](https://www.postman.com/) to make the following `HttpPost` request.
+You can interact with the API using a tool such as [Postman](https://www.postman.com/) or access it using [Swagger](https://swagger.io/) on the following URL whilst the application is running locally: https://localhost:5001/swagger
 
 With the API running locally, send a Post request to the following URL
 
 ```text
-https://localhost:5001/paymentgateway/
+https://localhost:5001/api/v1/payments
 ```
 
 with the body of the payload formatted like this:
@@ -80,7 +80,7 @@ e.g. the Payment demonstrated above returned an id of `9e51d18a-e022-4aed-8d62-0
 So to get information about this payment, send a Get request to:
 
 ```text
-https://localhost:5001/paymentgateway/9e51d18a-e022-4aed-8d62-01a2cc0bea7d
+https://localhost:5001/api/v1/payments/9e51d18a-e022-4aed-8d62-01a2cc0bea7d
 ```
 
 <p align="center">
@@ -150,10 +150,7 @@ I have written some integration tests that call the API to check data can be ins
 
 - [Swagger](https://swagger.io/)
 
-  I have added Swagger for documenting the API and to assist with discovery and exploration. It can be accessed on the following URL:
-  ```text
-  https://localhost:5001/swagger
-  ```
+  I have added Swagger for documenting the API and to assist with discovery and exploration. 
 
 ## TODO
 
