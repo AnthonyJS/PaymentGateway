@@ -1,6 +1,6 @@
-using System;
+﻿using System;
 
-namespace PaymentGateway.Application.Responses
+namespace PaymentGateway.API.Contracts.V1.Responses
 {
   public class PaymentByIdResponse
   {

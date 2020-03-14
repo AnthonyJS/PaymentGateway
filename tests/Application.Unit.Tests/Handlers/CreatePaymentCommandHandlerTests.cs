@@ -1,19 +1,14 @@
-using PaymentGateway.Application.Queries;
-using Moq;
+﻿using Moq;
 using Xunit;
 using PaymentGateway.Application.Interfaces;
 using AutoMapper;
 using System;
 using CSharpFunctionalExtensions;
-using PaymentGateway.API;
-using PaymentGateway.Application.Handlers;
 using System.Threading;
 using System.Threading.Tasks;
 using PaymentGateway.Application.Commands;
-using PaymentGateway.Application.Enums;
 using PaymentGateway.Application.Models;
-using PaymentGateway.Application.Requests;
-using PaymentGateway.Application.Responses;
+using PaymentGateway.API.Mapping;
 
 namespace PaymentGateway.Application.Unit.Tests.Handlers
 {
@@ -29,7 +24,9 @@ namespace PaymentGateway.Application.Unit.Tests.Handlers
       _mockPaymentHistoryRepository = new Mock<IPaymentHistoryRepository>();
       MapperConfiguration mapperConfig = new MapperConfiguration(cfg =>
       {
-        cfg.AddProfile<AutoMapping>();
+        cfg.AddProfile<CommandToDomainProfile>();
+        cfg.AddProfile<DomainToResponseProfile>();
+        cfg.AddProfile<RequestToCommandProfile>();
       });
       _mapper = mapperConfig.CreateMapper();
     }

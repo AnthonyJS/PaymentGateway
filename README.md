@@ -24,12 +24,12 @@ dotnet test
 
 ### Making a payment
 
-Use a tool such as [Postman](https://www.postman.com/) to make the following `HttpPost` request.
+You can interact with the API using a tool such as [Postman](https://www.postman.com/) or access it using [Swagger](https://swagger.io/) on the following URL whilst the application is running locally: https://localhost:5001/swagger
 
 With the API running locally, send a Post request to the following URL
 
 ```text
-https://localhost:5001/paymentgateway/
+https://localhost:5001/api/v1/payments
 ```
 
 with the body of the payload formatted like this:
@@ -80,7 +80,7 @@ e.g. the Payment demonstrated above returned an id of `9e51d18a-e022-4aed-8d62-0
 So to get information about this payment, send a Get request to:
 
 ```text
-https://localhost:5001/paymentgateway/9e51d18a-e022-4aed-8d62-01a2cc0bea7d
+https://localhost:5001/api/v1/payments/9e51d18a-e022-4aed-8d62-01a2cc0bea7d
 ```
 
 <p align="center">
@@ -148,12 +148,15 @@ I have written some integration tests that call the API to check data can be ins
 
   I decided to use Fluent Validation because it has a simple and expressive API for writing schema validation rules.
 
+- [Swagger](https://swagger.io/)
+
+  I have added Swagger for documenting the API and to assist with discovery and exploration. 
+
 ## TODO
 
 There are many aspects of this project that I would like to develop further, but was unable to due to time constraints. These include:
 
-- Atomic transactions and rollback on errors - I wanted to put the call to the Acquiring Bank and saving the payment data to the DB in a transaction to ensure it is atomic, and can rollback if failure occurs part way through.
-- Logging
-- Custom exceptions
 - Docker containerisation
-- Swagger - to simplify API discovery
+- CI with Github Actions
+- Logging
+- Atomic transactions and rollback on errors - I wanted to put the call to the Acquiring Bank and saving the payment data to the DB in a transaction to ensure it is atomic, and can rollback if failure occurs part way through.

@@ -1,10 +1,9 @@
-﻿using FluentValidation;
-using PaymentGateway.Application.Commands;
+﻿using System;
+using FluentValidation;
+using PaymentGateway.API.Contracts.V1.Requests;
 using PaymentGateway.Application.Enums;
-using PaymentGateway.Application.Requests;
-using System;
 
-namespace PaymentGateway.Application.Validation
+namespace PaymentGateway.API.Validation
 {
   public class CreatePaymentRequestValidator : AbstractValidator<CreatePaymentRequest>
   {
