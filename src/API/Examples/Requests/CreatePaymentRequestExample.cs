@@ -1,4 +1,4 @@
-﻿using PaymentGateway.Application.Requests;
+﻿using PaymentGateway.API.Contracts.V1.Requests;
 using Swashbuckle.AspNetCore.Filters;
 
 namespace PaymentGateway.API.Examples.Requests

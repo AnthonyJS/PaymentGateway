@@ -6,13 +6,13 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using PaymentGateway.API.Contracts.V1;
+using PaymentGateway.API.Contracts.V1.Requests;
+using PaymentGateway.API.Contracts.V1.Responses;
 using PaymentGateway.Application.Commands;
 using PaymentGateway.Application.Models;
 using PaymentGateway.Application.Queries;
-using PaymentGateway.Application.Requests;
-using PaymentGateway.Application.Responses;
 
-namespace PaymentGateway.API.Controllers
+namespace PaymentGateway.API.Controllers.V1
 {
   [ApiController]
   public class PaymentGatewayController : ControllerBase
@@ -38,11 +38,11 @@ namespace PaymentGateway.API.Controllers
     [HttpGet(ApiRoutes.Payments.Get)]
     public async Task<IActionResult> GetPayment(Guid paymentId)
     {
-      GetPaymentByIdQuery query = new GetPaymentByIdQuery(paymentId);
-      Result<PaymentByIdResponse> result = await _mediator.Send(query);
+      var query = new GetPaymentByIdQuery(paymentId);
+      Result<Payment> result = await _mediator.Send(query);
 
       return result.IsSuccess
-        ? (IActionResult)Ok(result.Value)
+        ? (IActionResult)Ok(_mapper.Map<PaymentByIdResponse>(result.Value))
         : NotFound();
     }
 
@@ -53,11 +53,11 @@ namespace PaymentGateway.API.Controllers
     /// <response code="400">Validation error when submitting payment</response>
     /// <response code="422">Unable to insert the payment</response>
     [HttpPost(ApiRoutes.Payments.Create)]
-    public async Task<IActionResult> CreatePayment([FromBody] CreatePaymentRequest request)
+    public async Task<IActionResult> CreatePayment([FromBody]CreatePaymentRequest request)
     {
-      CreatePaymentCommand command = _mapper.Map<CreatePaymentCommand>(request);
+      var command = _mapper.Map<CreatePaymentCommand>(request);
 
-      Result<PaymentResponse> result = await _mediator.Send(command);
+      Result<AcquiringBankDto> result = await _mediator.Send(command);
 
       if (!result.IsSuccess)
         return UnprocessableEntity(new { ErrorMessage = result.Error });
@@ -65,7 +65,7 @@ namespace PaymentGateway.API.Controllers
       if (!result.Value.IsSuccess)
         return UnprocessableEntity(new { id = result.Value.Id, result.Value.ErrorMessage });
 
-      var response = new CreatePaymentCommandResponse() { Id = result.Value.Id };
+      var response = _mapper.Map<CreatePaymentSuccessResponse>(result.Value);
 
       return CreatedAtAction("CreatePayment", response, response);
     }

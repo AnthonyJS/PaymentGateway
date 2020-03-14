@@ -2,13 +2,13 @@
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
-using PaymentGateway.Application.Requests;
-using PaymentGateway.Application.Responses;
 using Xunit;
 using System.Net;
 using System.Threading.Tasks;
 using PaymentGateway.API.Contracts.V1;
 using API.Integration.Tests;
+using PaymentGateway.API.Contracts.V1.Requests;
+using PaymentGateway.API.Contracts.V1.Responses;
 
 namespace PaymentGateway.API.Integration.Tests
 {
@@ -38,7 +38,7 @@ namespace PaymentGateway.API.Integration.Tests
 
       var responseString = await response.Content.ReadAsStringAsync();
 
-      var responseData = JsonSerializer.Deserialize<CreatePaymentCommandResponse>(responseString);
+      var responseData = JsonSerializer.Deserialize<CreatePaymentSuccessResponse>(responseString);
 
       Assert.True(responseData.Id.GetType() == typeof(Guid));
     }

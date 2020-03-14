@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Net.Http;
-using PaymentGateway.Application.Responses;
 using Xunit;
 using System.Threading.Tasks;
 using PaymentGateway.Application.Models;
@@ -10,6 +8,7 @@ using Newtonsoft.Json;
 using System.Net;
 using PaymentGateway.API.Contracts.V1;
 using API.Integration.Tests;
+using PaymentGateway.API.Contracts.V1.Responses;
 
 namespace PaymentGateway.API.Integration.Tests
 {

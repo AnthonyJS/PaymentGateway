@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using System.Text.Json;
 using System.Threading;
@@ -13,7 +13,7 @@ using PaymentGateway.Application.Models;
 
 namespace PaymentGateway.Application.Handlers
 {
-  public class CreatePaymentCommandHandler : IRequestHandler<CreatePaymentCommand, Result<PaymentResponse>>
+  public class CreatePaymentCommandHandler : IRequestHandler<CreatePaymentCommand, Result<AcquiringBankDto>>
   {
     private readonly IAcquiringBankService _acquiringBankService;
     private readonly IPaymentHistoryRepository _paymentHistoryRepository;
@@ -27,7 +27,7 @@ namespace PaymentGateway.Application.Handlers
       _mapper = mapper;
     }
 
-    public async Task<Result<PaymentResponse>> Handle(CreatePaymentCommand command, CancellationToken cancellationToken)
+    public async Task<Result<AcquiringBankDto>> Handle(CreatePaymentCommand command, CancellationToken cancellationToken)
     {
       Payment payment = _mapper.Map<Payment>(command);
 
@@ -48,10 +48,10 @@ namespace PaymentGateway.Application.Handlers
 
       if (dbResult.IsFailure)
       {
-        return Result.Failure<PaymentResponse>("Failed to save to the DB");
+        return Result.Failure<AcquiringBankDto>("Failed to save to the DB");
       }
 
-      return Result.Ok(new PaymentResponse()
+      return Result.Ok(new AcquiringBankDto()
       {
         Id = payment.Id,
         IsSuccess = acquiringBankResult.IsSuccess,
