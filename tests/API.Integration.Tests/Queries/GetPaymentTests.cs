@@ -8,6 +8,7 @@ using PaymentGateway.Application.Enums;
 using PaymentGateway.Infrastructure.Persistence.PaymentHistory;
 using Newtonsoft.Json;
 using System.Net;
+using PaymentGateway.API.Contracts.V1;
 
 namespace PaymentGateway.API.Integration.Tests
 {
@@ -29,7 +30,7 @@ namespace PaymentGateway.API.Integration.Tests
     {
       var id = await insertPaymentDirectlyIntoDatabaseForTesting();
 
-      var response = await _client.GetAsync($"/paymentgateway/{id}");
+      var response = await _client.GetAsync(ApiRoutes.Payments.Get.Replace("{paymentId}", id.ToString()));
 
       response.EnsureSuccessStatusCode();
 
@@ -48,7 +49,7 @@ namespace PaymentGateway.API.Integration.Tests
     {
       var id = Guid.NewGuid();
 
-      var response = await _client.GetAsync($"/paymentgateway/{id}");
+      var response = await _client.GetAsync(ApiRoutes.Payments.Get.Replace("{paymentId}", id.ToString()));
 
       Assert.True(response.StatusCode == HttpStatusCode.NotFound);
     }

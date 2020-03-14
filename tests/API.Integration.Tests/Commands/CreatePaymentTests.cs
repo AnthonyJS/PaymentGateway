@@ -7,6 +7,7 @@ using PaymentGateway.Application.Responses;
 using Xunit;
 using System.Net;
 using System.Threading.Tasks;
+using PaymentGateway.API.Contracts.V1;
 
 namespace PaymentGateway.API.Integration.Tests
 {
@@ -37,7 +38,7 @@ namespace PaymentGateway.API.Integration.Tests
       var payload = JsonSerializer.Serialize(data);
 
       var content = new StringContent(payload, Encoding.UTF8, "application/json");
-      var response = await _client.PostAsync($"/paymentgateway", content);
+      var response = await _client.PostAsync(ApiRoutes.Payments.Create, content);
 
       response.EnsureSuccessStatusCode();
 
@@ -65,7 +66,7 @@ namespace PaymentGateway.API.Integration.Tests
       var payload = JsonSerializer.Serialize(data);
 
       var content = new StringContent(payload, Encoding.UTF8, "application/json");
-      var response = await _client.PostAsync($"/paymentgateway", content);
+      var response = await _client.PostAsync(ApiRoutes.Payments.Create, content);
 
       Assert.True(response.StatusCode == HttpStatusCode.BadRequest);
     }

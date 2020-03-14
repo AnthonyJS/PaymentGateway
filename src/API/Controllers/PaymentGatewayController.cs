@@ -5,6 +5,7 @@ using CSharpFunctionalExtensions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using PaymentGateway.API.Contracts.V1;
 using PaymentGateway.Application.Commands;
 using PaymentGateway.Application.Models;
 using PaymentGateway.Application.Queries;
@@ -14,7 +15,6 @@ using PaymentGateway.Application.Responses;
 namespace PaymentGateway.API.Controllers
 {
   [ApiController]
-  [Route("[controller]")]
   public class PaymentGatewayController : ControllerBase
   {
     private readonly ILogger<PaymentGatewayController> _logger;
@@ -35,7 +35,7 @@ namespace PaymentGateway.API.Controllers
     /// <param name="paymentId"></param>
     /// <response code="200">Returns the payment details</response>
     /// <response code="404">Payment could not be found</response>
-    [HttpGet("{paymentId}")]
+    [HttpGet(ApiRoutes.Payments.Get)]
     public async Task<IActionResult> GetPayment(Guid paymentId)
     {
       GetPaymentByIdQuery query = new GetPaymentByIdQuery(paymentId);
@@ -52,7 +52,7 @@ namespace PaymentGateway.API.Controllers
     /// <response code="201">Successfully inserted payment</response>
     /// <response code="400">Validation error when submitting payment</response>
     /// <response code="422">Unable to insert the payment</response>
-    [HttpPost]
+    [HttpPost(ApiRoutes.Payments.Create)]
     public async Task<IActionResult> CreatePayment([FromBody] CreatePaymentRequest request)
     {
       CreatePaymentCommand command = _mapper.Map<CreatePaymentCommand>(request);
