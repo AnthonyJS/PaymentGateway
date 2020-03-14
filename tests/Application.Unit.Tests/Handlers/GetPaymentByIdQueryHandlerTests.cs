@@ -5,7 +5,6 @@ using PaymentGateway.Application.Interfaces;
 using System;
 using CSharpFunctionalExtensions;
 using PaymentGateway.Application.Models;
-using PaymentGateway.Application.Handlers;
 using System.Threading;
 using System.Threading.Tasks;
 

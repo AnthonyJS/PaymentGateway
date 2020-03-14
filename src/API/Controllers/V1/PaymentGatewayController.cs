@@ -57,7 +57,7 @@ namespace PaymentGateway.API.Controllers.V1
     {
       var command = _mapper.Map<CreatePaymentCommand>(request);
 
-      Result<AcquiringBankDto> result = await _mediator.Send(command);
+      Result<AcquiringBankPayment> result = await _mediator.Send(command);
 
       if (!result.IsSuccess)
         return UnprocessableEntity(new { ErrorMessage = result.Error });
