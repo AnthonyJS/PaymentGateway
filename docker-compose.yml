@@ -9,6 +9,6 @@ services:
     build: src/
     restart: always
     ports: 
-      - "5001:44305"
+      - "8080:80"
     networks:
       - payment-gateway
