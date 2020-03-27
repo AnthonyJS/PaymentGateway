@@ -7,6 +7,7 @@ using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -32,6 +33,14 @@ namespace PaymentGateway
     public void ConfigureServices(IServiceCollection services)
     {
       configureSwagger(services);
+
+      // Won't be needed once App.Metrics 4.0.0 is out of preview
+      services.Configure<KestrelServerOptions>(options =>
+      {
+        options.AllowSynchronousIO = true;
+      });
+      services.AddMetrics();
+      
       services.AddControllers();
       services.AddScoped<IAcquiringBankService, AcquiringBankService>();
       services.AddScoped<IAcquiringBankHttpClient, FakeAcquiringBankHttpClient>();
@@ -60,6 +69,7 @@ namespace PaymentGateway
       app.UseRouting();
 
       app.UseAuthorization();
+      app.UseStaticFiles();
 
       var swaggerOptions = new SwaggerOptions();
       Configuration.Bind(nameof(SwaggerOptions), swaggerOptions);
