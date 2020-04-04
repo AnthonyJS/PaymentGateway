@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Reflection;
 using AutoMapper;
 using FluentValidation.AspNetCore;
@@ -11,14 +9,13 @@ using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.OpenApi.Models;
+using PaymentGateway.API.Core;
 using PaymentGateway.API.Options;
 using PaymentGateway.Application.Interfaces;
 using PaymentGateway.Infrastructure.ExternalAPIs.AcquiringBank;
 using PaymentGateway.Infrastructure.Persistence.PaymentHistory;
-using Swashbuckle.AspNetCore.Filters;
 
-namespace PaymentGateway
+namespace PaymentGateway.API
 {
   public class Startup
   {
@@ -32,7 +29,7 @@ namespace PaymentGateway
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
-      configureSwagger(services);
+      services.AddSwagger();
 
       // Won't be needed once App.Metrics 4.0.0 is out of preview
       services.Configure<KestrelServerOptions>(options =>
@@ -42,9 +39,7 @@ namespace PaymentGateway
       services.AddMetrics();
       
       services.AddControllers();
-      services.AddScoped<IAcquiringBankService, AcquiringBankService>();
-      services.AddScoped<IAcquiringBankHttpClient, FakeAcquiringBankHttpClient>();
-      services.AddScoped<IPaymentHistoryRepository, PaymentHistoryRepository>();
+      services.AddDependencyInjectionWireup();
 
       var applicationAssembly = AppDomain.CurrentDomain.Load("PaymentGateway.Application");
       services.AddMediatR(applicationAssembly);
@@ -88,22 +83,6 @@ namespace PaymentGateway
       {
         endpoints.MapControllers();
       });
-    }
-
-    private void configureSwagger(IServiceCollection services)
-    {
-      services.AddSwaggerGen(x =>
-      {
-        x.SwaggerDoc("v1", new OpenApiInfo { Title = "Payment Gateway", Version = "v1" });
-
-        x.ExampleFilters();
-
-        var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-        var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-        x.IncludeXmlComments(xmlPath);
-      });
-
-      services.AddSwaggerExamplesFromAssemblyOf<Startup>();
     }
   }
 }
