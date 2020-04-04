@@ -1,6 +1,6 @@
 ﻿using System.Net.Http;
 using Microsoft.AspNetCore.Mvc.Testing;
-using PaymentGateway;
+using PaymentGateway.API;
 
 namespace API.Integration.Tests
 {
