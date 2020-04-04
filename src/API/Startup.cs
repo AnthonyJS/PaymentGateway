@@ -11,9 +11,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using PaymentGateway.API.Core;
 using PaymentGateway.API.Options;
-using PaymentGateway.Application.Interfaces;
-using PaymentGateway.Infrastructure.ExternalAPIs.AcquiringBank;
-using PaymentGateway.Infrastructure.Persistence.PaymentHistory;
 
 namespace PaymentGateway.API
 {
