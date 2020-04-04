@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using App.Metrics;
 using AutoMapper;
 using CSharpFunctionalExtensions;
 using MediatR;
@@ -8,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using PaymentGateway.API.Contracts.V1;
 using PaymentGateway.API.Contracts.V1.Requests;
 using PaymentGateway.API.Contracts.V1.Responses;
+using PaymentGateway.API.Metrics;
 using PaymentGateway.Application.Commands;
 using PaymentGateway.Application.Models;
 using PaymentGateway.Application.Queries;
@@ -20,13 +22,15 @@ namespace PaymentGateway.API.Controllers.V1
     private readonly ILogger<PaymentGatewayController> _logger;
     private readonly IMediator _mediator;
     private readonly IMapper _mapper;
+    private readonly IMetrics _metrics;
 
     public PaymentGatewayController(ILogger<PaymentGatewayController> logger,
-    IMediator mediator, IMapper mapper)
+    IMediator mediator, IMapper mapper, IMetrics metrics)
     {
       _mediator = mediator;
       _logger = logger;
       _mapper = mapper;
+      _metrics = metrics;
     }
 
     /// <summary>
@@ -40,7 +44,9 @@ namespace PaymentGateway.API.Controllers.V1
     {
       var query = new GetPaymentByIdQuery(paymentId);
       Result<Payment> result = await _mediator.Send(query);
-
+      
+      _metrics.Measure.Counter.Increment(MetricsRegistry.PaymentsRetrievedCounter);
+      
       return result.IsSuccess
         ? (IActionResult)Ok(_mapper.Map<PaymentByIdResponse>(result.Value))
         : NotFound();
@@ -66,6 +72,8 @@ namespace PaymentGateway.API.Controllers.V1
         return UnprocessableEntity(new { id = result.Value.Id, result.Value.ErrorMessage });
 
       var response = _mapper.Map<CreatePaymentSuccessResponse>(result.Value);
+      
+      _metrics.Measure.Counter.Increment(MetricsRegistry.PaymentsCreatedCounter);
 
       return CreatedAtAction("CreatePayment", response, response);
     }
