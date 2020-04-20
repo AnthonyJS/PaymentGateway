@@ -12,6 +12,7 @@ using PaymentGateway.API.Mapping;
 
 namespace PaymentGateway.Application.Unit.Tests.Handlers
 {
+  [Trait("Payments", "Create")]
   public class CreatePaymentCommandHandlerTests
   {
     private readonly Mock<IAcquiringBankService> _mockAcquiringBankService;

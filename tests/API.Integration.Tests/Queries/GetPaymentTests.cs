@@ -1,26 +1,25 @@
 ﻿using System;
-using Xunit;
-using System.Threading.Tasks;
-using PaymentGateway.Application.Models;
-using PaymentGateway.Application.Enums;
-using PaymentGateway.Infrastructure.Persistence.PaymentHistory;
-using Newtonsoft.Json;
 using System.Net;
+using System.Threading.Tasks;
+using Newtonsoft.Json;
 using PaymentGateway.API.Contracts.V1;
-using API.Integration.Tests;
 using PaymentGateway.API.Contracts.V1.Responses;
+using PaymentGateway.Application.Enums;
+using PaymentGateway.Application.Models;
+using PaymentGateway.Infrastructure.Persistence.PaymentHistory;
+using Xunit;
 
-namespace PaymentGateway.API.Integration.Tests
+namespace PaymentGateway.API.Integration.Tests.Queries
 {
-
-  [Collection("sequential")]
-  public class GetPaymentTests : IntegrationTest, IClassFixture<PaymentHistoryRepository>
+  [Collection(CollectionName.PaymentTestCollection)]
+  [Trait("Payments", "Get")]
+  public class GetPaymentTests
   {
-    private readonly PaymentHistoryRepository _repository;
+    private readonly PaymentTestFixture _fixture;
 
-    public GetPaymentTests(PaymentHistoryRepository repository)
+    public GetPaymentTests(PaymentTestFixture fixture)
     {
-      _repository = repository;
+      _fixture = fixture;
     }
 
     [Fact]
@@ -28,7 +27,7 @@ namespace PaymentGateway.API.Integration.Tests
     {
       var id = await insertPaymentDirectlyIntoDatabaseForTesting();
 
-      var response = await TestClient.GetAsync(ApiRoutes.Payments.Get.Replace("{paymentId}", id.ToString()));
+      var response = await _fixture.TestClient.GetAsync(ApiRoutes.Payments.Get.Replace("{paymentId}", id.ToString()));
 
       response.EnsureSuccessStatusCode();
 
@@ -47,7 +46,7 @@ namespace PaymentGateway.API.Integration.Tests
     {
       var id = Guid.NewGuid();
 
-      var response = await TestClient.GetAsync(ApiRoutes.Payments.Get.Replace("{paymentId}", id.ToString()));
+      var response = await _fixture.TestClient.GetAsync(ApiRoutes.Payments.Get.Replace("{paymentId}", id.ToString()));
 
       Assert.True(response.StatusCode == HttpStatusCode.NotFound);
     }
@@ -69,7 +68,7 @@ namespace PaymentGateway.API.Integration.Tests
         CVV = 321
       };
 
-      await _repository.InsertPayment(payment);
+      await _fixture.PaymentHistoryRepository.InsertPayment(payment);
 
       return payment.Id;
     }

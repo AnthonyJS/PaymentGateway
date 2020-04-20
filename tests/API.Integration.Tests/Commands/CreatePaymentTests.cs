@@ -1,20 +1,27 @@
 ﻿using System;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
-using Xunit;
-using System.Net;
 using System.Threading.Tasks;
 using PaymentGateway.API.Contracts.V1;
-using API.Integration.Tests;
 using PaymentGateway.API.Contracts.V1.Requests;
 using PaymentGateway.API.Contracts.V1.Responses;
+using Xunit;
 
-namespace PaymentGateway.API.Integration.Tests
+namespace PaymentGateway.API.Integration.Tests.Commands
 {
-  [Collection("sequential")]
-  public class CreatePaymentTests : IntegrationTest
+  [Collection(CollectionName.PaymentTestCollection)]
+  [Trait("Payments", "Create")]
+  public class CreatePaymentTests
   {
+    private readonly PaymentTestFixture _fixture;
+
+    public CreatePaymentTests(PaymentTestFixture fixture)
+    {
+      _fixture = fixture;
+    }
+    
     [Fact]
     public async Task ShouldInsertPaymentWithValidData()
     {
@@ -32,7 +39,7 @@ namespace PaymentGateway.API.Integration.Tests
       var payload = JsonSerializer.Serialize(data);
 
       var content = new StringContent(payload, Encoding.UTF8, "application/json");
-      var response = await TestClient.PostAsync(ApiRoutes.Payments.Create, content);
+      var response = await _fixture.TestClient.PostAsync(ApiRoutes.Payments.Create, content);
 
       response.EnsureSuccessStatusCode();
 
@@ -60,7 +67,7 @@ namespace PaymentGateway.API.Integration.Tests
       var payload = JsonSerializer.Serialize(data);
 
       var content = new StringContent(payload, Encoding.UTF8, "application/json");
-      var response = await TestClient.PostAsync(ApiRoutes.Payments.Create, content);
+      var response = await _fixture.TestClient.PostAsync(ApiRoutes.Payments.Create, content);
 
       Assert.True(response.StatusCode == HttpStatusCode.BadRequest);
     }
