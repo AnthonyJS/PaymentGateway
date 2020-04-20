@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace PaymentGateway.Application.Unit.Tests.Handlers
 {
+  [Trait("Payments", "Get")]
   public class GetPaymentByIdQueryHandlerTests
   {
     private readonly Mock<IPaymentHistoryRepository> _mockPaymentHistoryRepository;
