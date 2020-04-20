@@ -12,6 +12,7 @@ using Xunit;
 namespace PaymentGateway.API.Integration.Tests.Queries
 {
   [Collection(CollectionName.PaymentTestCollection)]
+  [Trait("Payments", "Get")]
   public class GetPaymentTests
   {
     private readonly PaymentTestFixture _fixture;

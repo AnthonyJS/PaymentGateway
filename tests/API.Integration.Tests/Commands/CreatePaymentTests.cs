@@ -12,6 +12,7 @@ using Xunit;
 namespace PaymentGateway.API.Integration.Tests.Commands
 {
   [Collection(CollectionName.PaymentTestCollection)]
+  [Trait("Payments", "Create")]
   public class CreatePaymentTests
   {
     private readonly PaymentTestFixture _fixture;
