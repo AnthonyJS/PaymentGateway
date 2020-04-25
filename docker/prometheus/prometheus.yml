@@ -1,0 +1,23 @@
+﻿global:
+  scrape_interval: 10s
+  external_labels:
+    monitor: 'local-monitor'
+
+scrape_configs:
+         
+  - job_name: 'payment-gateway-app'
+    metrics_path: /metrics-text
+    static_configs:
+      - targets: ['main-api:80']
+        
+  - job_name: 'docker-managers'
+    scrape_interval: 15s
+    metrics_path: /metrics
+    static_configs:
+      - targets: ['host.docker.icnternal:50501']
+
+  - job_name: 'docker-workers'
+    scrape_interval: 15s
+    metrics_path: /metrics
+    static_configs:
+      - targets: ['host.docker.internal:50501']
