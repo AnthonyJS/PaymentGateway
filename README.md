@@ -2,7 +2,30 @@
 
 ![.NET Core](https://github.com/AnthonyJS/PaymentGateway/workflows/.NET%20Core/badge.svg)
 
-## Steps to get Payment Gateway running locally
+
+## Steps to run the API using Docker Compose
+
+This will build and run the Payment Gateway API in a Docker container, as well as Prometheus and Grafana containers.
+
+### Mac
+
+```
+docker-compose -f docker-compose.yml -f docker-compose-mac.yml up
+```
+
+### Windows
+
+```
+docker-compose -f docker-compose.yml -f docker-compose-windows.yml up
+```
+
+### URLs when running via Docker Compose
+- Payment Gateway API via Swagger: http://localhost:8080/swagger
+- Prometheus: http://localhost:9090/graph
+- Grafana: http://localhost:3000/
+
+
+## Steps to get Payment Gateway running locally using `dotnet run`
 
 Firstly, clone this repository and then:
 
@@ -21,25 +44,6 @@ From the root directory of the project, enter the following:
 ```bash
 dotnet test
 ```
-
-
-
-## Steps to run the API using Docker Compose
-
-This will build and run the Payment Gateway API in a Docker container, as well as Prometheus and Grafana containers.
-
-### Mac
-
-```
-docker-compose -f docker-compose.yml -f docker-compose-mac.yml up
-```
-
-### Windows
-
-```
-docker-compose -f docker-compose.yml -f docker-compose-windows.yml up
-```
-
 
 
 ## Using the API
