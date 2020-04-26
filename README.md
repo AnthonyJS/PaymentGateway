@@ -7,6 +7,8 @@
 
 This will build and run the Payment Gateway API in a Docker container, as well as Prometheus and Grafana containers.
 
+Clone this repository, then from the root directory of the solution, run the following based on your environment:
+
 ### Mac
 
 ```
@@ -39,7 +41,7 @@ dotnet run --project src/API/API.csproj
 
 ### To run the tests
 
-From the root directory of the project, enter the following:
+From the root directory of the solution, enter the following:
 
 ```bash
 dotnet test
@@ -177,3 +179,11 @@ I have written some integration tests that call the API to check data can be ins
 - [Swagger](https://swagger.io/)
 
   I have added Swagger for documenting the API and to assist with discovery and exploration. 
+  
+- [Prometheus](https://prometheus.io/)  
+
+  Prometheus is an open source metrics server and has emerged as the most popular metrics server for containerized applications.
+  
+- [Grafana](https://grafana.com/)
+
+  Grafana is the open source analytics and monitoring solution and works very nicely with Prometheus.
