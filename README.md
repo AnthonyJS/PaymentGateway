@@ -32,7 +32,6 @@ dotnet run --project src/API/API.csproj
 ### To run the tests
 
 From the root directory of the solution, enter the following:
->>>>>>> e8542be6455352b1e195578ecd2bd3eef96f7447
 
 ```bash
 dotnet test
