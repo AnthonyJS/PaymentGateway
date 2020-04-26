@@ -3,4 +3,5 @@ obj
 MyData.db
 .vs/
 .idea/
-
+.DS_Store
+*DotSettings*

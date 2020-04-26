@@ -1,5 +1,7 @@
 # Payment Gateway demo
 
+![.NET Core](https://github.com/AnthonyJS/PaymentGateway/workflows/.NET%20Core/badge.svg)
+
 ## Steps to get Payment Gateway running locally
 
 Firstly, clone this repository and then:
