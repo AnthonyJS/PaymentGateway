@@ -5,6 +5,3 @@ SHELL ["powershell", "-Command", "$ErrorActionPreference = 'Continue';"]
 COPY ./docker/grafana/datasource-prometheus.yaml /grafana/conf/provisioning/datasources/
 COPY ./docker/grafana/dashboard-provider.yaml /grafana/conf/provisioning/dashboards/
 COPY ./docker/grafana/payment-gateway-dashboard.json /var/lib/grafana/dashboards/
-
-#COPY  ./docker/grafana/init.ps1 .
-#RUN ./init.ps1 
