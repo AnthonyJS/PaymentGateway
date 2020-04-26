@@ -20,7 +20,7 @@ services:
     container_name: ajs_prometheus
     build:
       context: .
-      dockerfile: docker/prometheus/Dockerfile
+      dockerfile: docker/prometheus/Dockerfile.windows
     ports:
       - "9090:9090"
     networks:
@@ -31,7 +31,7 @@ services:
     container_name: ajs_grafana
     build:
       context: .
-      dockerfile: docker/grafana/Dockerfile
+      dockerfile: docker/grafana/Dockerfile.windows
     ports:
       - "3000:3000"
     networks:
