@@ -177,12 +177,3 @@ I have written some integration tests that call the API to check data can be ins
 - [Swagger](https://swagger.io/)
 
   I have added Swagger for documenting the API and to assist with discovery and exploration. 
-
-## TODO
-
-There are many aspects of this project that I would like to develop further, but was unable to due to time constraints. These include:
-
-- Docker containerisation
-- CI with Github Actions
-- Logging
-- Atomic transactions and rollback on errors - I wanted to put the call to the Acquiring Bank and saving the payment data to the DB in a transaction to ensure it is atomic, and can rollback if failure occurs part way through.
