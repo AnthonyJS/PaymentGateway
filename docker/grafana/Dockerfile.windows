@@ -1,7 +1,0 @@
-# escape=`
-FROM dockersamples/aspnet-monitoring-grafana:5.2.1
-SHELL ["powershell", "-Command", "$ErrorActionPreference = 'Continue';"]
-
-COPY ./docker/grafana/datasource-prometheus.yaml /grafana/conf/provisioning/datasources/
-COPY ./docker/grafana/dashboard-provider.yaml /grafana/conf/provisioning/dashboards/
-COPY ./docker/grafana/payment-gateway-dashboard.json /var/lib/grafana/dashboards/
