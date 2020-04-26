@@ -31,13 +31,13 @@ This will build and run the Payment Gateway API in a Docker container, as well a
 ### Mac
 
 ```
-docker-compose -f docker-compose-mac.yml up
+docker-compose -f docker-compose.yml -f docker-compose-mac.yml up
 ```
 
 ### Windows
 
 ```
-docker-compose -f docker-compose-windows.yml up
+docker-compose -f docker-compose.yml -f docker-compose-windows.yml up
 ```
 
 
