@@ -18,9 +18,6 @@ services:
   prometheus:
     image: ajs/prometheus
     container_name: ajs_prometheus
-    build:
-      context: .
-      dockerfile: docker/prometheus/Dockerfile
     ports:
       - "9090:9090"
     networks:
@@ -29,9 +26,6 @@ services:
   grafana:
     image: ajs/grafana
     container_name: ajs_grafana
-    build:
-      context: .
-      dockerfile: docker/grafana/Dockerfile
     ports:
       - "3000:3000"
     networks:

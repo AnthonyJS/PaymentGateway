@@ -8,11 +8,11 @@ services:
   prometheus:
     build:
       context: .
-      dockerfile: docker/prometheus/Dockerfile.windows
+      dockerfile: docker/prometheus/Dockerfile
         
   grafana:
     build:
       context: .
-      dockerfile: docker/grafana/Dockerfile.windows
+      dockerfile: docker/grafana/Dockerfile
 
         

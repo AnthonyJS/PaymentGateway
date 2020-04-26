@@ -22,6 +22,26 @@ From the root directory of the project, enter the following:
 dotnet test
 ```
 
+
+
+## Steps to run the API using Docker Compose
+
+This will build and run the Payment Gateway API in a Docker container, as well as Prometheus and Grafana containers.
+
+### Mac
+
+```
+docker-compose -f docker-compose.yml -f docker-compose-mac.yml up
+```
+
+### Windows
+
+```
+docker-compose -f docker-compose.yml -f docker-compose-windows.yml up
+```
+
+
+
 ## Using the API
 
 ### Making a payment
