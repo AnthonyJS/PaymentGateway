@@ -26,13 +26,14 @@ services:
     networks:
       - payment-gateway
         
-#  grafana:
-#    image: ajs/grafana
-#    container_name: ajs_grafana
-#    build:
-#      context: .
-#      dockerfile: docker/grafana/Dockerfile.windows
-#    ports:
-#      - "3000:3000"
-#    networks:
-#      - payment-gateway
+  grafana:
+    image: ajs/grafana
+    container_name: ajs_grafana
+    build:
+      context: .
+      dockerfile: docker/grafana/Dockerfile.windows
+    ports:
+      - "3000:3000"
+    networks:
+      - payment-gateway
+        
