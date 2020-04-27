@@ -17,6 +17,19 @@ docker-compose up
 - Grafana: http://localhost:3000/
 
 
+
+## Steps to run container from Docker Hub
+
+Use the following to download and run the container:
+
+```
+docker run --rm -p 8080:80 anthonyjs/payment-gateway:v1.0
+```
+
+And then you can use the API via Swagger on http://localhost:8080/swagger 
+
+
+
 ## Steps to get Payment Gateway running locally using `dotnet run`
 
 Firstly, clone this repository and then:
