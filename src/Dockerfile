@@ -2,12 +2,12 @@
 WORKDIR /app
 
 # Copy everything and build the project
-COPY . ./
+COPY . .
 RUN dotnet restore ./API/API.csproj
-RUN dotnet publish ./API/API.csproj -c Release -o out
+RUN dotnet publish ./API/API.csproj -c Release -o /publish
 
 # Build runtime image
 FROM mcr.microsoft.com/dotnet/core/aspnet:3.1
 WORKDIR /app
-COPY --from=build-env /app/out .
+COPY --from=build-env /publish .
 ENTRYPOINT ["dotnet", "API.dll"]
