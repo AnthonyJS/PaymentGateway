@@ -1,17 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using App.Metrics.AspNetCore;
-using App.Metrics.Formatters.Ascii;
 using App.Metrics.Formatters.Prometheus;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using PaymentGateway.API;
 
-namespace PaymentGateway
+namespace PaymentGateway.API
 {
   public class Program
   {
