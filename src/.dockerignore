@@ -1,5 +1,6 @@
 */bin
 */obj
+Dockerfile
 .dockerignore
 .env
 .git

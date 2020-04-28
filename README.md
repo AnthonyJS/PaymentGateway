@@ -2,7 +2,35 @@
 
 ![.NET Core](https://github.com/AnthonyJS/PaymentGateway/workflows/.NET%20Core/badge.svg)
 
-## Steps to get Payment Gateway running locally
+
+## Steps to run the API using Docker Compose
+
+This will build and run the Payment Gateway API in a Docker container, as well as Prometheus and Grafana containers. On Windows make sure you are using Linux containers.
+
+```
+docker-compose up
+```
+
+### URLs when running via Docker Compose
+- Payment Gateway API via Swagger: http://localhost:8080/swagger
+- Prometheus: http://localhost:9090/graph
+- Grafana: http://localhost:3000/
+
+
+
+## Steps to run container from Docker Hub
+
+Use the following to download and run the container:
+
+```
+docker run --rm -p 8080:80 anthonyjs/payment-gateway:v1.0
+```
+
+And then you can use the API via Swagger on http://localhost:8080/swagger 
+
+
+
+## Steps to get Payment Gateway running locally using `dotnet run`
 
 Firstly, clone this repository and then:
 
@@ -16,11 +44,12 @@ dotnet run --project src/API/API.csproj
 
 ### To run the tests
 
-From the root directory of the project, enter the following:
+From the root directory of the solution, enter the following:
 
 ```bash
 dotnet test
 ```
+
 
 ## Using the API
 
@@ -153,12 +182,11 @@ I have written some integration tests that call the API to check data can be ins
 - [Swagger](https://swagger.io/)
 
   I have added Swagger for documenting the API and to assist with discovery and exploration. 
+  
+- [Prometheus](https://prometheus.io/)  
 
-## TODO
+  Prometheus is an open source metrics server and has emerged as the most popular metrics server for containerized applications.
+  
+- [Grafana](https://grafana.com/)
 
-There are many aspects of this project that I would like to develop further, but was unable to due to time constraints. These include:
-
-- Docker containerisation
-- CI with Github Actions
-- Logging
-- Atomic transactions and rollback on errors - I wanted to put the call to the Acquiring Bank and saving the payment data to the DB in a transaction to ensure it is atomic, and can rollback if failure occurs part way through.
+  Grafana is the open source analytics and monitoring solution and works very nicely with Prometheus.

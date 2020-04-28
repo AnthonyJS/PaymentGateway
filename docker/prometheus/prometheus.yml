@@ -1,0 +1,11 @@
+﻿global:
+  scrape_interval: 10s
+  external_labels:
+    monitor: 'local-monitor'
+
+scrape_configs:
+  - job_name: 'payment-gateway-app'
+    metrics_path: /metrics-text
+    static_configs:
+      - targets: ['main-api:80']
+        

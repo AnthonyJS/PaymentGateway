@@ -6,9 +6,34 @@ networks:
 
 services:
   main-api:
+    image: ajs/main-api
+    container_name: ajs_main_api
     build: src/
     restart: always
     ports: 
       - "8080:80"
     networks:
       - payment-gateway
+
+  prometheus:
+    image: ajs/prometheus
+    container_name: ajs_prometheus
+    build:
+      context: .
+      dockerfile: docker/prometheus/Dockerfile
+    ports:
+      - "9090:9090"
+    networks:
+      - payment-gateway
+        
+  grafana:
+    image: ajs/grafana
+    container_name: ajs_grafana
+    build:
+      context: .
+      dockerfile: docker/grafana/Dockerfile
+    ports:
+      - "3000:3000"
+    networks:
+      - payment-gateway
+        

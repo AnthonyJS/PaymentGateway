@@ -1,0 +1,11 @@
+*/bin
+*/obj
+Dockerfile
+.dockerignore
+.env
+.git
+.gitignore
+.vs
+.vscode
+**/.toolstarget
+.idea
