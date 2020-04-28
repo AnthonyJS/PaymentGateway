@@ -59,6 +59,7 @@ namespace PaymentGateway.API
       app.UseHttpsRedirection();
 
       app.UseRouting();
+      app.UseMetricsAllMiddleware();
 
       app.UseAuthorization();
       app.UseStaticFiles();
