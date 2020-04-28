@@ -1,8 +1,13 @@
 ﻿# Build stage
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1 as build-env
 WORKDIR /app
-COPY . .
+
+COPY ./API/API.csproj ./API/
+COPY ./Application/Application.csproj ./Application/
+COPY ./Infrastructure/Infrastructure.csproj ./Infrastructure/
 RUN dotnet restore ./API/API.csproj
+
+COPY . .
 RUN dotnet publish ./API/API.csproj -c Release -o /publish
 
 # Runtime stage
