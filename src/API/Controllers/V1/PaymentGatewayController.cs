@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
-using App.Metrics;
 using AutoMapper;
 using CSharpFunctionalExtensions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using PaymentGateway.API.Contracts.V1;
 using PaymentGateway.API.Contracts.V1.Requests;
 using PaymentGateway.API.Contracts.V1.Responses;

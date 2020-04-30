@@ -14,7 +14,6 @@ namespace PaymentGateway.API.Contracts.V1.Responses
     public string Currency { get; set; }
     public decimal Amount { get; set; }
     public short CVV { get; set; }
-    // TODO: Obsolete - return status
     public bool IsSuccess { get; set; }
     public string ErrorMessage { get; set; }
   }

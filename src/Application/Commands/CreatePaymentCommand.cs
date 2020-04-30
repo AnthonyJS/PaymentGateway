@@ -42,14 +42,8 @@ namespace PaymentGateway.Application.Commands
 
     public async Task<Result<Payment>> Handle(CreatePaymentCommand command, CancellationToken cancellationToken)
     {
-      var cardDetails = new CardDetails(
-        command.FirstName, 
-        command.Surname, 
-        command.CardNumber, 
-        command.ExpiryMonth, 
-        command.ExpiryYear, 
-        command.CVV);
-
+      var cardDetails = new CardDetails(command.FirstName, command.Surname, command.CardNumber, 
+                                        command.ExpiryMonth, command.ExpiryYear, command.CVV);
       var currency = Enum.Parse<Currency>(command.Currency);
       var payment = new Payment(Guid.NewGuid(), cardDetails, currency, command.Amount);
       
