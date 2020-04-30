@@ -1,4 +1,5 @@
 using System;
+using PaymentGateway.Domain.Enums;
 using PaymentGateway.Domain.Exceptions;
 using PaymentGateway.Domain.SeedWork;
 
@@ -18,8 +19,8 @@ namespace PaymentGateway.Domain.AggregatesModel.PaymentAggregate
       : base(id)
     {
       CardDetails = cardDetails ?? throw new PaymentDomainException(nameof(cardDetails));
-      Currency = currency ?? throw new PaymentDomainException(nameof(currency));
       Amount = amount > 0 ? amount : throw new PaymentDomainException(nameof(amount));
+      Currency = currency;
       PaymentStatus = PaymentStatus.Initialized;
     }
 

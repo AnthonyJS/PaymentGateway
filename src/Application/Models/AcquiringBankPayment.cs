@@ -1,5 +1,4 @@
 ﻿using System;
-using PaymentGateway.Application.Enums;
 
 namespace PaymentGateway.Application.Models
 {

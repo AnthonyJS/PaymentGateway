@@ -1,7 +1,7 @@
 ﻿using System;
 using FluentValidation;
 using PaymentGateway.API.Contracts.V1.Requests;
-using PaymentGateway.Application.Enums;
+using PaymentGateway.Domain.Enums;
 
 namespace PaymentGateway.API.Validation
 {

@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using CSharpFunctionalExtensions;
-using PaymentGateway.Application.Enums;
 using PaymentGateway.Application.Interfaces;
 using PaymentGateway.Application.Models;
 using PaymentGateway.Domain.AggregatesModel.PaymentAggregate;
+using PaymentGateway.Domain.Enums;
 
 namespace PaymentGateway.Infrastructure.ExternalAPIs.AcquiringBank
 {

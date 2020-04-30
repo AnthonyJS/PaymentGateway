@@ -20,7 +20,7 @@ namespace PaymentGateway.API.Mapping
         .ForMember(dest => dest.ExpiryMonth, src => src.MapFrom(c => c.CardDetails.ExpiryMonth))
         .ForMember(dest => dest.ExpiryYear, src => src.MapFrom(c => c.CardDetails.ExpiryYear))
         .ForMember(dest => dest.CVV, src => src.MapFrom(c => c.CardDetails.CVV))
-        .ForMember(dest => dest.Currency, src => src.MapFrom(c => c.Currency.Name))
+        .ForMember(dest => dest.Currency, src => src.MapFrom(c => c.Currency))
         .ForMember(dest => dest.IsSuccess, src => src.MapFrom(c => c.PaymentStatus == PaymentStatus.Success))
         .ForMember(dest => dest.ErrorMessage, src => src.MapFrom(c => c.ErrorMessage));
     }
