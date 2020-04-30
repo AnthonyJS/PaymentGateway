@@ -4,9 +4,8 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using PaymentGateway.API.Contracts.V1;
 using PaymentGateway.API.Contracts.V1.Responses;
-using PaymentGateway.Application.Enums;
-using PaymentGateway.Application.Models;
-using PaymentGateway.Infrastructure.Persistence.PaymentHistory;
+using PaymentGateway.Domain.AggregatesModel.PaymentAggregate;
+using PaymentGateway.Domain.Enums;
 using Xunit;
 
 namespace PaymentGateway.API.Integration.Tests.Queries
@@ -54,20 +53,15 @@ namespace PaymentGateway.API.Integration.Tests.Queries
     // TODO: Put this in a transaction so the data can be removed after the test finishes
     private async Task<Guid> insertPaymentDirectlyIntoDatabaseForTesting()
     {
-      var payment = new Payment()
-      {
-        Id = Guid.NewGuid(),
-        AcquiringBankId = Guid.NewGuid(),
-        FirstName = "Jim",
-        Surname = "Jimson",
-        CardNumber = "1234-5678-8765-4321",
-        ExpiryMonth = 10,
-        ExpiryYear = 20,
-        Currency = Currency.GBP,
-        Amount = 4404.44M,
-        CVV = 321
-      };
-
+      var cardDetails = new CardDetails(
+        "Jim", 
+        "Jimson", 
+        "1234-5678-8765-4321", 
+        10, 
+        20, 
+        321);
+      var payment = new Payment(Guid.NewGuid(), cardDetails, Currency.GBP, 4404.44M);
+      
       await _fixture.PaymentHistoryRepository.InsertPayment(payment);
 
       return payment.Id;

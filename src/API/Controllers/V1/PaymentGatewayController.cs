@@ -1,36 +1,28 @@
 ﻿using System;
 using System.Threading.Tasks;
-using App.Metrics;
 using AutoMapper;
 using CSharpFunctionalExtensions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using PaymentGateway.API.Contracts.V1;
 using PaymentGateway.API.Contracts.V1.Requests;
 using PaymentGateway.API.Contracts.V1.Responses;
-using PaymentGateway.API.Metrics;
 using PaymentGateway.Application.Commands;
-using PaymentGateway.Application.Models;
 using PaymentGateway.Application.Queries;
+using PaymentGateway.Domain.AggregatesModel.PaymentAggregate;
 
 namespace PaymentGateway.API.Controllers.V1
 {
   [ApiController]
   public class PaymentGatewayController : ControllerBase
   {
-    private readonly ILogger<PaymentGatewayController> _logger;
     private readonly IMediator _mediator;
     private readonly IMapper _mapper;
-    private readonly IMetrics _metrics;
 
-    public PaymentGatewayController(ILogger<PaymentGatewayController> logger,
-    IMediator mediator, IMapper mapper, IMetrics metrics)
+    public PaymentGatewayController(IMediator mediator, IMapper mapper)
     {
       _mediator = mediator;
-      _logger = logger;
       _mapper = mapper;
-      _metrics = metrics;
     }
 
     /// <summary>
@@ -44,8 +36,6 @@ namespace PaymentGateway.API.Controllers.V1
     {
       var query = new GetPaymentByIdQuery(paymentId);
       Result<Payment> result = await _mediator.Send(query);
-      
-      _metrics.Measure.Counter.Increment(MetricsRegistry.PaymentsRetrievedCounter);
       
       return result.IsSuccess
         ? (IActionResult)Ok(_mapper.Map<PaymentByIdResponse>(result.Value))
@@ -63,17 +53,12 @@ namespace PaymentGateway.API.Controllers.V1
     {
       var command = _mapper.Map<CreatePaymentCommand>(request);
 
-      Result<AcquiringBankPayment> result = await _mediator.Send(command);
+      Result<Payment> result = await _mediator.Send(command);
 
       if (!result.IsSuccess)
         return UnprocessableEntity(new { ErrorMessage = result.Error });
 
-      if (!result.Value.IsSuccess)
-        return UnprocessableEntity(new { id = result.Value.Id, result.Value.ErrorMessage });
-
       var response = _mapper.Map<CreatePaymentSuccessResponse>(result.Value);
-      
-      _metrics.Measure.Counter.Increment(MetricsRegistry.PaymentsCreatedCounter);
 
       return CreatedAtAction("CreatePayment", response, response);
     }

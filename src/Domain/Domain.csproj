@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <RootNamespace>PaymentGateway.Domain</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="App.Metrics.Abstractions" Version="4.0.0-preview1.0.3" />
+      <PackageReference Include="CSharpFunctionalExtensions" Version="2.3.0" />
+    </ItemGroup>
+
+</Project>
