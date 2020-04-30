@@ -21,9 +21,11 @@ namespace PaymentGateway.Infrastructure.Persistence.EventStore
     public EventStoreClient(ILogger<EventStoreClient> logger)
     {
       _logger = logger;
+      
       // TODO: Add env variables to set this value
-      //_conn = EventStoreConnection.Create(new Uri("tcp://admin:changeit@localhost:1113"));
-      _conn = EventStoreConnection.Create(new Uri("tcp://admin:changeit@eventstore:1113"));
+      _conn = EventStoreConnection.Create(new Uri("tcp://admin:changeit@localhost:1113"));
+      //_conn = EventStoreConnection.Create(new Uri("tcp://admin:changeit@eventstore:1113"));
+      
       _conn.ConnectAsync().Wait();
       _logger.LogInformation("Created connection to EventStore");
     }
