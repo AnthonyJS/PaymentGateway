@@ -8,7 +8,9 @@ services:
   main-api:
     image: ajs/main-api
     container_name: ajs_main_api
-    build: src/
+    build:
+      context: src/
+      dockerfile: Dockerfile
     restart: always
     ports: 
       - "8080:80"
@@ -36,4 +38,21 @@ services:
       - "3000:3000"
     networks:
       - payment-gateway
+        
+  eventstore:
+    image: eventstore/eventstore
+    container_name: ajs_event_store
+    environment:
+      - EVENTSTORE_CLUSTER_SIZE=1
+      - EVENTSTORE_INT_TCP_PORT=1112
+      - EVENTSTORE_EXT_TCP_PORT=1113
+      - EVENTSTORE_INT_HTTP_PORT=2112
+      - EVENTSTORE_EXT_HTTP_PORT=2113
+    ports:
+      - "1112:1112"
+      - "1113:1113"
+      - "2112:2112"
+      - "2113:2113"
+    networks:
+      - payment-gateway 
         

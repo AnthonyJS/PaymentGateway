@@ -7,6 +7,7 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 using PaymentGateway.Domain.AggregatesModel.PaymentAggregate;
 using PaymentGateway.Domain.Enums;
+using PaymentGateway.Domain.Events;
 using PaymentGateway.Domain.Interfaces;
 using PaymentGateway.Domain.Metrics;
 
@@ -30,14 +31,17 @@ namespace PaymentGateway.Application.Commands
     private readonly IPaymentHistoryRepository _paymentHistoryRepository;
     private readonly IMetrics _metrics;
     private readonly ILogger<CreatePaymentCommandHandler> _logger;
+    private readonly IEventStoreClient _eventStoreClient;
 
     public CreatePaymentCommandHandler(IAcquiringBankService acquiringBankService,
-      IPaymentHistoryRepository paymentHistoryRepository, IMetrics metrics, ILogger<CreatePaymentCommandHandler> logger)
+      IPaymentHistoryRepository paymentHistoryRepository, IMetrics metrics, 
+      ILogger<CreatePaymentCommandHandler> logger, IEventStoreClient eventStoreClient)
     {
       _acquiringBankService = acquiringBankService;
       _paymentHistoryRepository = paymentHistoryRepository;
       _metrics = metrics;
       _logger = logger;
+      _eventStoreClient = eventStoreClient;
     }
 
     public async Task<Result<Payment>> Handle(CreatePaymentCommand command, CancellationToken cancellationToken)
@@ -55,11 +59,13 @@ namespace PaymentGateway.Application.Commands
         // TODO: Use structured logging
         _logger.LogInformation($"Acquiring bank processed payment {payment.Id} successfully");
         payment.SetSuccess(acquiringBankResult.Value);
+        await _eventStoreClient.Write(new PaymentSuccessfulDomainEvent(payment));
       }
       else
       {
         _logger.LogWarning($"Acquiring bank would not process {payment.Id} {acquiringBankResult.Error}");
         payment.SetFailure(acquiringBankResult.Error);
+        await _eventStoreClient.Write(new PaymentFailedDomainEvent(payment));
       }
 
       Result dbResult = await _paymentHistoryRepository.InsertPayment(payment);
