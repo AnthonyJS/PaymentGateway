@@ -1,9 +1,8 @@
 using System;
 using System.Threading.Tasks;
 using CSharpFunctionalExtensions;
-using PaymentGateway.Application.Interfaces;
-using PaymentGateway.Application.Models;
 using PaymentGateway.Domain.AggregatesModel.PaymentAggregate;
+using PaymentGateway.Domain.Interfaces;
 
 namespace PaymentGateway.Infrastructure.ExternalAPIs.AcquiringBank
 {

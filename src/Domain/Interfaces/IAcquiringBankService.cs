@@ -1,12 +1,11 @@
 using System;
 using System.Threading.Tasks;
 using CSharpFunctionalExtensions;
-using PaymentGateway.Application.Models;
 using PaymentGateway.Domain.AggregatesModel.PaymentAggregate;
 
-namespace PaymentGateway.Application.Interfaces
+namespace PaymentGateway.Domain.Interfaces
 {
-  public interface IAcquiringBankHttpClient
+  public interface IAcquiringBankService
   {
     Task<Result<Guid>> ProcessPayment(Payment payment);
   }

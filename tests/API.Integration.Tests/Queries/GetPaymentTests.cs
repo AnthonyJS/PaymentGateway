@@ -4,10 +4,8 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using PaymentGateway.API.Contracts.V1;
 using PaymentGateway.API.Contracts.V1.Responses;
-using PaymentGateway.Application.Models;
 using PaymentGateway.Domain.AggregatesModel.PaymentAggregate;
 using PaymentGateway.Domain.Enums;
-using PaymentGateway.Infrastructure.Persistence.PaymentHistory;
 using Xunit;
 
 namespace PaymentGateway.API.Integration.Tests.Queries

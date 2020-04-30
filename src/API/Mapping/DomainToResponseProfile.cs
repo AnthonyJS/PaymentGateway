@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using PaymentGateway.API.Contracts.V1.Responses;
-using PaymentGateway.Application.Models;
 using PaymentGateway.Domain.AggregatesModel.PaymentAggregate;
 
 namespace PaymentGateway.API.Mapping

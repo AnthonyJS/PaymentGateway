@@ -1,16 +1,15 @@
 ﻿using PaymentGateway.Application.Queries;
 using Moq;
 using Xunit;
-using PaymentGateway.Application.Interfaces;
 using System;
 using CSharpFunctionalExtensions;
-using PaymentGateway.Application.Models;
 using System.Threading;
 using System.Threading.Tasks;
 using App.Metrics;
-using PaymentGateway.Application.Metrics;
 using PaymentGateway.Domain.AggregatesModel.PaymentAggregate;
 using PaymentGateway.Domain.Enums;
+using PaymentGateway.Domain.Interfaces;
+using PaymentGateway.Domain.Metrics;
 
 namespace PaymentGateway.Application.Unit.Tests.Handlers
 {

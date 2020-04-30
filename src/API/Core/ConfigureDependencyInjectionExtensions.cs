@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using PaymentGateway.Application.Interfaces;
+using PaymentGateway.Domain.Interfaces;
 using PaymentGateway.Infrastructure.ExternalAPIs.AcquiringBank;
 using PaymentGateway.Infrastructure.Persistence.PaymentHistory;
 

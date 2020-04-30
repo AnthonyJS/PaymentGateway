@@ -4,10 +4,9 @@ using System.Threading.Tasks;
 using App.Metrics;
 using CSharpFunctionalExtensions;
 using MediatR;
-using PaymentGateway.Application.Interfaces;
-using PaymentGateway.Application.Metrics;
-using PaymentGateway.Application.Models;
 using PaymentGateway.Domain.AggregatesModel.PaymentAggregate;
+using PaymentGateway.Domain.Interfaces;
+using PaymentGateway.Domain.Metrics;
 
 namespace PaymentGateway.Application.Queries
 {

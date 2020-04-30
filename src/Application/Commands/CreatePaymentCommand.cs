@@ -5,10 +5,10 @@ using App.Metrics;
 using CSharpFunctionalExtensions;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using PaymentGateway.Application.Interfaces;
-using PaymentGateway.Application.Metrics;
 using PaymentGateway.Domain.AggregatesModel.PaymentAggregate;
 using PaymentGateway.Domain.Enums;
+using PaymentGateway.Domain.Interfaces;
+using PaymentGateway.Domain.Metrics;
 
 namespace PaymentGateway.Application.Commands
 {

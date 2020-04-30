@@ -4,10 +4,9 @@ using System.Threading.Tasks;
 using CSharpFunctionalExtensions;
 using LiteDB;
 using Microsoft.Extensions.Logging;
-using PaymentGateway.Application.Interfaces;
-using PaymentGateway.Application.Models;
 using PaymentGateway.Domain.AggregatesModel.PaymentAggregate;
 using PaymentGateway.Domain.Enums;
+using PaymentGateway.Domain.Interfaces;
 
 namespace PaymentGateway.Infrastructure.Persistence.PaymentHistory
 {

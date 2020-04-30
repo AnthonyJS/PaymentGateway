@@ -1,7 +1,7 @@
 ﻿using App.Metrics;
 using App.Metrics.Counter;
 
-namespace PaymentGateway.Application.Metrics
+namespace PaymentGateway.Domain.Metrics
 {
   public class MetricsRegistry
   {

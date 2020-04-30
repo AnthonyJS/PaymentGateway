@@ -1,7 +1,5 @@
 ﻿using Moq;
 using Xunit;
-using PaymentGateway.Application.Interfaces;
-using AutoMapper;
 using System;
 using CSharpFunctionalExtensions;
 using System.Threading;
@@ -9,11 +7,10 @@ using System.Threading.Tasks;
 using App.Metrics;
 using Microsoft.Extensions.Logging;
 using PaymentGateway.Application.Commands;
-using PaymentGateway.Application.Models;
-using PaymentGateway.API.Mapping;
-using PaymentGateway.Application.Metrics;
 using PaymentGateway.Domain.AggregatesModel.PaymentAggregate;
 using PaymentGateway.Domain.Enums;
+using PaymentGateway.Domain.Interfaces;
+using PaymentGateway.Domain.Metrics;
 
 namespace PaymentGateway.Application.Unit.Tests.Handlers
 {

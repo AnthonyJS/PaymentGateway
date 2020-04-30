@@ -10,8 +10,6 @@ using PaymentGateway.API.Contracts.V1;
 using PaymentGateway.API.Contracts.V1.Requests;
 using PaymentGateway.API.Contracts.V1.Responses;
 using PaymentGateway.Application.Commands;
-using PaymentGateway.Application.Metrics;
-using PaymentGateway.Application.Models;
 using PaymentGateway.Application.Queries;
 using PaymentGateway.Domain.AggregatesModel.PaymentAggregate;
 
