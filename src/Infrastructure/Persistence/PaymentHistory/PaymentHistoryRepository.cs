@@ -3,45 +3,84 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using CSharpFunctionalExtensions;
 using LiteDB;
+using Microsoft.Extensions.Logging;
 using PaymentGateway.Application.Interfaces;
 using PaymentGateway.Application.Models;
 using PaymentGateway.Domain.AggregatesModel.PaymentAggregate;
+using PaymentGateway.Domain.Enums;
 
 namespace PaymentGateway.Infrastructure.Persistence.PaymentHistory
 {
-  public class Customer
-  {
-    public int Id { get; set; }
-    public string Name { get; set; }
-    public string[] Phones { get; set; }
-    public bool IsActive { get; set; }
-  }
-
-
   public class PaymentHistoryRepository : IPaymentHistoryRepository
   {
+    private readonly ILogger<PaymentHistoryRepository> _logger;
+
+    public PaymentHistoryRepository(ILogger<PaymentHistoryRepository> logger)
+    {
+      _logger = logger;
+    }
+    
     public async Task<Result<Payment>> GetPaymentById(Guid id)
     {
-      using (var db = new LiteDatabase(@"MyData.db"))
+      try
       {
-        var col = await Task.Run(() => db.GetCollection<Payment>("payments"));
+        using (var db = new LiteDatabase(@"MyData.db"))
+        {
+          var col = await Task.Run(() => db.GetCollection<PaymentDTO>("payments"));
 
-        var result = col.FindOne(x => x.Id == id);
+          PaymentDTO result = col.FindById(id);
 
-        if (result == null)
-            return Result.Failure<Payment>("Payment not in DB");
+          if (result == null)
+            Result.Failure<Payment>("Payment not in DB"); 
           
-        return Result.Ok(result);
+          var cardDetails = new CardDetails(
+            result.FirstName,
+            result.Surname,
+            result.CardNumber,
+            result.ExpiryMonth,
+            result.ExpiryYear,
+            result.CVV);
+          
+          var payment = new Payment(
+            result.Id, 
+            cardDetails, 
+            Enum.Parse<Currency>(result.Currency), 
+            result.Amount, 
+            result.AcquiringBankId);
+          
+          return Result.Ok(payment);
+        }
       }
+      catch (Exception e)
+      {
+        _logger.LogError($":( {e}");
+      }
+      
+      return Result.Failure<Payment>(":(");
     }
 
     public async Task<Result> InsertPayment(Payment payment)
     {
       using (var db = new LiteDatabase(@"MyData.db"))
       {
-        var col = await Task.Run(() => db.GetCollection<Payment>("payments"));
+        var col = await Task.Run(() => db.GetCollection<PaymentDTO>("payments"));
 
-        col.Insert(payment);
+        var paymentDto = new PaymentDTO()
+        {
+          Id = payment.Id,
+          AcquiringBankId = payment.AcquiringBankId.Value,
+          FirstName = payment.CardDetails.FirstName,
+          Surname = payment.CardDetails.Surname,
+          CardNumber = payment.CardDetails.CardNumber,
+          ExpiryMonth = payment.CardDetails.ExpiryMonth,
+          ExpiryYear = payment.CardDetails.ExpiryYear,
+          CVV = payment.CardDetails.CVV,
+          Currency = payment.Currency.ToString(),
+          Amount = payment.Amount,
+          PaymentStatusId = payment.PaymentStatus.Id
+        };
+        
+        col.Insert(paymentDto);
       }
 
       return Result.Ok();

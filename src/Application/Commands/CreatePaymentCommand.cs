@@ -9,7 +9,6 @@ using PaymentGateway.Application.Interfaces;
 using PaymentGateway.Application.Metrics;
 using PaymentGateway.Domain.AggregatesModel.PaymentAggregate;
 using PaymentGateway.Domain.Enums;
-using PaymentGateway.Domain.SeedWork;
 
 namespace PaymentGateway.Application.Commands
 {
@@ -50,7 +49,7 @@ namespace PaymentGateway.Application.Commands
         command.ExpiryMonth, 
         command.ExpiryYear, 
         command.CVV);
-      // var currency = Enumeration.FromDisplayName<Currency>(command.Currency);
+
       var currency = Enum.Parse<Currency>(command.Currency);
       var payment = new Payment(Guid.NewGuid(), cardDetails, currency, command.Amount);
       

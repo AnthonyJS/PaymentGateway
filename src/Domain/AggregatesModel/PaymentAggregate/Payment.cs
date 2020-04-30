@@ -7,21 +7,27 @@ namespace PaymentGateway.Domain.AggregatesModel.PaymentAggregate
 {
   public class Payment : Entity, IAggregateRoot
   {
-    public CardDetails CardDetails { get; }
-    public Currency Currency { get; set; }
-    public decimal Amount { get; set; }
+    public CardDetails CardDetails { get;  }
+    public Currency Currency { get; }
+    public decimal Amount { get; }
     
     public PaymentStatus PaymentStatus { get; private set; }
-    public Guid AcquiringBankId { get; private set; }
+    public Guid? AcquiringBankId { get; private set; }
     public string ErrorMessage { get; private set; }
-    
-    public Payment(Guid id, CardDetails cardDetails, Currency currency, decimal amount) 
+
+    public Payment(Guid id, CardDetails cardDetails, Currency currency, decimal amount, Guid acquiringBankId)
       : base(id)
     {
       CardDetails = cardDetails ?? throw new PaymentDomainException(nameof(cardDetails));
       Amount = amount > 0 ? amount : throw new PaymentDomainException(nameof(amount));
       Currency = currency;
       PaymentStatus = PaymentStatus.Initialized;
+      AcquiringBankId = acquiringBankId;
+    }
+
+    public Payment(Guid id, CardDetails cardDetails, Currency currency, decimal amount)
+      : this(id, cardDetails, currency, amount, Guid.Empty)
+    {
     }
 
     public void SetSubmitting()
