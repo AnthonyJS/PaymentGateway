@@ -1,5 +1,6 @@
 using System;
 using PaymentGateway.Domain.Enums;
+using PaymentGateway.Domain.Events;
 using PaymentGateway.Domain.Exceptions;
 using PaymentGateway.Domain.SeedWork;
 
@@ -36,7 +37,6 @@ namespace PaymentGateway.Domain.AggregatesModel.PaymentAggregate
       if (PaymentStatus == PaymentStatus.Initialized)
       {
         PaymentStatus = PaymentStatus.Submitting;
-        // TODO: Send Domain event here
       }
     }
     
@@ -46,7 +46,6 @@ namespace PaymentGateway.Domain.AggregatesModel.PaymentAggregate
       {
         AcquiringBankId = acquiringBankId;
         PaymentStatus = PaymentStatus.Success;
-        // TODO: Send Domain event here
       }
     }
     
@@ -56,7 +55,6 @@ namespace PaymentGateway.Domain.AggregatesModel.PaymentAggregate
       {
         ErrorMessage = error;
         PaymentStatus = PaymentStatus.Failure;
-        // TODO: Send Domain event here
       }
     }
   }
