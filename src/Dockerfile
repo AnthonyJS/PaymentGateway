@@ -5,6 +5,7 @@ WORKDIR /app
 COPY ./API/API.csproj ./API/
 COPY ./Application/Application.csproj ./Application/
 COPY ./Infrastructure/Infrastructure.csproj ./Infrastructure/
+COPY ./Domain/Domain.csproj ./Domain/
 RUN dotnet restore ./API/API.csproj
 
 COPY . .
