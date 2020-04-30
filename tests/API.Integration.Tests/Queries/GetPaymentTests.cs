@@ -6,6 +6,7 @@ using PaymentGateway.API.Contracts.V1;
 using PaymentGateway.API.Contracts.V1.Responses;
 using PaymentGateway.Application.Enums;
 using PaymentGateway.Application.Models;
+using PaymentGateway.Domain.AggregatesModel.PaymentAggregate;
 using PaymentGateway.Infrastructure.Persistence.PaymentHistory;
 using Xunit;
 

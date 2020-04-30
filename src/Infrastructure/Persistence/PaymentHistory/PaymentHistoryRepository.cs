@@ -5,6 +5,7 @@ using CSharpFunctionalExtensions;
 using LiteDB;
 using PaymentGateway.Application.Interfaces;
 using PaymentGateway.Application.Models;
+using PaymentGateway.Domain.AggregatesModel.PaymentAggregate;
 
 namespace PaymentGateway.Infrastructure.Persistence.PaymentHistory
 {

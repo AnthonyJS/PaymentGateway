@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using PaymentGateway.Application.Commands;
 using PaymentGateway.Application.Models;
 using PaymentGateway.API.Mapping;
+using PaymentGateway.Domain.AggregatesModel.PaymentAggregate;
 
 namespace PaymentGateway.Application.Unit.Tests.Handlers
 {

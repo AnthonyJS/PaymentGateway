@@ -7,6 +7,7 @@ using CSharpFunctionalExtensions;
 using PaymentGateway.Application.Models;
 using System.Threading;
 using System.Threading.Tasks;
+using PaymentGateway.Domain.AggregatesModel.PaymentAggregate;
 
 namespace PaymentGateway.Application.Unit.Tests.Handlers
 {
