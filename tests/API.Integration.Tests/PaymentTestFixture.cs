@@ -15,7 +15,7 @@ namespace PaymentGateway.API.Integration.Tests
 
     public PaymentTestFixture()
     {
-      PaymentHistoryRepository = new PaymentHistoryRepository(null);
+      PaymentHistoryRepository = new PaymentHistoryRepository(null, null);
       var appFactory = new WebApplicationFactory<Startup>();
       TestClient = appFactory.CreateClient();         
     }

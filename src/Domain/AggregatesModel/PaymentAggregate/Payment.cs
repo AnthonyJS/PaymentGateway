@@ -7,13 +7,15 @@ namespace PaymentGateway.Domain.AggregatesModel.PaymentAggregate
 {
   public class Payment : Entity, IAggregateRoot
   {
-    public CardDetails CardDetails { get; }
-    public Currency Currency { get; }
-    public decimal Amount { get; }
+    public CardDetails CardDetails { get; private set; }
+    public Currency Currency { get; private set; }
+    public decimal Amount { get; private set; }
     public PaymentStatus PaymentStatus { get; private set; }
     public Guid? AcquiringBankId { get; private set; }
     public string ErrorMessage { get; private set; }
 
+    private Payment() : base(Guid.Empty) { }
+    
     public Payment(Guid id, CardDetails cardDetails, Currency currency, decimal amount, Guid acquiringBankId)
       : base(id)
     {

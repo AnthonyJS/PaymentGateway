@@ -1,11 +1,10 @@
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
+using AutoMapper;
 using CSharpFunctionalExtensions;
 using LiteDB;
 using Microsoft.Extensions.Logging;
 using PaymentGateway.Domain.AggregatesModel.PaymentAggregate;
-using PaymentGateway.Domain.Enums;
 using PaymentGateway.Domain.Interfaces;
 
 namespace PaymentGateway.Infrastructure.Persistence.PaymentHistory
@@ -13,10 +12,12 @@ namespace PaymentGateway.Infrastructure.Persistence.PaymentHistory
   public class PaymentHistoryRepository : IPaymentHistoryRepository
   {
     private readonly ILogger<PaymentHistoryRepository> _logger;
+    private readonly IMapper _mapper;
 
-    public PaymentHistoryRepository(ILogger<PaymentHistoryRepository> logger)
+    public PaymentHistoryRepository(ILogger<PaymentHistoryRepository> logger, IMapper mapper)
     {
       _logger = logger;
+      _mapper = mapper;
     }
     
     public async Task<Result<Payment>> GetPaymentById(Guid id)
@@ -30,22 +31,9 @@ namespace PaymentGateway.Infrastructure.Persistence.PaymentHistory
           PaymentDTO result = col.FindById(id);
 
           if (result == null)
-            Result.Failure<Payment>("Payment not in DB"); 
-          
-          var cardDetails = new CardDetails(
-            result.FirstName,
-            result.Surname,
-            result.CardNumber,
-            result.ExpiryMonth,
-            result.ExpiryYear,
-            result.CVV);
-          
-          var payment = new Payment(
-            result.Id, 
-            cardDetails, 
-            Enum.Parse<Currency>(result.Currency), 
-            result.Amount, 
-            result.AcquiringBankId);
+            Result.Failure<Payment>("Payment not in DB");
+
+          var payment = _mapper.Map<Payment>(result);
           
           return Result.Ok(payment);
         }

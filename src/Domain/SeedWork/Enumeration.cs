@@ -33,6 +33,12 @@ namespace PaymentGateway.Domain.SeedWork
       return matchingItem;
     }
     
+    public static T FromValue<T>(int value) where T : Enumeration
+    {
+      var matchingItem = Parse<T, int>(value, "value", item => item.Id == value);
+      return matchingItem;
+    }
+    
     public static IEnumerable<T> GetAll<T>() where T : Enumeration
     {
       var fields = typeof(T).GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly);

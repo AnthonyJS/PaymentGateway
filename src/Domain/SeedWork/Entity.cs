@@ -9,6 +9,6 @@ namespace PaymentGateway.Domain.SeedWork
       Id = id;
     }
     
-    public Guid Id { get; }
+    public Guid Id { get; private set; }
   }
 }
