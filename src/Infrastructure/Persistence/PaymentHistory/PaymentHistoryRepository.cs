@@ -31,7 +31,7 @@ namespace PaymentGateway.Infrastructure.Persistence.PaymentHistory
           PaymentDTO result = col.FindById(id);
 
           if (result == null)
-            Result.Failure<Payment>("Payment not in DB");
+            return Result.Failure<Payment>("Payment not in DB");
 
           var payment = _mapper.Map<Payment>(result);
           

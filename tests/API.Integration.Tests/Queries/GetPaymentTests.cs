@@ -52,7 +52,6 @@ namespace PaymentGateway.API.Integration.Tests.Queries
 
     // TODO: Put this in a transaction so the data can be removed after the test finishes
     private async Task<Guid> insertPaymentDirectlyIntoDatabaseForTesting()
-    
     {
       var cardDetails = new CardDetails(
         "Jim", 
