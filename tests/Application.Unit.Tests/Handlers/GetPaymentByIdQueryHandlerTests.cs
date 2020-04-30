@@ -8,6 +8,7 @@ using PaymentGateway.Application.Models;
 using System.Threading;
 using System.Threading.Tasks;
 using App.Metrics;
+using PaymentGateway.Application.Metrics;
 using PaymentGateway.Domain.AggregatesModel.PaymentAggregate;
 using PaymentGateway.Domain.Enums;
 
@@ -23,6 +24,7 @@ namespace PaymentGateway.Application.Unit.Tests.Handlers
     {
       _mockPaymentHistoryRepository = new Mock<IPaymentHistoryRepository>();
       _mockMetrics = new Mock<IMetrics>();
+      _mockMetrics.Setup(m => m.Measure.Counter.Increment(MetricsRegistry.PaymentsRetrievedCounter));
     }
 
     [Fact]

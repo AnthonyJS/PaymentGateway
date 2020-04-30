@@ -7,10 +7,9 @@ namespace PaymentGateway.Domain.AggregatesModel.PaymentAggregate
 {
   public class Payment : Entity, IAggregateRoot
   {
-    public CardDetails CardDetails { get;  }
+    public CardDetails CardDetails { get; }
     public Currency Currency { get; }
     public decimal Amount { get; }
-    
     public PaymentStatus PaymentStatus { get; private set; }
     public Guid? AcquiringBankId { get; private set; }
     public string ErrorMessage { get; private set; }
