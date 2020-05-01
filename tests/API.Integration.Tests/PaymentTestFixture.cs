@@ -1,4 +1,5 @@
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Testing;
 using PaymentGateway.Domain.Interfaces;
@@ -12,7 +13,7 @@ namespace PaymentGateway.API.Integration.Tests
     public IPaymentHistoryRepository PaymentHistoryRepository { get; }
     public HttpClient TestClient { get; }
 
-    private DockerTestContainer _dockerTestContainer;
+    private EventStoreTestContainer _eventStoreTestContainer;
 
     public PaymentTestFixture()
     {
@@ -23,15 +24,19 @@ namespace PaymentGateway.API.Integration.Tests
 
     public async Task InitializeAsync()
     {
-      _dockerTestContainer = new DockerTestContainer();
+      _eventStoreTestContainer = new EventStoreTestContainer();
         
-      await _dockerTestContainer.CreateContainer();
-      await _dockerTestContainer.StartContainer();
+      await _eventStoreTestContainer.CreateContainer();
+      await _eventStoreTestContainer.StartContainer();
+      
+      // Give EventStore container enough time to start up 😬
+      // TODO: Find a better way to do this
+      Thread.Sleep(5000);
     }
 
     public async Task DisposeAsync()
     {
-      await _dockerTestContainer.DeleteContainer();
+      await _eventStoreTestContainer.DeleteContainer();
     }
   }
 }

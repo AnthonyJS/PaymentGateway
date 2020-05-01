@@ -7,27 +7,26 @@ using Docker.DotNet.Models;
 
 namespace PaymentGateway.API.Integration.Tests
 {
-  public class DockerTestContainer
+  public class EventStoreTestContainer
   {
-    private DockerClient _client;
-    private string ImageName = "eventstore/eventstore";
-    private string ImageTag = "latest";
-    private string ContainerName = "ajs-eventstore-integration-testing";
+    private readonly DockerClient _client;
+    private const string _imageName = "eventstore/eventstore";
+    private const string _imageTag = "latest";
+    private const string _containerName = "ajs-eventstore-integration-testing";
 
-    public DockerTestContainer()
+    public EventStoreTestContainer()
     {
       _client = new DockerClientConfiguration(new Uri("npipe://./pipe/docker_engine")).CreateClient();
     }
     
     public async Task CreateContainer()
     {
-      if (await DoesContainerExist(ContainerName))
+      if (await DoesContainerExist(_containerName))
       {
-        Console.WriteLine($"Container {ContainerName} exists so deleting it");
-        await DeleteContainer();
+        return;
       }
 
-      await _client.Images.CreateImageAsync(new ImagesCreateParameters() {FromImage = ImageName, Tag = ImageTag},
+      await _client.Images.CreateImageAsync(new ImagesCreateParameters() {FromImage = _imageName, Tag = _imageTag},
         new AuthConfig(),
         new Progress<JSONMessage>());
 
@@ -48,7 +47,7 @@ namespace PaymentGateway.API.Integration.Tests
         CreateContainerResponse response = await _client.Containers.CreateContainerAsync(
           new CreateContainerParameters(config)
           {
-            Image = ImageName + ":" + ImageTag, Name = ContainerName, Tty = false, HostConfig = hostConfig,
+            Image = _imageName + ":" + _imageTag, Name = _containerName, Tty = false, HostConfig = hostConfig,
           });
       }
       catch (Exception e)
@@ -57,14 +56,14 @@ namespace PaymentGateway.API.Integration.Tests
       }
     }
 
-    public async Task StartContainer()
+    public async Task<bool> StartContainer()
     {
-      bool result = await _client.Containers.StartContainerAsync(ContainerName, new ContainerStartParameters());
+      return await _client.Containers.StartContainerAsync(_containerName, new ContainerStartParameters());
     }
 
     public async Task DeleteContainer()
     {
-      await _client.Containers.RemoveContainerAsync(ContainerName, new ContainerRemoveParameters() {Force = true});
+      await _client.Containers.RemoveContainerAsync(_containerName, new ContainerRemoveParameters() {Force = true});
     }
     
     private async Task<bool> DoesContainerExist(string label)
