@@ -3,10 +3,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Text.Json;
 using System.Threading.Tasks;
 using CSharpFunctionalExtensions;
 using EventStore.ClientAPI;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using PaymentGateway.Domain.AggregatesModel.PaymentAggregate;
 using PaymentGateway.Domain.Interfaces;
@@ -18,14 +18,14 @@ namespace PaymentGateway.Infrastructure.Persistence.EventStore
     private readonly ILogger<EventStoreClient>  _logger;
     private readonly IEventStoreConnection _conn;
 
-    public EventStoreClient(ILogger<EventStoreClient> logger)
+    public EventStoreClient(ILogger<EventStoreClient> logger, IConfiguration configuration)
     {
       _logger = logger;
+
+      var eventStoreConnectionString = configuration.GetValue<string>("EventStore:Url");
+      _logger.LogDebug($"EventStore connection string is {eventStoreConnectionString}");
       
-      // TODO: Add env variables to set this value
-      _conn = EventStoreConnection.Create(new Uri("tcp://admin:changeit@localhost:1113"));
-      //_conn = EventStoreConnection.Create(new Uri("tcp://admin:changeit@eventstore:1113"));
-      
+      _conn = EventStoreConnection.Create(new Uri(eventStoreConnectionString));
       _conn.ConnectAsync().Wait();
       _logger.LogInformation("Created connection to EventStore");
     }

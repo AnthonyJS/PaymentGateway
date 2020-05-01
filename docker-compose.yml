@@ -11,6 +11,8 @@ services:
     build:
       context: src/
       dockerfile: Dockerfile
+    environment:
+      - EVENTSTORE__URL=tcp://admin:changeit@eventstore:1113
     restart: always
     ports: 
       - "8080:80"
