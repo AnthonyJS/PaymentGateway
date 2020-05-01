@@ -79,7 +79,9 @@ namespace PaymentGateway.Application.Commands
       
       _metrics.Measure.Counter.Increment(MetricsRegistry.PaymentsCreatedCounter);
 
-      return Result.Ok(payment);
+      return acquiringBankResult.IsSuccess  
+        ? Result.Ok(payment)
+        : Result.Failure<Payment>("Acquiring bank refused payment");
     }
   }
 }
