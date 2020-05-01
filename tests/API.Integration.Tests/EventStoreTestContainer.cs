@@ -61,6 +61,14 @@ namespace PaymentGateway.API.Integration.Tests
       return await _client.Containers.StartContainerAsync(_containerName, new ContainerStartParameters());
     }
 
+    public async Task<string> GetStatusOfContainer()
+    {
+      var containers = await _client.Containers.ListContainersAsync(
+        new ContainersListParameters());
+
+      return containers.FirstOrDefault(c => c.Names.Contains($"/{_containerName}"))?.Status;
+    }
+
     public async Task DeleteContainer()
     {
       await _client.Containers.RemoveContainerAsync(_containerName, new ContainerRemoveParameters() {Force = true});

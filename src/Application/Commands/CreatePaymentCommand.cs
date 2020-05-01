@@ -84,7 +84,7 @@ namespace PaymentGateway.Application.Commands
         _logger.LogError($"Failed to send the Domain Event for Payment {payment.Id} of type {_domainEvent.GetType()}");
       }
       
-      if (dbResult.IsFailure || eventStoreResult.IsFailure)
+      if (dbResult.IsFailure)
         return Result.Failure<Payment>("Failed to save Payment");
       
       _metrics.Measure.Counter.Increment(MetricsRegistry.PaymentsCreatedCounter);
