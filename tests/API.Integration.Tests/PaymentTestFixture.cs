@@ -31,7 +31,7 @@ namespace PaymentGateway.API.Integration.Tests
       
       // Give EventStore container enough time to start up 😬
       // TODO: Find a better way to do this
-      Thread.Sleep(5000);
+      //Thread.Sleep(5000);
     }
 
     public async Task DisposeAsync()
