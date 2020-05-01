@@ -1,9 +1,8 @@
-using System;
-using PaymentGateway.Application.Enums;
+﻿using System;
 
-namespace PaymentGateway.Application.Models
+namespace PaymentGateway.Infrastructure.Persistence.PaymentHistory
 {
-  public class Payment
+  public class PaymentDTO
   {
     public Guid Id { get; set; }
     public Guid AcquiringBankId { get; set; }
@@ -12,10 +11,9 @@ namespace PaymentGateway.Application.Models
     public string CardNumber { get; set; }
     public int ExpiryMonth { get; set; }
     public int ExpiryYear { get; set; }
-    public Currency Currency { get; set; }
+    public string Currency { get; set; }
     public decimal Amount { get; set; }
     public short CVV { get; set; }
-    public bool IsSuccess { get; set; }
-    public string ErrorMessage { get; set; }
+    public int PaymentStatusId { get; set; }
   }
 }

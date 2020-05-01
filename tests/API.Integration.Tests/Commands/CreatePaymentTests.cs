@@ -51,7 +51,7 @@ namespace PaymentGateway.API.Integration.Tests.Commands
     }
 
     [Fact]
-    public async Task ShouldNotInsertPaymentWithInvalidData()
+    public async Task ShouldNotInsertPaymentWithInvalidMonth()
     {
       var data = new CreatePaymentRequest()
       {
@@ -70,6 +70,28 @@ namespace PaymentGateway.API.Integration.Tests.Commands
       var response = await _fixture.TestClient.PostAsync(ApiRoutes.Payments.Create, content);
 
       Assert.True(response.StatusCode == HttpStatusCode.BadRequest);
+    }
+    
+    [Fact]
+    public async Task ShouldNotInsertPaymentWithInvalidAmount()
+    {
+      var data = new CreatePaymentRequest()
+      {
+        FirstName = "Jim",
+        Surname = "Jimson",
+        CardNumber = "1234-5678-8765-4321",
+        ExpiryMonth = 10, 
+        ExpiryYear = 20,
+        Currency = "GBP",
+        Amount = 44404.44M, // Amount too high
+        CVV = 321
+      };
+      var payload = JsonSerializer.Serialize(data);
+
+      var content = new StringContent(payload, Encoding.UTF8, "application/json");
+      var response = await _fixture.TestClient.PostAsync(ApiRoutes.Payments.Create, content);
+
+      Assert.True(response.StatusCode == HttpStatusCode.UnprocessableEntity);
     }
   }
 }

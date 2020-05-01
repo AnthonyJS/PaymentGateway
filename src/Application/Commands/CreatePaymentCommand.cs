@@ -1,15 +1,19 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using AutoMapper;
+using App.Metrics;
 using CSharpFunctionalExtensions;
 using MediatR;
-using PaymentGateway.Application.Interfaces;
-using PaymentGateway.Application.Models;
+using Microsoft.Extensions.Logging;
+using PaymentGateway.Domain.AggregatesModel.PaymentAggregate;
+using PaymentGateway.Domain.Enums;
+using PaymentGateway.Domain.Events;
+using PaymentGateway.Domain.Interfaces;
+using PaymentGateway.Domain.Metrics;
 
 namespace PaymentGateway.Application.Commands
 {
-  public class CreatePaymentCommand : IRequest<Result<AcquiringBankPayment>>
+  public class CreatePaymentCommand : IRequest<Result<Payment>>
   {
     public string FirstName { get; set; }
     public string Surname { get; set; }
@@ -21,52 +25,73 @@ namespace PaymentGateway.Application.Commands
     public short CVV { get; set; }
   }
 
-  public class CreatePaymentCommandHandler : IRequestHandler<CreatePaymentCommand, Result<AcquiringBankPayment>>
+  public class CreatePaymentCommandHandler : IRequestHandler<CreatePaymentCommand, Result<Payment>>
   {
     private readonly IAcquiringBankService _acquiringBankService;
     private readonly IPaymentHistoryRepository _paymentHistoryRepository;
-    private readonly IMapper _mapper;
+    private readonly IMetrics _metrics;
+    private readonly ILogger<CreatePaymentCommandHandler> _logger;
+    private readonly IEventStoreClient _eventStoreClient;
+    private IDomainEvent _domainEvent;
 
     public CreatePaymentCommandHandler(IAcquiringBankService acquiringBankService,
-      IPaymentHistoryRepository paymentHistoryRepository, IMapper mapper)
+      IPaymentHistoryRepository paymentHistoryRepository, IMetrics metrics, 
+      ILogger<CreatePaymentCommandHandler> logger, IEventStoreClient eventStoreClient)
     {
       _acquiringBankService = acquiringBankService;
       _paymentHistoryRepository = paymentHistoryRepository;
-      _mapper = mapper;
+      _metrics = metrics;
+      _logger = logger;
+      _eventStoreClient = eventStoreClient;
     }
 
-    public async Task<Result<AcquiringBankPayment>> Handle(CreatePaymentCommand command, CancellationToken cancellationToken)
+    // TODO: Make whole thing atomic with Unit of Work
+    public async Task<Result<Payment>> Handle(CreatePaymentCommand command, CancellationToken cancellationToken)
     {
-      Payment payment = _mapper.Map<Payment>(command);
-
-      // TODO: The payment request to the acquiring bank and saving the result
-      // to the DB should be done in an atomic transaction, so a rollback
-      // can be performed in case one part fails.
+      var cardDetails = new CardDetails(command.FirstName, command.Surname, command.CardNumber, 
+                                        command.ExpiryMonth, command.ExpiryYear, command.CVV);
+      var currency = Enum.Parse<Currency>(command.Currency);
+      var payment = new Payment(Guid.NewGuid(), cardDetails, currency, command.Amount);
+      
+      payment.SetSubmitting();
       Result<Guid> acquiringBankResult = await _acquiringBankService.ProcessPayment(payment);
-
-      payment.Id = Guid.NewGuid();
-      payment.IsSuccess = acquiringBankResult.IsSuccess;
-
-      if (payment.IsSuccess)
-        payment.AcquiringBankId = acquiringBankResult.Value;
+      
+      if (acquiringBankResult.IsSuccess)
+      {
+        // TODO: Use structured logging
+        _logger.LogInformation($"Acquiring bank processed payment {payment.Id} successfully");
+        payment.SetSuccess(acquiringBankResult.Value);
+        _domainEvent = new PaymentSuccessfulDomainEvent(payment);
+      }
       else
-        payment.ErrorMessage = acquiringBankResult.Error;
-
+      {
+        _logger.LogWarning($"Acquiring bank would not process {payment.Id} {acquiringBankResult.Error}");
+        payment.SetFailure(acquiringBankResult.Error);
+        _domainEvent = new PaymentFailedDomainEvent(payment);
+      }
+      
       Result dbResult = await _paymentHistoryRepository.InsertPayment(payment);
 
       if (dbResult.IsFailure)
       {
-        return Result.Failure<AcquiringBankPayment>("Failed to save to the DB");
+        _logger.LogError($"Failed to save the Payment {payment.Id} to the DB");
       }
-
-      return Result.Ok(new AcquiringBankPayment()
+      
+      var eventStoreResult = await _eventStoreClient.Write(_domainEvent);
+      
+      if (eventStoreResult.IsFailure)
       {
-        Id = payment.Id,
-        IsSuccess = acquiringBankResult.IsSuccess,
-        ErrorMessage = acquiringBankResult.IsSuccess
-                        ? string.Empty
-                        : acquiringBankResult.Error
-      });
+        _logger.LogError($"Failed to send the Domain Event for Payment {payment.Id} of type {_domainEvent.GetType()}");
+      }
+      
+      if (dbResult.IsFailure)
+        return Result.Failure<Payment>("Failed to save Payment");
+      
+      _metrics.Measure.Counter.Increment(MetricsRegistry.PaymentsCreatedCounter);
+
+      return acquiringBankResult.IsSuccess  
+        ? Result.Ok(payment)
+        : Result.Failure<Payment>("Acquiring bank refused payment");
     }
   }
 }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using PaymentGateway.Application.Interfaces;
+using PaymentGateway.Domain.Interfaces;
 using PaymentGateway.Infrastructure.ExternalAPIs.AcquiringBank;
+using PaymentGateway.Infrastructure.Persistence.EventStore;
 using PaymentGateway.Infrastructure.Persistence.PaymentHistory;
 
 namespace PaymentGateway.API.Core
@@ -12,6 +13,7 @@ namespace PaymentGateway.API.Core
       services.AddScoped<IAcquiringBankService, AcquiringBankService>();
       services.AddScoped<IAcquiringBankHttpClient, FakeAcquiringBankHttpClient>();
       services.AddScoped<IPaymentHistoryRepository, PaymentHistoryRepository>();
+      services.AddSingleton<IEventStoreClient, EventStoreClient>();
 
       return services;
     }
