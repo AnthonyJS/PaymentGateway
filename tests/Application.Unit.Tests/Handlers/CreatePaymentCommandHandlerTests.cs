@@ -89,7 +89,7 @@ namespace PaymentGateway.Application.Unit.Tests.Handlers
 
       _mockAcquiringBankService.Verify(a => a.ProcessPayment(It.IsAny<Payment>()), Times.Once());
       _mockPaymentHistoryRepository.Verify(p => p.InsertPayment(It.IsAny<Payment>()), Times.Once());
-      Assert.True(result.IsSuccess);
+      Assert.False(result.IsSuccess);
     }
 
     [Fact]
