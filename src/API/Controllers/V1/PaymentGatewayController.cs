@@ -29,18 +29,18 @@ namespace PaymentGateway.API.Controllers.V1
     /// <summary>
     /// Retrieves a Payment by Id in the query string
     /// </summary>
-    /// <param name="paymentId"></param>
+    /// <param name="query"></param>
     /// <response code="200">Returns the payment details</response>
     /// <response code="404">Payment could not be found</response>
     [HttpGet(ApiRoutes.Payments.Get)]
-    public async Task<IActionResult> GetPayment(Guid paymentId)
+    public async Task<IActionResult> GetPayment([FromQuery]GetPaymentByIdQuery query)
     {
-      var query = new GetPaymentByIdQuery(paymentId);
-      Result<Payment> result = await _mediator.Send(query);
+      Result<PaymentByIdResponse> result = await _mediator.Send(query);
 
-      return result.IsSuccess
-        ? (IActionResult) Ok(_mapper.Map<PaymentByIdResponse>(result.Value))
-        : NotFound();
+      if (!result.IsSuccess)
+        return NotFound();
+
+      return Ok(result.Value);
     }
 
     /// <summary>
