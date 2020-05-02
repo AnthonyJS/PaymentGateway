@@ -37,12 +37,14 @@ namespace PaymentGateway.API.Controllers.V1
     {
       var query = _mapper.Map<GetPaymentByIdQuery>(request);
       
-      Result<GetPaymentByIdResponse> result = await _mediator.Send(query);
+      Result<Payment> payment = await _mediator.Send(query);
 
-      if (!result.IsSuccess)
+      if (!payment.IsSuccess)
         return NotFound();
 
-      return Ok(result.Value);
+      var result = _mapper.Map<GetPaymentByIdResponse>(payment.Value);
+
+      return Ok(result);
     }
 
     /// <summary>
@@ -57,22 +59,24 @@ namespace PaymentGateway.API.Controllers.V1
     {
       var command = _mapper.Map<CreatePaymentCommand>(request);
       
-      Result<CreatePaymentResponse> result = await _mediator.Send(command);
+      Result<Payment> payment = await _mediator.Send(command);
 
-      if (!result.IsSuccess)
+      if (!payment.IsSuccess)
       {
-        if (result.Error == CreatePaymentErrors.PaymentSaveFailed)
+        if (payment.Error == CreatePaymentErrors.PaymentSaveFailed)
         {
           return StatusCode(StatusCodes.Status503ServiceUnavailable);
         }
 
-        if (result.Error == CreatePaymentErrors.AcquiringBankRefusedPayment)
+        if (payment.Error == CreatePaymentErrors.AcquiringBankRefusedPayment)
         {
-          return UnprocessableEntity(new {ErrorMessage = result.Error});
+          return UnprocessableEntity(new {ErrorMessage = payment.Error});
         }
       }
 
-      return CreatedAtAction("CreatePayment", result.Value, result.Value);
+      var result = _mapper.Map<CreatePaymentResponse>(payment.Value);
+
+      return CreatedAtAction("CreatePayment", result, result);
     }
   }
 }

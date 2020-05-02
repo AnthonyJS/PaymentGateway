@@ -2,19 +2,15 @@
 using System.Threading;
 using System.Threading.Tasks;
 using App.Metrics;
-using AutoMapper;
 using CSharpFunctionalExtensions;
 using MediatR;
-using Microsoft.AspNetCore.Mvc;
-using PaymentGateway.API.Contracts.V1.Requests;
-using PaymentGateway.API.Contracts.V1.Responses;
 using PaymentGateway.Domain.AggregatesModel.PaymentAggregate;
 using PaymentGateway.Domain.Interfaces;
 using PaymentGateway.Domain.Metrics;
 
 namespace PaymentGateway.API.Application.Queries
 {
-  public class GetPaymentByIdQuery : IRequest<Result<GetPaymentByIdResponse>>
+  public class GetPaymentByIdQuery : IRequest<Result<Payment>>
   {
     public Guid Id { get; set; }
 
@@ -24,31 +20,27 @@ namespace PaymentGateway.API.Application.Queries
     }
   }
   
-  public class GetPaymentByIdQueryHandler : IRequestHandler<GetPaymentByIdQuery, Result<GetPaymentByIdResponse>>
+  public class GetPaymentByIdQueryHandler : IRequestHandler<GetPaymentByIdQuery, Result<Payment>>
   {
     private readonly IPaymentHistoryRepository _paymentHistoryRepository;
     private readonly IMetrics _metrics;
-    private readonly IMapper _mapper;
 
-    public GetPaymentByIdQueryHandler(IPaymentHistoryRepository paymentHistoryRepository, IMetrics metrics, IMapper mapper)
+    public GetPaymentByIdQueryHandler(IPaymentHistoryRepository paymentHistoryRepository, IMetrics metrics)
     {
       _paymentHistoryRepository = paymentHistoryRepository;
       _metrics = metrics;
-      _mapper = mapper;
     }
 
-    public async Task<Result<GetPaymentByIdResponse>> Handle(GetPaymentByIdQuery request, CancellationToken cancellationToken)
+    public async Task<Result<Payment>> Handle(GetPaymentByIdQuery request, CancellationToken cancellationToken)
     {
       Result<Payment> result = await _paymentHistoryRepository.GetPaymentById(request.Id);
 
       if (result.IsFailure)
-        return Result.Failure<GetPaymentByIdResponse>(GetPaymentErrors.PaymentNotFound);
+        return Result.Failure<Payment>(GetPaymentErrors.PaymentNotFound);
 
-      Payment payment = result.Value;
-      
       _metrics.Measure.Counter.Increment(MetricsRegistry.PaymentsRetrievedCounter);
 
-      return Result.Ok(_mapper.Map<GetPaymentByIdResponse>(payment));
+      return Result.Ok(result.Value);
     }
   }
   

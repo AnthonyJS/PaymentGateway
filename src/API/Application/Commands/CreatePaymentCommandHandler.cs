@@ -6,7 +6,6 @@ using AutoMapper;
 using CSharpFunctionalExtensions;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using PaymentGateway.API.Contracts.V1.Responses;
 using PaymentGateway.Domain.AggregatesModel.PaymentAggregate;
 using PaymentGateway.Domain.Enums;
 using PaymentGateway.Domain.Events;
@@ -15,7 +14,7 @@ using PaymentGateway.Domain.Metrics;
 
 namespace PaymentGateway.API.Application.Commands
 {
-  public class CreatePaymentCommand : IRequest<Result<CreatePaymentResponse>>
+  public class CreatePaymentCommand : IRequest<Result<Payment>>
   {
     public string FirstName { get; set; }
     public string Surname { get; set; }
@@ -27,7 +26,7 @@ namespace PaymentGateway.API.Application.Commands
     public short CVV { get; set; }
   }
   
-  public class CreatePaymentCommandHandler : IRequestHandler<CreatePaymentCommand, Result<CreatePaymentResponse>>
+  public class CreatePaymentCommandHandler : IRequestHandler<CreatePaymentCommand, Result<Payment>>
   {
     private readonly IAcquiringBankService _acquiringBankService;
     private readonly IPaymentHistoryRepository _paymentHistoryRepository;
@@ -50,7 +49,7 @@ namespace PaymentGateway.API.Application.Commands
     }
 
     // TODO: Make whole thing atomic with Unit of Work
-    public async Task<Result<CreatePaymentResponse>> Handle(CreatePaymentCommand command, CancellationToken cancellationToken)
+    public async Task<Result<Payment>> Handle(CreatePaymentCommand command, CancellationToken cancellationToken)
     {
       var cardDetails = new CardDetails(command.FirstName, command.Surname, command.CardNumber, 
         command.ExpiryMonth, command.ExpiryYear, command.CVV);
@@ -89,15 +88,13 @@ namespace PaymentGateway.API.Application.Commands
       }
       
       if (dbResult.IsFailure)
-        return Result.Failure<CreatePaymentResponse>(CreatePaymentErrors.PaymentSaveFailed);
+        return Result.Failure<Payment>(CreatePaymentErrors.PaymentSaveFailed);
       
       _metrics.Measure.Counter.Increment(MetricsRegistry.PaymentsCreatedCounter);
       
-      var response = _mapper.Map<CreatePaymentResponse>(payment);
-
       return acquiringBankResult.IsSuccess  
-        ? Result.Ok(response)
-        : Result.Failure<CreatePaymentResponse>(CreatePaymentErrors.AcquiringBankRefusedPayment);
+        ? Result.Ok(payment)
+        : Result.Failure<Payment>(CreatePaymentErrors.AcquiringBankRefusedPayment);
     }
   }
   
