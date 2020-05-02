@@ -8,8 +8,9 @@
 
     public static class Payments
     {
-      public const string Get = Base + "/payments/{paymentId}";
+      public const string Get = Base + "/payments/{Id}";
       public const string Create = Base + "/payments";
     }
   }
 }
+

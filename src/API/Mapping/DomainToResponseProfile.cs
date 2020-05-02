@@ -8,9 +8,9 @@ namespace PaymentGateway.API.Mapping
   {
     public DomainToResponseProfile()
     {
-      CreateMap<Payment, CreatePaymentSuccessResponse>();
+      CreateMap<Payment, CreatePaymentResponse>();
       
-      CreateMap<Payment, PaymentByIdResponse>()
+      CreateMap<Payment, GetPaymentByIdResponse>()
         .ForMember(dest => dest.FirstName, src => src.MapFrom(c => c.CardDetails.FirstName))
         .ForMember(dest => dest.Surname, src => src.MapFrom(c => c.CardDetails.Surname))
         .ForMember(dest => dest.CardNumberMasked,

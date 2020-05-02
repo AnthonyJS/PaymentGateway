@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using PaymentGateway.API.Application.Commands;
 using PaymentGateway.API.Contracts.V1;
 using PaymentGateway.API.Contracts.V1.Requests;
 using PaymentGateway.API.Contracts.V1.Responses;
@@ -45,7 +46,7 @@ namespace PaymentGateway.API.Integration.Tests.Commands
 
       var responseString = await response.Content.ReadAsStringAsync();
 
-      var responseData = JsonSerializer.Deserialize<CreatePaymentSuccessResponse>(responseString);
+      var responseData = JsonSerializer.Deserialize<CreatePaymentResponse>(responseString);
 
       Assert.True(responseData.Id.GetType() == typeof(Guid));
     }

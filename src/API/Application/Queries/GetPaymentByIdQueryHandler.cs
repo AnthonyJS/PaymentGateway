@@ -8,7 +8,7 @@ using PaymentGateway.Domain.AggregatesModel.PaymentAggregate;
 using PaymentGateway.Domain.Interfaces;
 using PaymentGateway.Domain.Metrics;
 
-namespace PaymentGateway.Application.Queries
+namespace PaymentGateway.API.Application.Queries
 {
   public class GetPaymentByIdQuery : IRequest<Result<Payment>>
   {
@@ -19,7 +19,7 @@ namespace PaymentGateway.Application.Queries
       Id = id;
     }
   }
-
+  
   public class GetPaymentByIdQueryHandler : IRequestHandler<GetPaymentByIdQuery, Result<Payment>>
   {
     private readonly IPaymentHistoryRepository _paymentHistoryRepository;
@@ -38,10 +38,10 @@ namespace PaymentGateway.Application.Queries
       if (result.IsFailure)
         return Result.Failure<Payment>(GetPaymentErrors.PaymentNotFound);
 
-      Payment payment = result.Value;
-      
       _metrics.Measure.Counter.Increment(MetricsRegistry.PaymentsRetrievedCounter);
 
+      Payment payment = result.Value;
+      
       return Result.Ok(payment);
     }
   }
@@ -49,8 +49,5 @@ namespace PaymentGateway.Application.Queries
   public static class GetPaymentErrors
   {
     public static readonly string PaymentNotFound = "Unable to find payment";
-    public static readonly string AcquiringBankRefusedPayment = "Acquiring bank refused payment";
   }
 }
-
-

@@ -26,7 +26,7 @@ namespace PaymentGateway.API.Integration.Tests.Queries
     {
       var id = await insertPaymentDirectlyIntoDatabaseForTesting();
 
-      var response = await _fixture.TestClient.GetAsync(ApiRoutes.Payments.Get.Replace("{paymentId}", id.ToString()));
+      var response = await _fixture.TestClient.GetAsync(ApiRoutes.Payments.Get.Replace("{Id}", id.ToString()));
 
       response.EnsureSuccessStatusCode();
 
@@ -34,7 +34,7 @@ namespace PaymentGateway.API.Integration.Tests.Queries
 
       Assert.NotNull(responseString);
 
-      var responseData = JsonConvert.DeserializeObject<PaymentByIdResponse>(responseString);
+      var responseData = JsonConvert.DeserializeObject<GetPaymentByIdResponse>(responseString);
 
       Assert.True(responseData.FirstName == "Jim");
       Assert.True(responseData.Amount == 4404.44M);
@@ -45,7 +45,7 @@ namespace PaymentGateway.API.Integration.Tests.Queries
     {
       var id = Guid.NewGuid();
 
-      var response = await _fixture.TestClient.GetAsync(ApiRoutes.Payments.Get.Replace("{paymentId}", id.ToString()));
+      var response = await _fixture.TestClient.GetAsync(ApiRoutes.Payments.Get.Replace("{Id}", id.ToString()));
 
       Assert.True(response.StatusCode == HttpStatusCode.NotFound);
     }

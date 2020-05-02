@@ -2,7 +2,7 @@
 
 namespace PaymentGateway.API.Contracts.V1.Responses
 {
-  public class PaymentByIdResponse
+  public class GetPaymentByIdResponse
   {
     public Guid Id { get; set; }
     public Guid AcquiringBankId { get; set; }

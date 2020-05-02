@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using App.Metrics;
+using AutoMapper;
 using CSharpFunctionalExtensions;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -11,7 +12,7 @@ using PaymentGateway.Domain.Events;
 using PaymentGateway.Domain.Interfaces;
 using PaymentGateway.Domain.Metrics;
 
-namespace PaymentGateway.Application.Commands
+namespace PaymentGateway.API.Application.Commands
 {
   public class CreatePaymentCommand : IRequest<Result<Payment>>
   {
@@ -24,7 +25,7 @@ namespace PaymentGateway.Application.Commands
     public decimal Amount { get; set; }
     public short CVV { get; set; }
   }
-
+  
   public class CreatePaymentCommandHandler : IRequestHandler<CreatePaymentCommand, Result<Payment>>
   {
     private readonly IAcquiringBankService _acquiringBankService;
@@ -49,7 +50,7 @@ namespace PaymentGateway.Application.Commands
     public async Task<Result<Payment>> Handle(CreatePaymentCommand command, CancellationToken cancellationToken)
     {
       var cardDetails = new CardDetails(command.FirstName, command.Surname, command.CardNumber, 
-                                        command.ExpiryMonth, command.ExpiryYear, command.CVV);
+        command.ExpiryMonth, command.ExpiryYear, command.CVV);
       var currency = Enum.Parse<Currency>(command.Currency);
       var payment = new Payment(Guid.NewGuid(), cardDetails, currency, command.Amount);
       
@@ -88,7 +89,7 @@ namespace PaymentGateway.Application.Commands
         return Result.Failure<Payment>(CreatePaymentErrors.PaymentSaveFailed);
       
       _metrics.Measure.Counter.Increment(MetricsRegistry.PaymentsCreatedCounter);
-
+      
       return acquiringBankResult.IsSuccess  
         ? Result.Ok(payment)
         : Result.Failure<Payment>(CreatePaymentErrors.AcquiringBankRefusedPayment);

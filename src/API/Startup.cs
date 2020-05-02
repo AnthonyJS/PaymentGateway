@@ -38,8 +38,7 @@ namespace PaymentGateway.API
       services.AddControllers();
       services.AddDependencyInjectionWireup();
 
-      var applicationAssembly = AppDomain.CurrentDomain.Load("PaymentGateway.Application");
-      services.AddMediatR(applicationAssembly);
+      services.AddMediatR(typeof(Startup));
       services.AddAutoMapper(typeof(Startup));
       services.AddControllers()
         .AddFluentValidation(opt =>
