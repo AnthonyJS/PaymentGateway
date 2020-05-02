@@ -16,7 +16,7 @@ using PaymentGateway.Domain.Metrics;
 
 namespace PaymentGateway.API.Application.Commands
 {
-  public class CreatePaymentCommandHandler : IRequestHandler<CreatePaymentCommand, Result<CreatePaymentSuccessResponse>>
+  public class CreatePaymentCommandHandler : IRequestHandler<CreatePaymentCommand, Result<CreatePaymentResponse>>
   {
     private readonly IAcquiringBankService _acquiringBankService;
     private readonly IPaymentHistoryRepository _paymentHistoryRepository;
@@ -39,7 +39,7 @@ namespace PaymentGateway.API.Application.Commands
     }
 
     // TODO: Make whole thing atomic with Unit of Work
-    public async Task<Result<CreatePaymentSuccessResponse>> Handle(CreatePaymentCommand command, CancellationToken cancellationToken)
+    public async Task<Result<CreatePaymentResponse>> Handle(CreatePaymentCommand command, CancellationToken cancellationToken)
     {
       var cardDetails = new CardDetails(command.FirstName, command.Surname, command.CardNumber, 
         command.ExpiryMonth, command.ExpiryYear, command.CVV);
@@ -78,15 +78,15 @@ namespace PaymentGateway.API.Application.Commands
       }
       
       if (dbResult.IsFailure)
-        return Result.Failure<CreatePaymentSuccessResponse>(CreatePaymentErrors.PaymentSaveFailed);
+        return Result.Failure<CreatePaymentResponse>(CreatePaymentErrors.PaymentSaveFailed);
       
       _metrics.Measure.Counter.Increment(MetricsRegistry.PaymentsCreatedCounter);
       
-      var response = _mapper.Map<CreatePaymentSuccessResponse>(payment);
+      var response = _mapper.Map<CreatePaymentResponse>(payment);
 
       return acquiringBankResult.IsSuccess  
         ? Result.Ok(response)
-        : Result.Failure<CreatePaymentSuccessResponse>(CreatePaymentErrors.AcquiringBankRefusedPayment);
+        : Result.Failure<CreatePaymentResponse>(CreatePaymentErrors.AcquiringBankRefusedPayment);
     }
   }
   

@@ -35,7 +35,7 @@ namespace PaymentGateway.API.Controllers.V1
     [HttpGet(ApiRoutes.Payments.Get)]
     public async Task<IActionResult> GetPayment([FromQuery]GetPaymentByIdQuery query)
     {
-      Result<PaymentByIdResponse> result = await _mediator.Send(query);
+      Result<GetPaymentByIdResponse> result = await _mediator.Send(query);
 
       if (!result.IsSuccess)
         return NotFound();
@@ -52,7 +52,7 @@ namespace PaymentGateway.API.Controllers.V1
     [HttpPost(ApiRoutes.Payments.Create)]
     public async Task<IActionResult> CreatePayment([FromBody]CreatePaymentCommand command)
     {
-      Result<CreatePaymentSuccessResponse> result = await _mediator.Send(command);
+      Result<CreatePaymentResponse> result = await _mediator.Send(command);
 
       if (!result.IsSuccess)
       {

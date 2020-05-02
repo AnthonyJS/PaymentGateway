@@ -34,7 +34,7 @@ namespace PaymentGateway.API.Integration.Tests.Queries
 
       Assert.NotNull(responseString);
 
-      var responseData = JsonConvert.DeserializeObject<PaymentByIdResponse>(responseString);
+      var responseData = JsonConvert.DeserializeObject<GetPaymentByIdResponse>(responseString);
 
       Assert.True(responseData.FirstName == "Jim");
       Assert.True(responseData.Amount == 4404.44M);

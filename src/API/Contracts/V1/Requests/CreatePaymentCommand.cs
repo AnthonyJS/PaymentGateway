@@ -4,7 +4,7 @@ using PaymentGateway.API.Contracts.V1.Responses;
 
 namespace PaymentGateway.API.Contracts.V1.Requests
 {
-  public class CreatePaymentCommand : IRequest<Result<CreatePaymentSuccessResponse>>
+  public class CreatePaymentCommand : IRequest<Result<CreatePaymentResponse>>
   {
     public string FirstName { get; set; }
     public string Surname { get; set; }

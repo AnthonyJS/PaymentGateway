@@ -46,7 +46,7 @@ namespace PaymentGateway.API.Integration.Tests.Commands
 
       var responseString = await response.Content.ReadAsStringAsync();
 
-      var responseData = JsonSerializer.Deserialize<CreatePaymentSuccessResponse>(responseString);
+      var responseData = JsonSerializer.Deserialize<CreatePaymentResponse>(responseString);
 
       Assert.True(responseData.Id.GetType() == typeof(Guid));
     }

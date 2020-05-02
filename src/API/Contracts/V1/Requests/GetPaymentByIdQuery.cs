@@ -6,7 +6,7 @@ using PaymentGateway.API.Contracts.V1.Responses;
 
 namespace PaymentGateway.API.Contracts.V1.Requests
 {
-  public class GetPaymentByIdQuery : IRequest<Result<PaymentByIdResponse>>
+  public class GetPaymentByIdQuery : IRequest<Result<GetPaymentByIdResponse>>
   {
     [FromRoute]
     public Guid Id { get; set; }

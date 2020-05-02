@@ -12,7 +12,7 @@ using PaymentGateway.Domain.Metrics;
 
 namespace PaymentGateway.API.Application.Queries
 {
-  public class GetPaymentByIdQueryHandler : IRequestHandler<GetPaymentByIdQuery, Result<PaymentByIdResponse>>
+  public class GetPaymentByIdQueryHandler : IRequestHandler<GetPaymentByIdQuery, Result<GetPaymentByIdResponse>>
   {
     private readonly IPaymentHistoryRepository _paymentHistoryRepository;
     private readonly IMetrics _metrics;
@@ -25,18 +25,18 @@ namespace PaymentGateway.API.Application.Queries
       _mapper = mapper;
     }
 
-    public async Task<Result<PaymentByIdResponse>> Handle(GetPaymentByIdQuery request, CancellationToken cancellationToken)
+    public async Task<Result<GetPaymentByIdResponse>> Handle(GetPaymentByIdQuery request, CancellationToken cancellationToken)
     {
       Result<Payment> result = await _paymentHistoryRepository.GetPaymentById(request.Id);
 
       if (result.IsFailure)
-        return Result.Failure<PaymentByIdResponse>(GetPaymentErrors.PaymentNotFound);
+        return Result.Failure<GetPaymentByIdResponse>(GetPaymentErrors.PaymentNotFound);
 
       Payment payment = result.Value;
       
       _metrics.Measure.Counter.Increment(MetricsRegistry.PaymentsRetrievedCounter);
 
-      return Result.Ok(_mapper.Map<PaymentByIdResponse>(payment));
+      return Result.Ok(_mapper.Map<GetPaymentByIdResponse>(payment));
     }
   }
   
