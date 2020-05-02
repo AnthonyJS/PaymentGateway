@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using CSharpFunctionalExtensions;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PaymentGateway.API.Contracts.V1;
 using PaymentGateway.API.Contracts.V1.Requests;
@@ -36,9 +37,9 @@ namespace PaymentGateway.API.Controllers.V1
     {
       var query = new GetPaymentByIdQuery(paymentId);
       Result<Payment> result = await _mediator.Send(query);
-      
+
       return result.IsSuccess
-        ? (IActionResult)Ok(_mapper.Map<PaymentByIdResponse>(result.Value))
+        ? (IActionResult) Ok(_mapper.Map<PaymentByIdResponse>(result.Value))
         : NotFound();
     }
 
@@ -49,14 +50,25 @@ namespace PaymentGateway.API.Controllers.V1
     /// <response code="400">Validation error when submitting payment</response>
     /// <response code="422">Unable to insert the payment</response>
     [HttpPost(ApiRoutes.Payments.Create)]
-    public async Task<IActionResult> CreatePayment([FromBody]CreatePaymentRequest request)
+    public async Task<IActionResult> CreatePayment([FromBody] CreatePaymentRequest request)
     {
       var command = _mapper.Map<CreatePaymentCommand>(request);
 
       Result<Payment> result = await _mediator.Send(command);
 
       if (!result.IsSuccess)
-        return UnprocessableEntity(new { ErrorMessage = result.Error });
+      {
+        if (result.Error == CreatePaymentErrors.PaymentSaveFailed)
+        {
+          return StatusCode(StatusCodes.Status503ServiceUnavailable);
+        }
+
+        if (result.Error == CreatePaymentErrors.AcquiringBankRefusedPayment)
+        {
+          return UnprocessableEntity(new {ErrorMessage = result.Error});
+        }
+      }
+
 
       var response = _mapper.Map<CreatePaymentSuccessResponse>(result.Value);
 
