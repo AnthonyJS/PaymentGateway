@@ -29,12 +29,14 @@ namespace PaymentGateway.API.Controllers.V1
     /// <summary>
     /// Retrieves a Payment by Id in the query string
     /// </summary>
-    /// <param name="query"></param>
+    /// <param name="request"></param>
     /// <response code="200">Returns the payment details</response>
     /// <response code="404">Payment could not be found</response>
     [HttpGet(ApiRoutes.Payments.Get)]
-    public async Task<IActionResult> GetPayment([FromQuery]GetPaymentByIdQuery query)
+    public async Task<IActionResult> GetPayment([FromQuery]GetPaymentByIdRequest request)
     {
+      var query = _mapper.Map<GetPaymentByIdQuery>(request);
+      
       Result<GetPaymentByIdResponse> result = await _mediator.Send(query);
 
       if (!result.IsSuccess)
@@ -46,12 +48,15 @@ namespace PaymentGateway.API.Controllers.V1
     /// <summary>
     /// Inserts a Payment using information submitted in the request body
     /// </summary>
+    /// <param name="request"></param>
     /// <response code="201">Successfully inserted payment</response>
     /// <response code="400">Validation error when submitting payment</response>
     /// <response code="422">Unable to insert the payment</response>
     [HttpPost(ApiRoutes.Payments.Create)]
-    public async Task<IActionResult> CreatePayment([FromBody]CreatePaymentCommand command)
+    public async Task<IActionResult> CreatePayment([FromBody]CreatePaymentRequest request)
     {
+      var command = _mapper.Map<CreatePaymentCommand>(request);
+      
       Result<CreatePaymentResponse> result = await _mediator.Send(command);
 
       if (!result.IsSuccess)

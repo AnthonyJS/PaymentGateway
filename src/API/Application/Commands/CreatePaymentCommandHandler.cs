@@ -6,7 +6,6 @@ using AutoMapper;
 using CSharpFunctionalExtensions;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using PaymentGateway.API.Contracts.V1.Requests;
 using PaymentGateway.API.Contracts.V1.Responses;
 using PaymentGateway.Domain.AggregatesModel.PaymentAggregate;
 using PaymentGateway.Domain.Enums;
@@ -16,6 +15,18 @@ using PaymentGateway.Domain.Metrics;
 
 namespace PaymentGateway.API.Application.Commands
 {
+  public class CreatePaymentCommand : IRequest<Result<CreatePaymentResponse>>
+  {
+    public string FirstName { get; set; }
+    public string Surname { get; set; }
+    public string CardNumber { get; set; }
+    public byte ExpiryMonth { get; set; }
+    public byte ExpiryYear { get; set; }
+    public string Currency { get; set; }
+    public decimal Amount { get; set; }
+    public short CVV { get; set; }
+  }
+  
   public class CreatePaymentCommandHandler : IRequestHandler<CreatePaymentCommand, Result<CreatePaymentResponse>>
   {
     private readonly IAcquiringBankService _acquiringBankService;

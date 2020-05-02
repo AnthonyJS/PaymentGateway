@@ -26,7 +26,7 @@ namespace PaymentGateway.API.Integration.Tests.Commands
     [Fact]
     public async Task ShouldInsertPaymentWithValidData()
     {
-      var data = new CreatePaymentCommand()
+      var data = new CreatePaymentRequest()
       {
         FirstName = "Jim",
         Surname = "Jimson",
@@ -54,7 +54,7 @@ namespace PaymentGateway.API.Integration.Tests.Commands
     [Fact]
     public async Task ShouldNotInsertPaymentWithInvalidMonth()
     {
-      var data = new CreatePaymentCommand()
+      var data = new CreatePaymentRequest()
       {
         FirstName = "Jim",
         Surname = "Jimson",
@@ -76,7 +76,7 @@ namespace PaymentGateway.API.Integration.Tests.Commands
     [Fact]
     public async Task ShouldNotInsertPaymentWithInvalidAmount()
     {
-      var data = new CreatePaymentCommand()
+      var data = new CreatePaymentRequest()
       {
         FirstName = "Jim",
         Surname = "Jimson",

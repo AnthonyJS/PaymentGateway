@@ -1,9 +1,11 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using App.Metrics;
 using AutoMapper;
 using CSharpFunctionalExtensions;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using PaymentGateway.API.Contracts.V1.Requests;
 using PaymentGateway.API.Contracts.V1.Responses;
 using PaymentGateway.Domain.AggregatesModel.PaymentAggregate;
@@ -12,6 +14,16 @@ using PaymentGateway.Domain.Metrics;
 
 namespace PaymentGateway.API.Application.Queries
 {
+  public class GetPaymentByIdQuery : IRequest<Result<GetPaymentByIdResponse>>
+  {
+    public Guid Id { get; set; }
+
+    public GetPaymentByIdQuery(Guid id)
+    {
+      Id = id;
+    }
+  }
+  
   public class GetPaymentByIdQueryHandler : IRequestHandler<GetPaymentByIdQuery, Result<GetPaymentByIdResponse>>
   {
     private readonly IPaymentHistoryRepository _paymentHistoryRepository;

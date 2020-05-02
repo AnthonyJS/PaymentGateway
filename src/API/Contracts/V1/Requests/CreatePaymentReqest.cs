@@ -1,10 +1,6 @@
-﻿using CSharpFunctionalExtensions;
-using MediatR;
-using PaymentGateway.API.Contracts.V1.Responses;
-
-namespace PaymentGateway.API.Contracts.V1.Requests
+﻿namespace PaymentGateway.API.Contracts.V1.Requests
 {
-  public class CreatePaymentCommand : IRequest<Result<CreatePaymentResponse>>
+  public class CreatePaymentRequest
   {
     public string FirstName { get; set; }
     public string Surname { get; set; }
