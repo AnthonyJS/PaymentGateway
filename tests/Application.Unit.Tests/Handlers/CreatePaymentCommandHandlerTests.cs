@@ -27,7 +27,6 @@ namespace PaymentGateway.Application.Unit.Tests.Handlers
     private readonly Mock<ILogger<CreatePaymentCommandHandler>> _mockLogger;
     private readonly Mock<IMetrics> _mockMetrics;
     private readonly Mock<IEventStoreClient> _mockEventStoreClient;
-    private readonly IMapper _mapper;
 
     public CreatePaymentCommandHandlerTests()
     {
@@ -37,12 +36,6 @@ namespace PaymentGateway.Application.Unit.Tests.Handlers
       _mockEventStoreClient = new Mock<IEventStoreClient>();
       _mockMetrics = new Mock<IMetrics>();
       _mockMetrics.Setup(m => m.Measure.Counter.Increment(MetricsRegistry.PaymentsCreatedCounter));
-      MapperConfiguration mapperConfig = new MapperConfiguration(cfg =>
-      {
-        cfg.AddProfile<DomainToResponseProfile>();
-        cfg.AddProfile<RequestToCommandProfile>();
-      });
-      _mapper = mapperConfig.CreateMapper();
     }
 
     [Fact]
@@ -55,7 +48,7 @@ namespace PaymentGateway.Application.Unit.Tests.Handlers
 
       var sut = new CreatePaymentCommandHandler(_mockAcquiringBankService.Object,
                       _mockPaymentHistoryRepository.Object, _mockMetrics.Object, 
-                      _mockLogger.Object, _mockEventStoreClient.Object, _mapper);
+                      _mockLogger.Object, _mockEventStoreClient.Object);
 
       var command = new CreatePaymentCommand()
       {
@@ -85,7 +78,7 @@ namespace PaymentGateway.Application.Unit.Tests.Handlers
 
       var sut = new CreatePaymentCommandHandler(_mockAcquiringBankService.Object,
         _mockPaymentHistoryRepository.Object, _mockMetrics.Object, _mockLogger.Object, 
-        _mockEventStoreClient.Object, _mapper);
+        _mockEventStoreClient.Object);
 
       var command = new CreatePaymentCommand()
       {
@@ -118,7 +111,7 @@ namespace PaymentGateway.Application.Unit.Tests.Handlers
 
       var sut = new CreatePaymentCommandHandler(_mockAcquiringBankService.Object,
         _mockPaymentHistoryRepository.Object, _mockMetrics.Object, 
-        _mockLogger.Object, _mockEventStoreClient.Object, _mapper);
+        _mockLogger.Object, _mockEventStoreClient.Object);
 
       var command = new CreatePaymentCommand()
       {
@@ -132,7 +125,7 @@ namespace PaymentGateway.Application.Unit.Tests.Handlers
         Surname = "Jimson"
       };
 
-      var result = await sut.Handle(command, default(CancellationToken));
+      var result = await sut.Handle(command, default);
 
       _mockAcquiringBankService.Verify(a => a.ProcessPayment(It.IsAny<Payment>()), Times.Once());
       _mockPaymentHistoryRepository.Verify(p => p.InsertPayment(It.IsAny<Payment>()), Times.Once());

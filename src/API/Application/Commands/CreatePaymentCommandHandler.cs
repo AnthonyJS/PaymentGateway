@@ -33,19 +33,17 @@ namespace PaymentGateway.API.Application.Commands
     private readonly IMetrics _metrics;
     private readonly ILogger<CreatePaymentCommandHandler> _logger;
     private readonly IEventStoreClient _eventStoreClient;
-    private readonly IMapper _mapper;
     private IDomainEvent _domainEvent;
 
     public CreatePaymentCommandHandler(IAcquiringBankService acquiringBankService,
       IPaymentHistoryRepository paymentHistoryRepository, IMetrics metrics, 
-      ILogger<CreatePaymentCommandHandler> logger, IEventStoreClient eventStoreClient, IMapper mapper)
+      ILogger<CreatePaymentCommandHandler> logger, IEventStoreClient eventStoreClient)
     {
       _acquiringBankService = acquiringBankService;
       _paymentHistoryRepository = paymentHistoryRepository;
       _metrics = metrics;
       _logger = logger;
       _eventStoreClient = eventStoreClient;
-      _mapper = mapper;
     }
 
     // TODO: Make whole thing atomic with Unit of Work
