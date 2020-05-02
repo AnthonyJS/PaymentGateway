@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using App.Metrics;
 using AutoMapper;
 using PaymentGateway.API.Application.Queries;
+using PaymentGateway.API.Contracts.V1.Requests;
 using PaymentGateway.API.Mapping;
 using PaymentGateway.Domain.AggregatesModel.PaymentAggregate;
 using PaymentGateway.Domain.Enums;

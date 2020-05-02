@@ -8,7 +8,6 @@ namespace PaymentGateway.API.Mapping
   {
     public RequestToCommandProfile()
     {
-      CreateMap<CreatePaymentRequest, CreatePaymentCommand>();
     }
   }
 }

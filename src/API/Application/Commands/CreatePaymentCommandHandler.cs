@@ -13,18 +13,6 @@ using PaymentGateway.Domain.Metrics;
 
 namespace PaymentGateway.API.Application.Commands
 {
-  public class CreatePaymentCommand : IRequest<Result<Payment>>
-  {
-    public string FirstName { get; set; }
-    public string Surname { get; set; }
-    public string CardNumber { get; set; }
-    public byte ExpiryMonth { get; set; }
-    public byte ExpiryYear { get; set; }
-    public string Currency { get; set; }
-    public decimal Amount { get; set; }
-    public short CVV { get; set; }
-  }
-
   public class CreatePaymentCommandHandler : IRequestHandler<CreatePaymentCommand, Result<Payment>>
   {
     private readonly IAcquiringBankService _acquiringBankService;
@@ -49,7 +37,7 @@ namespace PaymentGateway.API.Application.Commands
     public async Task<Result<Payment>> Handle(CreatePaymentCommand command, CancellationToken cancellationToken)
     {
       var cardDetails = new CardDetails(command.FirstName, command.Surname, command.CardNumber, 
-                                        command.ExpiryMonth, command.ExpiryYear, command.CVV);
+        command.ExpiryMonth, command.ExpiryYear, command.CVV);
       var currency = Enum.Parse<Currency>(command.Currency);
       var payment = new Payment(Guid.NewGuid(), cardDetails, currency, command.Amount);
       

@@ -1,6 +1,10 @@
-﻿namespace PaymentGateway.API.Contracts.V1.Requests
+﻿using CSharpFunctionalExtensions;
+using MediatR;
+using PaymentGateway.Domain.AggregatesModel.PaymentAggregate;
+
+namespace PaymentGateway.API.Application.Commands
 {
-  public class CreatePaymentRequest
+  public class CreatePaymentCommand : IRequest<Result<Payment>>
   {
     public string FirstName { get; set; }
     public string Surname { get; set; }
@@ -11,4 +15,6 @@
     public decimal Amount { get; set; }
     public short CVV { get; set; }
   }
+
+
 }

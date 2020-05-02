@@ -50,10 +50,8 @@ namespace PaymentGateway.API.Controllers.V1
     /// <response code="400">Validation error when submitting payment</response>
     /// <response code="422">Unable to insert the payment</response>
     [HttpPost(ApiRoutes.Payments.Create)]
-    public async Task<IActionResult> CreatePayment([FromBody] CreatePaymentRequest request)
+    public async Task<IActionResult> CreatePayment([FromBody] CreatePaymentCommand command)
     {
-      var command = _mapper.Map<CreatePaymentCommand>(request);
-
       Result<Payment> result = await _mediator.Send(command);
 
       if (!result.IsSuccess)

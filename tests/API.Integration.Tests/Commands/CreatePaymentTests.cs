@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using PaymentGateway.API.Application.Commands;
 using PaymentGateway.API.Contracts.V1;
 using PaymentGateway.API.Contracts.V1.Requests;
 using PaymentGateway.API.Contracts.V1.Responses;
@@ -25,7 +26,7 @@ namespace PaymentGateway.API.Integration.Tests.Commands
     [Fact]
     public async Task ShouldInsertPaymentWithValidData()
     {
-      var data = new CreatePaymentRequest()
+      var data = new CreatePaymentCommand()
       {
         FirstName = "Jim",
         Surname = "Jimson",
@@ -53,7 +54,7 @@ namespace PaymentGateway.API.Integration.Tests.Commands
     [Fact]
     public async Task ShouldNotInsertPaymentWithInvalidMonth()
     {
-      var data = new CreatePaymentRequest()
+      var data = new CreatePaymentCommand()
       {
         FirstName = "Jim",
         Surname = "Jimson",
@@ -75,7 +76,7 @@ namespace PaymentGateway.API.Integration.Tests.Commands
     [Fact]
     public async Task ShouldNotInsertPaymentWithInvalidAmount()
     {
-      var data = new CreatePaymentRequest()
+      var data = new CreatePaymentCommand()
       {
         FirstName = "Jim",
         Surname = "Jimson",
