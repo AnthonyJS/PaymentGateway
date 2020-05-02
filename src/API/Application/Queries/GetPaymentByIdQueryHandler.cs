@@ -40,7 +40,9 @@ namespace PaymentGateway.API.Application.Queries
 
       _metrics.Measure.Counter.Increment(MetricsRegistry.PaymentsRetrievedCounter);
 
-      return Result.Ok(result.Value);
+      Payment payment = result.Value;
+      
+      return Result.Ok(payment);
     }
   }
   

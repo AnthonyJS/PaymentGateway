@@ -59,24 +59,24 @@ namespace PaymentGateway.API.Controllers.V1
     {
       var command = _mapper.Map<CreatePaymentCommand>(request);
       
-      Result<Payment> payment = await _mediator.Send(command);
+      Result<Payment> result = await _mediator.Send(command);
 
-      if (!payment.IsSuccess)
+      if (!result.IsSuccess)
       {
-        if (payment.Error == CreatePaymentErrors.PaymentSaveFailed)
+        if (result.Error == CreatePaymentErrors.PaymentSaveFailed)
         {
           return StatusCode(StatusCodes.Status503ServiceUnavailable);
         }
 
-        if (payment.Error == CreatePaymentErrors.AcquiringBankRefusedPayment)
+        if (result.Error == CreatePaymentErrors.AcquiringBankRefusedPayment)
         {
-          return UnprocessableEntity(new {ErrorMessage = payment.Error});
+          return UnprocessableEntity(new {ErrorMessage = result.Error});
         }
       }
 
-      var result = _mapper.Map<CreatePaymentResponse>(payment.Value);
+      var response = _mapper.Map<CreatePaymentResponse>(result.Value);
 
-      return CreatedAtAction("CreatePayment", result, result);
+      return CreatedAtAction("CreatePayment", response, response);
     }
   }
 }
