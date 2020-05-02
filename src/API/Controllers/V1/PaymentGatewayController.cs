@@ -5,11 +5,11 @@ using CSharpFunctionalExtensions;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using PaymentGateway.API.Application.Commands;
+using PaymentGateway.API.Application.Queries;
 using PaymentGateway.API.Contracts.V1;
 using PaymentGateway.API.Contracts.V1.Requests;
 using PaymentGateway.API.Contracts.V1.Responses;
-using PaymentGateway.Application.Commands;
-using PaymentGateway.Application.Queries;
 using PaymentGateway.Domain.AggregatesModel.PaymentAggregate;
 
 namespace PaymentGateway.API.Controllers.V1

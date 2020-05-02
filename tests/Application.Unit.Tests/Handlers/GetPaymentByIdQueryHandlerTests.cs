@@ -1,10 +1,10 @@
-﻿using PaymentGateway.Application.Queries;
-using Moq;
+﻿using Moq;
 using Xunit;
 using System;
 using CSharpFunctionalExtensions;
 using System.Threading.Tasks;
 using App.Metrics;
+using PaymentGateway.API.Application.Queries;
 using PaymentGateway.Domain.AggregatesModel.PaymentAggregate;
 using PaymentGateway.Domain.Enums;
 using PaymentGateway.Domain.Interfaces;

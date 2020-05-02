@@ -11,7 +11,7 @@ using PaymentGateway.Domain.Events;
 using PaymentGateway.Domain.Interfaces;
 using PaymentGateway.Domain.Metrics;
 
-namespace PaymentGateway.Application.Commands
+namespace PaymentGateway.API.Application.Commands
 {
   public class CreatePaymentCommand : IRequest<Result<Payment>>
   {

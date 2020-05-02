@@ -6,7 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using App.Metrics;
 using Microsoft.Extensions.Logging;
-using PaymentGateway.Application.Commands;
+using PaymentGateway.API.Application.Commands;
 using PaymentGateway.Domain.AggregatesModel.PaymentAggregate;
 using PaymentGateway.Domain.Enums;
 using PaymentGateway.Domain.Interfaces;

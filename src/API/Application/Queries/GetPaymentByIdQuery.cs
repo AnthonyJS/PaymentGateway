@@ -8,7 +8,7 @@ using PaymentGateway.Domain.AggregatesModel.PaymentAggregate;
 using PaymentGateway.Domain.Interfaces;
 using PaymentGateway.Domain.Metrics;
 
-namespace PaymentGateway.Application.Queries
+namespace PaymentGateway.API.Application.Queries
 {
   public class GetPaymentByIdQuery : IRequest<Result<Payment>>
   {
