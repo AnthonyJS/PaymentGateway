@@ -85,13 +85,19 @@ namespace PaymentGateway.Application.Commands
       }
       
       if (dbResult.IsFailure)
-        return Result.Failure<Payment>("Failed to save Payment");
+        return Result.Failure<Payment>(CreatePaymentErrors.PaymentSaveFailed);
       
       _metrics.Measure.Counter.Increment(MetricsRegistry.PaymentsCreatedCounter);
 
       return acquiringBankResult.IsSuccess  
         ? Result.Ok(payment)
-        : Result.Failure<Payment>("Acquiring bank refused payment");
+        : Result.Failure<Payment>(CreatePaymentErrors.AcquiringBankRefusedPayment);
     }
+  }
+  
+  public static class CreatePaymentErrors
+  {
+    public static readonly string PaymentSaveFailed = "Failed to save Payment";
+    public static readonly string AcquiringBankRefusedPayment = "Acquiring bank refused payment";
   }
 }

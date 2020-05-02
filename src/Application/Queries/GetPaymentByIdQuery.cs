@@ -36,7 +36,7 @@ namespace PaymentGateway.Application.Queries
       Result<Payment> result = await _paymentHistoryRepository.GetPaymentById(request.Id);
 
       if (result.IsFailure)
-        return Result.Failure<Payment>("Unable to find payment");
+        return Result.Failure<Payment>(GetPaymentErrors.PaymentNotFound);
 
       Payment payment = result.Value;
       
@@ -44,6 +44,12 @@ namespace PaymentGateway.Application.Queries
 
       return Result.Ok(payment);
     }
+  }
+  
+  public static class GetPaymentErrors
+  {
+    public static readonly string PaymentNotFound = "Unable to find payment";
+    public static readonly string AcquiringBankRefusedPayment = "Acquiring bank refused payment";
   }
 }
 

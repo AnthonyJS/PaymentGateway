@@ -3,13 +3,13 @@ using Moq;
 using Xunit;
 using System;
 using CSharpFunctionalExtensions;
-using System.Threading;
 using System.Threading.Tasks;
 using App.Metrics;
 using PaymentGateway.Domain.AggregatesModel.PaymentAggregate;
 using PaymentGateway.Domain.Enums;
 using PaymentGateway.Domain.Interfaces;
 using PaymentGateway.Domain.Metrics;
+using PaymentGateway.Infrastructure.Persistence.PaymentHistory;
 
 namespace PaymentGateway.Application.Unit.Tests.Handlers
 {
@@ -45,25 +45,24 @@ namespace PaymentGateway.Application.Unit.Tests.Handlers
 
       var query = new GetPaymentByIdQuery(Guid.NewGuid());
 
-      var result = await sut.Handle(query, default(CancellationToken));
+      var result = await sut.Handle(query, default);
 
       _mockPaymentHistoryRepository.Verify(p => p.GetPaymentById(It.IsAny<Guid>()), Times.Once());
       Assert.True(result.IsSuccess);
       Assert.True(result.Value.Amount == 123M);
     }
 
-
     [Fact]
     public async Task ShouldReturnFailureIfCannotFindPaymentById()
     {
-      var paymentResult = Result.Failure<Payment>("Failed to get data");
+      var paymentResult = Result.Failure<Payment>(PaymentRepositoryErrors.PaymentRetrievalFailed);
       _mockPaymentHistoryRepository.Setup(p => p.GetPaymentById(It.IsAny<Guid>())).ReturnsAsync(paymentResult);
 
       var sut = new GetPaymentByIdQueryHandler(_mockPaymentHistoryRepository.Object, _mockMetrics.Object);
 
       var query = new GetPaymentByIdQuery(Guid.NewGuid());
 
-      var result = await sut.Handle(query, default(CancellationToken));
+      var result = await sut.Handle(query, default);
 
       Assert.True(result.IsFailure);
     }
