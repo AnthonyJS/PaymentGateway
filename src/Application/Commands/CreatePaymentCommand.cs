@@ -25,13 +25,6 @@ namespace PaymentGateway.Application.Commands
     public short CVV { get; set; }
   }
 
-  public static class CreatePaymentErrors
-  {
-    public static readonly string PaymentSaveFailed = "Failed to save Payment";
-    public static readonly string AcquiringBankRefusedPayment = "Acquiring bank refused payment";
-      
-  }
-
   public class CreatePaymentCommandHandler : IRequestHandler<CreatePaymentCommand, Result<Payment>>
   {
     private readonly IAcquiringBankService _acquiringBankService;
@@ -91,7 +84,7 @@ namespace PaymentGateway.Application.Commands
         _logger.LogError($"Failed to send the Domain Event for Payment {payment.Id} of type {_domainEvent.GetType()}");
       }
       
-      if (dbResult.IsFailure || eventStoreResult.IsFailure)
+      if (dbResult.IsFailure)
         return Result.Failure<Payment>(CreatePaymentErrors.PaymentSaveFailed);
       
       _metrics.Measure.Counter.Increment(MetricsRegistry.PaymentsCreatedCounter);
@@ -100,5 +93,11 @@ namespace PaymentGateway.Application.Commands
         ? Result.Ok(payment)
         : Result.Failure<Payment>(CreatePaymentErrors.AcquiringBankRefusedPayment);
     }
+  }
+  
+  public static class CreatePaymentErrors
+  {
+    public static readonly string PaymentSaveFailed = "Failed to save Payment";
+    public static readonly string AcquiringBankRefusedPayment = "Acquiring bank refused payment";
   }
 }

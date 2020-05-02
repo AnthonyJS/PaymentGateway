@@ -31,7 +31,7 @@ namespace PaymentGateway.Infrastructure.Persistence.PaymentHistory
           PaymentDTO result = col.FindById(id);
 
           if (result == null)
-            return Result.Failure<Payment>("Payment not in DB");
+            return Result.Failure<Payment>(PaymentRepositoryErrors.PaymentNotInDb);
 
           var payment = _mapper.Map<Payment>(result);
           
@@ -43,7 +43,7 @@ namespace PaymentGateway.Infrastructure.Persistence.PaymentHistory
         _logger.LogError($":( {e}");
       }
       
-      return Result.Failure<Payment>(":(");
+      return Result.Failure<Payment>(PaymentRepositoryErrors.PaymentRetrievalFailed);
     }
 
     public async Task<Result> InsertPayment(Payment payment)
@@ -72,5 +72,11 @@ namespace PaymentGateway.Infrastructure.Persistence.PaymentHistory
 
       return Result.Ok();
     }
+  }
+  
+  public static class PaymentRepositoryErrors
+  {
+    public static readonly string PaymentNotInDb = "Payment not in DB";
+    public static readonly string PaymentRetrievalFailed = "Payment retrieval failed";
   }
 }
