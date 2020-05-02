@@ -2,9 +2,12 @@
 using System.Threading;
 using System.Threading.Tasks;
 using App.Metrics;
+using AutoMapper;
 using CSharpFunctionalExtensions;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using PaymentGateway.API.Contracts.V1.Requests;
+using PaymentGateway.API.Contracts.V1.Responses;
 using PaymentGateway.Domain.AggregatesModel.PaymentAggregate;
 using PaymentGateway.Domain.Enums;
 using PaymentGateway.Domain.Events;
@@ -13,28 +16,30 @@ using PaymentGateway.Domain.Metrics;
 
 namespace PaymentGateway.API.Application.Commands
 {
-  public class CreatePaymentCommandHandler : IRequestHandler<CreatePaymentCommand, Result<Payment>>
+  public class CreatePaymentCommandHandler : IRequestHandler<CreatePaymentCommand, Result<CreatePaymentSuccessResponse>>
   {
     private readonly IAcquiringBankService _acquiringBankService;
     private readonly IPaymentHistoryRepository _paymentHistoryRepository;
     private readonly IMetrics _metrics;
     private readonly ILogger<CreatePaymentCommandHandler> _logger;
     private readonly IEventStoreClient _eventStoreClient;
+    private readonly IMapper _mapper;
     private IDomainEvent _domainEvent;
 
     public CreatePaymentCommandHandler(IAcquiringBankService acquiringBankService,
       IPaymentHistoryRepository paymentHistoryRepository, IMetrics metrics, 
-      ILogger<CreatePaymentCommandHandler> logger, IEventStoreClient eventStoreClient)
+      ILogger<CreatePaymentCommandHandler> logger, IEventStoreClient eventStoreClient, IMapper mapper)
     {
       _acquiringBankService = acquiringBankService;
       _paymentHistoryRepository = paymentHistoryRepository;
       _metrics = metrics;
       _logger = logger;
       _eventStoreClient = eventStoreClient;
+      _mapper = mapper;
     }
 
     // TODO: Make whole thing atomic with Unit of Work
-    public async Task<Result<Payment>> Handle(CreatePaymentCommand command, CancellationToken cancellationToken)
+    public async Task<Result<CreatePaymentSuccessResponse>> Handle(CreatePaymentCommand command, CancellationToken cancellationToken)
     {
       var cardDetails = new CardDetails(command.FirstName, command.Surname, command.CardNumber, 
         command.ExpiryMonth, command.ExpiryYear, command.CVV);
@@ -73,13 +78,15 @@ namespace PaymentGateway.API.Application.Commands
       }
       
       if (dbResult.IsFailure)
-        return Result.Failure<Payment>(CreatePaymentErrors.PaymentSaveFailed);
+        return Result.Failure<CreatePaymentSuccessResponse>(CreatePaymentErrors.PaymentSaveFailed);
       
       _metrics.Measure.Counter.Increment(MetricsRegistry.PaymentsCreatedCounter);
+      
+      var response = _mapper.Map<CreatePaymentSuccessResponse>(payment);
 
       return acquiringBankResult.IsSuccess  
-        ? Result.Ok(payment)
-        : Result.Failure<Payment>(CreatePaymentErrors.AcquiringBankRefusedPayment);
+        ? Result.Ok(response)
+        : Result.Failure<CreatePaymentSuccessResponse>(CreatePaymentErrors.AcquiringBankRefusedPayment);
     }
   }
   

@@ -5,8 +5,11 @@ using CSharpFunctionalExtensions;
 using System.Threading;
 using System.Threading.Tasks;
 using App.Metrics;
+using AutoMapper;
 using Microsoft.Extensions.Logging;
 using PaymentGateway.API.Application.Commands;
+using PaymentGateway.API.Contracts.V1.Requests;
+using PaymentGateway.API.Mapping;
 using PaymentGateway.Domain.AggregatesModel.PaymentAggregate;
 using PaymentGateway.Domain.Enums;
 using PaymentGateway.Domain.Interfaces;
@@ -24,6 +27,7 @@ namespace PaymentGateway.Application.Unit.Tests.Handlers
     private readonly Mock<ILogger<CreatePaymentCommandHandler>> _mockLogger;
     private readonly Mock<IMetrics> _mockMetrics;
     private readonly Mock<IEventStoreClient> _mockEventStoreClient;
+    private readonly IMapper _mapper;
 
     public CreatePaymentCommandHandlerTests()
     {
@@ -33,6 +37,12 @@ namespace PaymentGateway.Application.Unit.Tests.Handlers
       _mockEventStoreClient = new Mock<IEventStoreClient>();
       _mockMetrics = new Mock<IMetrics>();
       _mockMetrics.Setup(m => m.Measure.Counter.Increment(MetricsRegistry.PaymentsCreatedCounter));
+      MapperConfiguration mapperConfig = new MapperConfiguration(cfg =>
+      {
+        cfg.AddProfile<DomainToResponseProfile>();
+        cfg.AddProfile<RequestToCommandProfile>();
+      });
+      _mapper = mapperConfig.CreateMapper();
     }
 
     [Fact]
@@ -44,7 +54,8 @@ namespace PaymentGateway.Application.Unit.Tests.Handlers
       _mockPaymentHistoryRepository.Setup(p => p.InsertPayment(It.IsAny<Payment>())).ReturnsAsync(Result.Ok(Guid.NewGuid()));
 
       var sut = new CreatePaymentCommandHandler(_mockAcquiringBankService.Object,
-                      _mockPaymentHistoryRepository.Object, _mockMetrics.Object, _mockLogger.Object, _mockEventStoreClient.Object);
+                      _mockPaymentHistoryRepository.Object, _mockMetrics.Object, 
+                      _mockLogger.Object, _mockEventStoreClient.Object, _mapper);
 
       var command = new CreatePaymentCommand()
       {
@@ -73,7 +84,8 @@ namespace PaymentGateway.Application.Unit.Tests.Handlers
       _mockAcquiringBankService.Setup(a => a.ProcessPayment(It.IsAny<Payment>())).ReturnsAsync(acquiringBankResult);
 
       var sut = new CreatePaymentCommandHandler(_mockAcquiringBankService.Object,
-        _mockPaymentHistoryRepository.Object, _mockMetrics.Object, _mockLogger.Object, _mockEventStoreClient.Object);
+        _mockPaymentHistoryRepository.Object, _mockMetrics.Object, _mockLogger.Object, 
+        _mockEventStoreClient.Object, _mapper);
 
       var command = new CreatePaymentCommand()
       {
@@ -105,7 +117,8 @@ namespace PaymentGateway.Application.Unit.Tests.Handlers
             .ReturnsAsync(Result.Failure<Guid>(PaymentRepositoryErrors.PaymentRetrievalFailed));
 
       var sut = new CreatePaymentCommandHandler(_mockAcquiringBankService.Object,
-        _mockPaymentHistoryRepository.Object, _mockMetrics.Object, _mockLogger.Object, _mockEventStoreClient.Object);
+        _mockPaymentHistoryRepository.Object, _mockMetrics.Object, 
+        _mockLogger.Object, _mockEventStoreClient.Object, _mapper);
 
       var command = new CreatePaymentCommand()
       {
