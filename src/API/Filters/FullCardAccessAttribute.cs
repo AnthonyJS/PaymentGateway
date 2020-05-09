@@ -12,17 +12,15 @@ namespace PaymentGateway.API.Filters
 
     public FullCardAccessAttribute(IApiAuthorizationService apiAuthorizationService)
     {
-      _apiAuthorizationService = apiAuthorizationService;
+      _apiAuthorizationService = apiAuthorizationService 
+                                 ?? throw new ArgumentNullException(nameof(apiAuthorizationService));
     }
     
     public override void OnActionExecuting(ActionExecutingContext context)
     {
-      // TODO: [] Handle if no authorization header
-      // TODO: [] Handle if it is not a Guid
-      // TODO: Logging
       var apiKey = context.HttpContext.Request.Headers["Authorization"].FirstOrDefault();
 
-      if (_apiAuthorizationService.ValidateFullCardAccess(new Guid(apiKey)))
+      if (_apiAuthorizationService.ValidateFullCardAccess(apiKey))
       {
         base.OnActionExecuting(context);
         return;
