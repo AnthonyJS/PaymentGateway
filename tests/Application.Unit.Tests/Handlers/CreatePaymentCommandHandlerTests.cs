@@ -5,12 +5,17 @@ using CSharpFunctionalExtensions;
 using System.Threading;
 using System.Threading.Tasks;
 using App.Metrics;
+using AutoMapper;
 using Microsoft.Extensions.Logging;
-using PaymentGateway.Application.Commands;
+using PaymentGateway.API.Application.Commands;
+using PaymentGateway.API.Contracts.V1.Requests;
+using PaymentGateway.API.Mapping;
 using PaymentGateway.Domain.AggregatesModel.PaymentAggregate;
 using PaymentGateway.Domain.Enums;
 using PaymentGateway.Domain.Interfaces;
 using PaymentGateway.Domain.Metrics;
+using PaymentGateway.Infrastructure.ExternalAPIs.AcquiringBank;
+using PaymentGateway.Infrastructure.Persistence.PaymentHistory;
 
 namespace PaymentGateway.Application.Unit.Tests.Handlers
 {
@@ -42,7 +47,8 @@ namespace PaymentGateway.Application.Unit.Tests.Handlers
       _mockPaymentHistoryRepository.Setup(p => p.InsertPayment(It.IsAny<Payment>())).ReturnsAsync(Result.Ok(Guid.NewGuid()));
 
       var sut = new CreatePaymentCommandHandler(_mockAcquiringBankService.Object,
-                      _mockPaymentHistoryRepository.Object, _mockMetrics.Object, _mockLogger.Object, _mockEventStoreClient.Object);
+                      _mockPaymentHistoryRepository.Object, _mockMetrics.Object, 
+                      _mockLogger.Object, _mockEventStoreClient.Object);
 
       var command = new CreatePaymentCommand()
       {
@@ -66,16 +72,17 @@ namespace PaymentGateway.Application.Unit.Tests.Handlers
     [Fact]
     public async Task ShouldSavePaymentToDatabaseEvenIfBankAcquirerDoesNotSucceed()
     {
-      var acquiringBankResult = Result.Failure<Guid>("Failed to make payment on acquiring bank");
+      var acquiringBankResult = Result.Failure<Guid>(FakeAcquiringBankErrors.AmountMustBeLessThan10000);
 
       _mockAcquiringBankService.Setup(a => a.ProcessPayment(It.IsAny<Payment>())).ReturnsAsync(acquiringBankResult);
 
       var sut = new CreatePaymentCommandHandler(_mockAcquiringBankService.Object,
-        _mockPaymentHistoryRepository.Object, _mockMetrics.Object, _mockLogger.Object, _mockEventStoreClient.Object);
+        _mockPaymentHistoryRepository.Object, _mockMetrics.Object, _mockLogger.Object, 
+        _mockEventStoreClient.Object);
 
       var command = new CreatePaymentCommand()
       {
-        Amount = 4404.44M,
+        Amount = 44044.44M,
         Currency = Currency.GBP.ToString(),
         CardNumber = "1234-5678-8765-4321",
         CVV = 321,
@@ -100,10 +107,11 @@ namespace PaymentGateway.Application.Unit.Tests.Handlers
       _mockAcquiringBankService.Setup(a => a.ProcessPayment(It.IsAny<Payment>())).ReturnsAsync(acquiringBankResult);
 
       _mockPaymentHistoryRepository.Setup(p => p.InsertPayment(It.IsAny<Payment>()))
-            .ReturnsAsync(Result.Failure<Guid>("Failed to save to DB"));
+            .ReturnsAsync(Result.Failure<Guid>(PaymentRepositoryErrors.PaymentRetrievalFailed));
 
       var sut = new CreatePaymentCommandHandler(_mockAcquiringBankService.Object,
-        _mockPaymentHistoryRepository.Object, _mockMetrics.Object, _mockLogger.Object, _mockEventStoreClient.Object);
+        _mockPaymentHistoryRepository.Object, _mockMetrics.Object, 
+        _mockLogger.Object, _mockEventStoreClient.Object);
 
       var command = new CreatePaymentCommand()
       {
@@ -117,7 +125,7 @@ namespace PaymentGateway.Application.Unit.Tests.Handlers
         Surname = "Jimson"
       };
 
-      var result = await sut.Handle(command, default(CancellationToken));
+      var result = await sut.Handle(command, default);
 
       _mockAcquiringBankService.Verify(a => a.ProcessPayment(It.IsAny<Payment>()), Times.Once());
       _mockPaymentHistoryRepository.Verify(p => p.InsertPayment(It.IsAny<Payment>()), Times.Once());
