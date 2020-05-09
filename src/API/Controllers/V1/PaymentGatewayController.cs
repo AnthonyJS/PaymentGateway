@@ -10,6 +10,7 @@ using PaymentGateway.API.Application.Queries;
 using PaymentGateway.API.Contracts.V1;
 using PaymentGateway.API.Contracts.V1.Requests;
 using PaymentGateway.API.Contracts.V1.Responses;
+using PaymentGateway.API.Filters;
 using PaymentGateway.Domain.AggregatesModel.PaymentAggregate;
 
 namespace PaymentGateway.API.Controllers.V1
@@ -33,6 +34,7 @@ namespace PaymentGateway.API.Controllers.V1
     /// <response code="200">Returns the payment details</response>
     /// <response code="404">Payment could not be found</response>
     [HttpGet(ApiRoutes.Payments.Get)]
+    [ServiceFilter(typeof(FullCardAccessAttribute))]
     public async Task<IActionResult> GetPayment([FromQuery]GetPaymentByIdRequest request)
     {
       var query = _mapper.Map<GetPaymentByIdQuery>(request);

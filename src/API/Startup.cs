@@ -10,7 +10,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using PaymentGateway.API.Core;
+using PaymentGateway.API.Filters;
 using PaymentGateway.API.Options;
+using PaymentGateway.Infrastructure.Security;
 
 namespace PaymentGateway.API
 {
@@ -33,8 +35,9 @@ namespace PaymentGateway.API
       {
         options.AllowSynchronousIO = true;
       });
-      services.AddMetrics();
+      services.Configure<AuthenticationOptions>(Configuration.GetSection("Authentication"));
       
+      services.AddMetrics();
       services.AddControllers();
       services.AddDependencyInjectionWireup();
 
