@@ -1,13 +1,14 @@
-﻿using PaymentGateway.API.Contracts.V1.Requests;
+﻿using PaymentGateway.API.Application.Commands;
+using PaymentGateway.API.Contracts.V1.Requests;
 using Swashbuckle.AspNetCore.Filters;
 
 namespace PaymentGateway.API.Examples.Requests
 {
-  public class CreatePaymentRequestExample : IExamplesProvider<CreatePaymentRequest>
+  public class CreatePaymentRequestExample : IExamplesProvider<CreatePaymentCommand>
   {
-    public CreatePaymentRequest GetExamples()
+    public CreatePaymentCommand GetExamples()
     {
-      return new CreatePaymentRequest
+      return new CreatePaymentCommand
       {
         FirstName = "Tim",
         Surname = "Tomson",
